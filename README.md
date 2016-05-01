@@ -1,2 +1,2 @@
 # docker-images
-Generic docker image builds
+General purpose docker images repo
