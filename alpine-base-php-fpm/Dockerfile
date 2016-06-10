@@ -2,12 +2,12 @@ FROM unocha/alpine-base-s6
 
 MAINTAINER Serban Teodorescu <teodorescu.serban@gmail.com>
 
-# inspiration: orakili <docker@orakili.net>
+# Thanks to orakili <docker@orakili.net>
 
 COPY php-fpm.conf run_fpm /
 
-# Install php.
-RUN apk --update add \
+RUN apk update && \
+    apk add \
       php-bcmath \
       php-cli \
       php-ctype \
@@ -27,12 +27,12 @@ RUN apk --update add \
       php-zip \
       php-zlib \
       php-xml \
-      php-xmlreader \
- && rm -rf /var/cache/apk/* \
- && mkdir -p /etc/services.d/fpm /srv/www /var/log/php \
- && mv /run_fpm /etc/services.d/fpm/run \
- && mv /etc/php/php-fpm.conf /etc/php/php-fpm.conf.verbose \
- && mv /php-fpm.conf /etc/php/php-fpm.conf
+      php-xmlreader && \
+    rm -rf /var/cache/apk/* && \
+    mkdir -p /etc/services.d/fpm /srv/www /var/log/php && \
+    mv /run_fpm /etc/services.d/fpm/run && \
+    mv /etc/php/php-fpm.conf /etc/php/php-fpm.conf.verbose && \
+    mv /php-fpm.conf /etc/php/php-fpm.conf
 
 EXPOSE 9000
 
