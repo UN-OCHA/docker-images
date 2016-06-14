@@ -14,5 +14,3 @@ RUN apk update && \
 EXPOSE 6379
 
 VOLUME ["/var/log/redis"]
-
-#CMD ["/init"]
