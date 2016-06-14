@@ -1,0 +1,10 @@
+#!/usr/bin/with-contenv sh
+
+BASEDIR=/srv/solr/example
+#CONFDIR=solr/XXX/conf/
+
+cd $BASEDIR
+
+#envsubst < $CONFDIR/solrcore.properties.tpl > $CONFDIR/solrcore.properties
+
+exec java -jar start.jar
