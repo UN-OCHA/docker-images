@@ -1,4 +1,4 @@
-FROM unocha/alpine-base-s6
+FROM unocha/alpine-base-s6:latest
 
 MAINTAINER "Serban TEODORESCU <teodorescu.serban@gmail.com>"
 
