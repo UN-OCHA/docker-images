@@ -1,4 +1,4 @@
-FROM unocha/alpine-base:latest
+FROM unocha/alpine-base-s6:latest
 
 MAINTAINER Serban Teodorescu <teodorescu.serban@gmail.com>
 # thanks to Anastas Dancha <anapsix@random.io>
