@@ -10,7 +10,7 @@ COPY nginx.conf default.conf index.html run_nginx /
 RUN apk --update add \
       nginx \
  && rm -rf /var/cache/apk/* \
- && mkdir -p /etc/services.d/nginx /srv/www/html /var/log/nginx \
+ && mkdir -p /etc/services.d/nginx /srv/www/html /var/log/nginx /var/cache/nginx \
  && mv /run_nginx /etc/services.d/nginx/run \
  && mv /nginx.conf /etc/nginx/nginx.conf \
  && mv /default.conf /etc/nginx/conf.d/default.conf \
