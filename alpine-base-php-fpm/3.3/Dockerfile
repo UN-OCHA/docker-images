@@ -19,18 +19,18 @@ RUN apk update && \
       php-iconv \
       php-json \
       php-mcrypt \
-      php-posix \
       php-opcache \
       php-openssl \
       php-pdo \
       php-pdo_mysql \
       php-pdo_pgsql \
       php-phar \
+      php-posix \
       php-sockets \
-      php-zip \
-      php-zlib \
       php-xml \
       php-xmlreader \
+      php-zip \
+      php-zlib \
       mysql-client \
       postgresql-client  && \
     rm -rf /var/cache/apk/* && \
