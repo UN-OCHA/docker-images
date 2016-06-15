@@ -9,7 +9,8 @@ ENV SOLR solr-$SOLR_VERSION
 ENV JDBC_MYSQL_VERSION 5.1.38
 ENV JDBC_PSQL_VERSION 9.4.1207
 
-COPY run-solr /tmp/
+COPY run-solr /
+
 RUN apk add --update bash && \
     cd /tmp && \
     echo "getting solr $SOLR_VERSION" >&2 && \
@@ -27,7 +28,7 @@ RUN apk add --update bash && \
     apk del curl || true && \
     rm -rf /tmp/* && \
     mkdir /etc/services.d/solr && \
-    mv /tmp/run-solr /etc/services.d/solr/run
+    mv /run-solr /etc/services.d/solr/run
 
 EXPOSE 8983
 
