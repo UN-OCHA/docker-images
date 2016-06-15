@@ -11,7 +11,9 @@ ENV JDBC_PSQL_VERSION 9.4.1207
 
 COPY run-solr /
 
-RUN apk add --update bash && \
+RUN apk add --update \
+        bash \
+        curl && \
     cd /tmp && \
     echo "getting solr $SOLR_VERSION" >&2 && \
     curl -sSL http://mirrors.gigenet.com/apache/lucene/solr/$SOLR_VERSION/$SOLR.tgz -o /tmp/$SOLR.tgz && \
