@@ -1,4 +1,4 @@
-FROM unocha/alpine-base-jdk:8
+FROM unocha/alpine-jdk:8
 
 MAINTAINER Serban Teodorescu <teodorescu.serban@gmail.com>
 
