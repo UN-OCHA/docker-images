@@ -39,4 +39,4 @@ EXPOSE 8983
 WORKDIR /srv/solr
 
 # You need to map the index / data volume from the host.
-# This should be inside /opt/solr/server/solr/CORE_NAME
+# This should be inside /srv/solr/server/solr/CORE_NAME
