@@ -31,7 +31,7 @@ RUN apk add --update \
     rm -rf /tmp/* && \
     mkdir /etc/services.d/solr && \
     mv /run-solr /etc/services.d/solr/run && \
-    sed -i 's/INFO/WARN' /opt/solr/server/resources/log4j.properties && \
+    sed -i 's/INFO/WARN/' /opt/solr/server/resources/log4j.properties && \
     chmod +x /init-demo-core.sh
 
 EXPOSE 8983
