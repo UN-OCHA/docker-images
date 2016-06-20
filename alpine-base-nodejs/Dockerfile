@@ -12,7 +12,7 @@ RUN apk update && \
         nodejs-lts \
         && \
     rm -rf /var/lib/apk/* && \
-    npm install -g
+    npm install -g \
         grunt-cli \
         bower \
         && \
