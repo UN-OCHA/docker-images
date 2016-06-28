@@ -37,12 +37,18 @@ RUN apk update && \
     mv /etc/php/php-fpm.conf /etc/php/php-fpm.conf.verbose && \
     mv /php-fpm.conf /etc/php/php-fpm.conf
 
-# Add php-redis from edge.
+# Add php5-redis from edge.
 RUN apk add \
       --update-cache --allow-untrusted \
       --repository http://dl-3.alpinelinux.org/alpine/edge/testing/ --allow-untrusted \
-        php-redis && \
+        php5-redis && \
     rm -rf /var/cache/apk/*
+
+# Redis installs to the wrong spot. Oops.
+RUN mv /etc/php5/conf.d/redis.ini /etc/php/conf.d/redis.ini && \
+    rmdir /etc/php5/conf.d /etc/php5 && \
+    mv /usr/lib/php5/modules/redis.so /usr/lib/php/modules/redis.so && \
+    rmdir /usr/lib/php5/modules /usr/lib/php5
 
 EXPOSE 9000
 
