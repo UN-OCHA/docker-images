@@ -10,7 +10,6 @@ RUN apk update && \
     apk add \
       php5-bcmath \
       php5-bz2 \
-      php5-cli \
       php5-ctype \
       php5-curl \
       php5-dom \
@@ -31,9 +30,7 @@ RUN apk update && \
       php5-xml \
       php5-xmlreader \
       php5-zip \
-      php5-zlib \
-      mysql-client \
-      postgresql-client  && \
+      php5-zlib && \
     rm -rf /var/cache/apk/* && \
     mkdir -p /etc/services.d/fpm /srv/www /var/log/php && \
     mv /run_fpm /etc/services.d/fpm/run && \
@@ -47,19 +44,11 @@ RUN apk add \
         php-redis && \
     rm -rf /var/cache/apk/*
 
-# Set unlimited memory for CLI php.
-RUN sed -i 's/^memory_limit = .*/memory_limit = -1/' /etc/php5/php.ini
-
-# Install composer, as suggested by https://getcomposer.org/
-RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" && \
-    php -r "if (hash_file('SHA384', 'composer-setup.php') === '070854512ef404f16bac87071a6db9fd9721da1684cd4589b1196c3faf71b9a2682e2311b36a5079825e155ac7ce150d') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;" && \
-    php composer-setup.php --install-dir=/usr/bin --filename=composer && \
-    php -r "unlink('composer-setup.php');"
-
-# Install drush and symlink it somewhere useful.
-RUN COMPOSER_HOME=/usr/local/drush \
-    composer global require drush/drush 6.x
-RUN ln -sf /usr/local/drush/vendor/bin/drush /usr/bin/drush
+# Redis installs to the wrong spot. Oops.
+RUN mv /etc/php/conf.d/redis.ini /etc/php5/conf.d/redis.ini && \
+    rmdir /etc/php/conf.d /etc/php && \
+    mv /usr/lib/php/modules/redis.so /usr/lib/php5/modules/redis.so && \
+    rmdir /usr/lib/php/modules /usr/lib/php
 
 EXPOSE 9000
 
