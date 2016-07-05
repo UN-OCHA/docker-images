@@ -4,6 +4,10 @@ MAINTAINER Serban Teodorescu <teodorescu.serban@gmail.com>
 
 # Thanks to orakili <docker@orakili.net>
 
+# Work around s6 containing a binary called `import' which
+# clashes with imagemagick. D'oh.
+RUN mv /usr/bin/import /usr/bin/s6-import
+
 COPY php-fpm.conf run_fpm /
 
 RUN apk update && \
@@ -36,6 +40,9 @@ RUN apk update && \
     mv /run_fpm /etc/services.d/fpm/run && \
     mv /etc/php5/php-fpm.conf /etc/php5/php-fpm.conf.verbose && \
     mv /php-fpm.conf /etc/php5/php-fpm.conf
+
+RUN mv /usr/bin/import /usr/bin/im-import
+RUN mv /usr/bin/s6-import /usr/bin/import
 
 # Add php-redis from edge.
 RUN apk add \
