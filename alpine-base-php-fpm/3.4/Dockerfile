@@ -16,9 +16,9 @@ RUN apk update && \
       php5-fpm \
       php5-gd \
       php5-iconv \
+      php5-imagick \
       php5-json \
       php5-mcrypt \
-      php5-memcache \
       php5-opcache \
       php5-openssl \
       php5-pdo \
@@ -41,7 +41,7 @@ RUN apk update && \
 RUN apk add \
       --update-cache --allow-untrusted \
       --repository http://dl-3.alpinelinux.org/alpine/edge/testing/ --allow-untrusted \
-        php5-redis && \
+        php5-memcached php5-redis && \
     rm -rf /var/cache/apk/*
 
 EXPOSE 9000
