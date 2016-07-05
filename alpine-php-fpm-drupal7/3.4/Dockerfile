@@ -24,10 +24,15 @@ RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" &&
 
 # Install drush and symlink it somewhere useful.
 RUN COMPOSER_HOME=/usr/local/drush \
-    composer global require drush/drush 6.x
+    composer global require drush/drush 8.1.2
 RUN ln -sf /usr/local/drush/vendor/bin/drush /usr/bin/drush
 
+# Add our default drushrc.php file.
+COPY drushrc.php /drushrc.php
+RUN mkdir -p /etc/drush && \
+    mv /drushrc.php /etc/drush/drushrc.php
+
 # Volumes
-# - Conf: /etc/php/ (php-fpm.conf, php.ini)
+# - Conf: /etc/php5/ (php.ini, php-fpm.conf, conf.d/)
 # - Logs: /var/log/php
 # - Data: /srv/www, /var/lib/php/session
