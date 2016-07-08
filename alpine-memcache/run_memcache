@@ -1,0 +1,3 @@
+#!/usr/bin/with-contenv sh
+
+exec /usr/bin/memcached -p$MEMCACHE_PORT -l0.0.0.0 -uroot -m$MEMCACHE_MAX_MEMORY -I$MEMCACHE_SLAB_SIZE
