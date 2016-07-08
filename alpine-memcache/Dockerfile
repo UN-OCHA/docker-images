@@ -11,7 +11,6 @@ COPY run_memcache /
 
 RUN apk add --update \
         memcached \
-        mysql-client \
         && \
     rm -rf /var/lib/apk/* && \
     mkdir -p /etc/services.d/memcache && \
