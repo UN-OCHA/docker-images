@@ -11,7 +11,6 @@ chmod 700 $MYSQL_DIR;
 mkdir -p /run/mysqld
 chown -R mysql:mysql /run/mysqld
 
-
 args=""
 # init db if datadir is empty
 if [ ! "$(ls -A $MYSQL_DIR)" ]; then
