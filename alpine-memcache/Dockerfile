@@ -5,7 +5,8 @@ MAINTAINER Serban Teodorescu <teodorescu.serban@gmail.com>
 ENV LANG=en_US.utf8 \
     MEMCACHE_PORT=11212 \
     MEMCACHE_MAX_MEMORY=1024 \
-    MEMCACHE_SLAB_SIZE=1M
+    MEMCACHE_SLAB_SIZE=1M \
+    MEMCACHE_USER=memcached
 
 COPY run_memcache /
 
