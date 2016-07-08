@@ -16,3 +16,5 @@ RUN apk add --update \
     rm -rf /var/lib/apk/* && \
     mkdir -p /etc/services.d/memcache && \
     mv /run_memcache /etc/services.d/memcache/run
+
+EXPOSE 11212
