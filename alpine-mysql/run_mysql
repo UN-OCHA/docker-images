@@ -1,0 +1,43 @@
+#!/usr/bin/with-contenv sh
+
+# create datadir if not exists
+if [ ! -d $MYSQL_DIR ]; then
+    mkdir -p $MYSQL_DIR;
+fi
+
+chown -R mysql:mysql $MYSQL_DIR;
+chmod 700 $MYSQL_DIR;
+
+mkdir -p /run/mysqld
+chown -R mysql:mysql /run/mysqld
+
+args=""
+# init db if datadir is empty
+if [ ! "$(ls -A $MYSQL_DIR)" ]; then
+    s6-setuidgid mysql mysql_install_db --datadir=$MYSQL_DIR
+    tempSqlFile='/tmp/mysql-first-time.sql'
+    cat > "$tempSqlFile" <<-EOSQL
+DELETE FROM mysql.user ;
+CREATE USER 'root'@'%' IDENTIFIED BY '${MYSQL_ROOT_PASS}' ;
+GRANT ALL ON *.* TO 'root'@'%' WITH GRANT OPTION ;
+DROP DATABASE IF EXISTS test ;
+EOSQL
+    if [ "$MYSQL_DB" ]; then
+        echo "CREATE DATABASE IF NOT EXISTS \`$MYSQL_DB\` ;" >> "$tempSqlFile"
+    fi
+    if [ "$MYSQL_USER" -a "$MYSQL_PASS" ]; then
+        echo "CREATE USER '$MYSQL_USER'@'%' IDENTIFIED BY '$MYSQL_PASS' ;" >> "$tempSqlFile"
+        if [ "$MYSQL_DB" ]; then
+            echo "GRANT ALL ON \`$MYSQL_DB\`.* TO '$MYSQL_USER'@'%' ;" >> "$tempSqlFile"
+        fi
+    fi
+    echo 'FLUSH PRIVILEGES ;' >> "$tempSqlFile"
+
+    args="--init-file=$tempSqlFile"
+else
+    echo "Data dir ($MYSQL_DIR) not empty. Skipping mysql initialisation."
+fi
+
+chown -R mysql:mysql $MYSQL_DIR
+
+exec s6-setuidgid mysql /usr/bin/mysqld --datadir=$MYSQL_DIR --bind-address=0.0.0.0 $args
