@@ -6,5 +6,7 @@ chown -R postgres:postgres ${PGDATA}
 
 test "$(ls -A "$PGDATA" 2>/dev/null)" || exec s6-setuidgid postgres /usr/bin/initdb -D $PGDATA
 
+args=""
+[ -z ${PG_CONFIG_FILE} ] || args="--config-file=/etc/postgresql/postgresql.conf"
 
-exec s6-setuidgid postgres /usr/bin/postgres -D ${PGDATA}
+exec s6-setuidgid postgres /usr/bin/postgres -D ${PGDATA} $args
