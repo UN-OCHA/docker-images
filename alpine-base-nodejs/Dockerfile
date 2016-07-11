@@ -2,12 +2,10 @@ FROM unocha/alpine-base-s6:latest
 
 MAINTAINER Serban Teodorescu <teodorescu.serban@gmail.com>
 
-COPY node-run /tmp/
+ENV NODE_APP_DIR=/srv/www \
+    SRC_DIR=/src
 
-ENV NODE_APP_DIR /srv/www
-
-RUN apk update && \
-    apk add --update \
+RUN apk add --update \
         git \
         nodejs-lts \
         && \
@@ -16,9 +14,9 @@ RUN apk update && \
         grunt-cli \
         bower \
         && \
-    mkdir -p /srv/www /etc/services.d/node && \
-    mv /tmp/node-run /etc/services.d/node/run
+    mkdir -p ${SRC_DIR} ${NODE_APP_DIR}
 
-EXPOSE 3000
+VOLUME ["${SRC_DIR}", "${NODE_APP_DIR}"]
 
-VOLUME ["/srv/www"]
+# mainly used to build stuff so it makes sense to use ${SRC_DIR} as WORKDIR
+WORKDIR ${SRC_DIR}
