@@ -1,0 +1,14 @@
+FROM unocha/alpine-base-s6:3.4
+
+MAINTAINER Serban Teodorescu <teodorescu.serban@gmail.com>
+
+ENV LANG=en_US.utf8
+
+COPY run_mongo /
+
+RUN echo http://dl-cdn.alpinelinux.org/alpine/edge/testing >> /etc/apk/repositories && \
+    apk add --update --no-cache mongodb
+
+EXPOSE 27017
+
+VOLUME ["/srv/db"]
