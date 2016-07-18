@@ -23,6 +23,7 @@ RUN apk update && \
       php5-imagick \
       php5-json \
       php5-mcrypt \
+      php5-mysql \
       php5-opcache \
       php5-openssl \
       php5-pdo \
@@ -33,6 +34,7 @@ RUN apk update && \
       php5-sockets \
       php5-xml \
       php5-xmlreader \
+      php5-xmlwriter \
       php5-zip \
       php5-zlib && \
     rm -rf /var/cache/apk/* && \
