@@ -1,6 +1,6 @@
 <?php
 // Specify a default drupal root.
-$options['r'] = '/srv/www';
+$options['r'] = '/srv/www/html';
 
 /**
  * Restore drush_backend_fork().
