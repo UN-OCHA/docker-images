@@ -1,3 +1,5 @@
 #!/usr/bin/with-contenv sh
 
+chown mongodb:mongodb /srv/db
+
 exec s6-setuidgid mongodb mongod --dbpath /srv/db
