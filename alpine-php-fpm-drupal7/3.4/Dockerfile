@@ -25,6 +25,7 @@ RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" &&
 # Install drush and symlink it somewhere useful.
 RUN COMPOSER_HOME=/usr/local/drush \
     composer global require drush/drush 6.7
+RUN drush @none dl registry_rebuild
 RUN ln -sf /usr/local/drush/vendor/bin/drush /usr/bin/drush
 
 # Add our default drushrc.php file.
