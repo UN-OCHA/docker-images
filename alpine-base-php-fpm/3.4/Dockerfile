@@ -34,7 +34,6 @@ RUN apk update && \
       php5-sockets \
       php5-xml \
       php5-xmlreader \
-      php5-xmlwriter \
       php5-zip \
       php5-zlib && \
     rm -rf /var/cache/apk/* && \
