@@ -26,7 +26,12 @@ RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" &&
 RUN COMPOSER_HOME=/usr/local/drush \
     composer global require drush/drush 6.7
 RUN ln -sf /usr/local/drush/vendor/bin/drush /usr/bin/drush
-RUN drush @none dl registry_rebuild
+
+# Install registry_rebuild to the appuser's homedir.
+RUN drush -y @none dl --destination=/home/appuser/.drush registry_rebuild
+
+# Symlink the appuser's .drush to root's, so all modules are available for both.
+RUN ln -s /home/appuser/.drush /root/.drush
 
 # Add our default drushrc.php file.
 COPY drushrc.php /drushrc.php
