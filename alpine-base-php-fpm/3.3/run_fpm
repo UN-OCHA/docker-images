@@ -1,4 +1,4 @@
 #!/bin/sh
 set -e
-
+env | sed "s/\(.*\)=\(.*\)/env[\1]='\2'/" > /etc/php5/env.conf
 exec /usr/bin/php-fpm -c /etc/php/php.ini -y /etc/php/php-fpm.conf -F
