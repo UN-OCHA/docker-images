@@ -28,11 +28,11 @@ RUN COMPOSER_HOME=/usr/local/drush \
 RUN ln -sf /usr/local/drush/vendor/bin/drush /usr/bin/drush
 
 # Install registry_rebuild to the appuser's homedir.
-RUN drush -y @none dl --destination=/home/appuser/.drush registry_rebuild
+RUN drush -y @none dl --destination=/home/appuser/.drush/commands registry_rebuild
 
 # Symlink the appuser's drush module to root's.
 RUN mkdir -p /root/.drush
-RUN ln -s /home/appuser/.drush/registry_rebuild /root/.drush/registry_rebuild
+RUN ln -s /home/appuser/.drush/commands /root/.drush/commands
 
 # Add our default drushrc.php file.
 COPY drushrc.php /drushrc.php
