@@ -7,11 +7,14 @@ MAINTAINER Serban Teodorescu <teodorescu.serban@gmail.com>
 # and: Adrian B. Danieli "https://github.com/sickp"
 
 ENV NGINX_VERSION nginx-1.10.1
+ENV NGINX_UPLOADPROGRESS_VERSION v0.9.1
 
 RUN build_pkgs="build-base linux-headers openssl-dev pcre-dev wget zlib-dev" \
   && runtime_pkgs="ca-certificates openssl pcre zlib" \
   && apk --update add ${build_pkgs} ${runtime_pkgs} \
   && cd /tmp \
+  && wget -q https://github.com/masterzen/nginx-upload-progress-module/archive/${NGINX_UPLOADPROGRESS_VERSION}.zip \
+  && unzip ${NGINX_UPLOADPROGRESS_VERSION}.zip \
   && wget http://nginx.org/download/${NGINX_VERSION}.tar.gz \
   && tar xzf ${NGINX_VERSION}.tar.gz \
   && cd /tmp/${NGINX_VERSION} \
@@ -49,6 +52,7 @@ RUN build_pkgs="build-base linux-headers openssl-dev pcre-dev wget zlib-dev" \
     --with-http_slice_module \
     --with-file-aio \
     --with-http_v2_module \
+    --add-module=/tmp/nginx-upload-progress-module-0.9.1 \
   && make \
   && make install \
   && sed -i -e 's/#access_log  logs\/access.log  main;/access_log \/dev\/stdout;/' -e 's/#error_log  logs\/error.log  notice;/error_log stderr notice;/' /etc/nginx/nginx.conf \
