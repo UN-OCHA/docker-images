@@ -8,10 +8,11 @@ MAINTAINER Serban Teodorescu <teodorescu.serban@gmail.com>
 # clashes with imagemagick. D'oh.
 RUN mv /usr/bin/import /usr/bin/s6-import
 
-COPY php-fpm.conf run_fpm /
+COPY php-fpm.conf run_fpm msmtprc /
 
 RUN apk update && \
     apk add \
+      msmtp \
       php5-bcmath \
       php5-bz2 \
       php5-ctype \
@@ -37,7 +38,8 @@ RUN apk update && \
       php5-zip \
       php5-zlib && \
     rm -rf /var/cache/apk/* && \
-    mkdir -p /etc/services.d/fpm /srv/www /var/log/php && \
+    mkdir -p /etc/services.d/fpm /srv/www/html /var/log/php && \
+    mv /msmtprc /etc/msmtprc && \
     mv /run_fpm /etc/services.d/fpm/run && \
     mv /etc/php5/php-fpm.conf /etc/php5/php-fpm.conf.verbose && \
     mv /php-fpm.conf /etc/php5/php-fpm.conf
@@ -51,6 +53,10 @@ RUN apk add \
       --repository http://dl-3.alpinelinux.org/alpine/edge/testing/ --allow-untrusted \
         php5-memcached php5-redis && \
     rm -rf /var/cache/apk/*
+
+# Fixup the sendmail path for msmtp and set it as mailer.
+RUN ln -s /usr/bin/msmtp /usr/bin/sendmail && \
+    sed -i 's/^;sendmail_path =/sendmail_path = \/usr\/bin\/sendmail -t/' /etc/php5/php.ini
 
 EXPOSE 9000
 
