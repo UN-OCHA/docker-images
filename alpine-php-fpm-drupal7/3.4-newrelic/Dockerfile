@@ -4,7 +4,7 @@ MAINTAINER Serban Teodorescu <teodorescu.serban@gmail.com>
 
 # Thanks to orakili <docker@orakili.net>
 
-ENV NR_VERSION php5-6.4.0.163-linux-musl
+ENV NR_VERSION php5-6.5.0.166-linux-musl
 
 COPY run_newrelic /
 
