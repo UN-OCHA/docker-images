@@ -1,0 +1,9 @@
+filebeat.prospectors:
+- input_type: log
+  paths:
+    - /var/log/*.log
+output.elasticsearch:
+  hosts: ["localhost:9200"]
+  template.name: "filebeat"
+  template.path: "/etc/filebeat/filebeat.template.json"
+  template.overwrite: false
