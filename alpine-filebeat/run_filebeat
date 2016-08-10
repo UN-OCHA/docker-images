@@ -1,0 +1,3 @@
+#!/usr/bin/with-contenv sh
+
+exec filebeat -e -c $FILEBEAT_CFG
