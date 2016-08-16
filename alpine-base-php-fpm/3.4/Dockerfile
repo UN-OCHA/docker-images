@@ -55,8 +55,10 @@ RUN apk add \
     rm -rf /var/cache/apk/*
 
 # Fixup the sendmail path for msmtp and set it as mailer.
+# Disable expose_php so we do not advertise a potentially vulnerable version.
 RUN ln -s /usr/bin/msmtp /usr/bin/sendmail && \
-    sed -i 's/^;sendmail_path =/sendmail_path = \/usr\/bin\/sendmail -t/' /etc/php5/php.ini
+    sed -i 's/^;sendmail_path =/sendmail_path = \/usr\/bin\/sendmail -t/' /etc/php5/php.ini && \
+    sed -i 's/^expose_php = On/expose_php = Off/' /etc/php5/php.ini
 
 EXPOSE 9000
 
