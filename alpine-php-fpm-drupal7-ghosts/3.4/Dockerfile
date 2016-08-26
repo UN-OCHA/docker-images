@@ -49,14 +49,21 @@ RUN apk update && \
     git && \
   rm -rf /var/cache/apk/*
 
-# RUN curl -L -o /tmp/casperjs.zip https://github.com/n1k0/casperjs/archive/master.zip && \
-#   mkdir /opt && \
-#   unzip /tmp/casperjs.zip -d /opt && \
-#   mv /opt/casperjs-master /opt/casperjs && \
-#   ln -s /opt/casperjs/bin/casperjs /usr/local/bin/casperjs && \
-#   rm -f /tmp/casperjs.zip
+# Add depends for capsper and phantom.
+RUN apk -U --no-cache add \
+      fontconfig \
+      libc6-compat \
+      python
 
-# RUN curl -L -o /tmp/phantomjs.tar.bz2 https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-1.9.8-linux-x86_64.tar.bz2 && \
-#   tar xf /tmp/phantomjs.tar.bz2 phantomjs-1.9.8-linux-x86_64/bin/phantomjs && \
-#   mv phantomjs-1.9.8-linux-x86_64/bin/phantomjs /usr/local/bin && \
-#   rm -rf phantomjs-1.9.8-linux-x86_64 /tmp/phantomjs.tar.bz2
+RUN curl -L -o /tmp/casperjs.zip https://github.com/n1k0/casperjs/archive/master.zip && \
+    mkdir /opt && \
+    unzip /tmp/casperjs.zip -d /opt && \
+    mv /opt/casperjs-master /opt/casperjs && \
+    ln -s /opt/casperjs/bin/casperjs /usr/local/bin/casperjs && \
+    rm -f /tmp/casperjs.zip
+
+# Found a possibly working PhantomJS at https://github.com/sgerrand/alpine-pkg-glibc/issues/13#issuecomment-241582002
+RUN curl -L -o /tmp/phantomjs.tar.bz2 https://github.com/Overbryd/docker-phantomjs-alpine/releases/download/2.11/phantomjs-alpine-x86_64.tar.bz2 && \
+    tar -C /opt -xf /tmp/phantomjs.tar.bz2 && \
+    ln -sf /opt/phantomjs/phantomjs /usr/local/bin/phantomjs && \
+    rm -rf /tmp/phantomjs.tar.bz2
