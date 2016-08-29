@@ -63,7 +63,12 @@ RUN curl -L -o /tmp/casperjs.zip https://github.com/n1k0/casperjs/archive/master
     rm -f /tmp/casperjs.zip
 
 # Found a possibly working PhantomJS at https://github.com/sgerrand/alpine-pkg-glibc/issues/13#issuecomment-241582002
-RUN curl -L -o /tmp/phantomjs.tar.bz2 https://github.com/Overbryd/docker-phantomjs-alpine/releases/download/2.11/phantomjs-alpine-x86_64.tar.bz2 && \
-    tar -C /opt -xf /tmp/phantomjs.tar.bz2 && \
-    ln -sf /opt/phantomjs/phantomjs /usr/local/bin/phantomjs && \
-    rm -rf /tmp/phantomjs.tar.bz2
+# RUN curl -L -o /tmp/phantomjs.tar.bz2 https://github.com/Overbryd/docker-phantomjs-alpine/releases/download/2.11/phantomjs-alpine-x86_64.tar.bz2 && \
+#     tar -C /opt -xf /tmp/phantomjs.tar.bz2 && \
+#     ln -sf /opt/phantomjs/phantomjs /usr/local/bin/phantomjs && \
+#     rm -rf /tmp/phantomjs.tar.bz2
+
+# Found an actual working PhantomJS at http://fabiorehm.com/blog/2015/07/22/building-a-minimum-viable-phantomjs-2-docker-image
+# It's a year old, but it's newer than the old one (1.9.8) and it works.
+RUN curl -Ls https://github.com/fgrehm/docker-phantomjs2/releases/download/v2.0.0-20150722/dockerized-phantomjs.tar.gz \
+      | tar xz -C /
