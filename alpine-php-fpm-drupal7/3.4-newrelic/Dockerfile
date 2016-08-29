@@ -1,10 +1,10 @@
 FROM unocha/alpine-php-fpm-drupal7:3.4
 
-MAINTAINER Serban Teodorescu <teodorescu.serban@gmail.com>
+MAINTAINER Peter Lieverdink <peterl@humanitarianresponse.info>
 
 # Thanks to orakili <docker@orakili.net>
 
-ENV NR_VERSION php5-6.5.0.166-linux-musl
+ENV NR_VERSION php5-6.6.1.172-linux-musl
 
 COPY run_newrelic /
 
