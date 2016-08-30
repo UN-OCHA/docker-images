@@ -5,6 +5,8 @@ RUN sed -i s/4000/48/g /etc/group && \
     sed -i s/4000/48/g /etc/passwd && \
     sed -i s/4000/48/g /etc/shadow
 
+RUN cat /etc/passwd
+
 RUN apk update && \
   apk add \
     php5-calendar \
@@ -70,5 +72,6 @@ RUN curl -L -o /tmp/casperjs.zip https://github.com/n1k0/casperjs/archive/master
 
 # Found an actual working PhantomJS at http://fabiorehm.com/blog/2015/07/22/building-a-minimum-viable-phantomjs-2-docker-image
 # It's a year old, but it's newer than the old one (1.9.8) and it works.
+# Mind you, only extract part of the archive, or our crafted passwd and shadow files wil be overwritten.
 RUN curl -Ls https://github.com/fgrehm/docker-phantomjs2/releases/download/v2.0.0-20150722/dockerized-phantomjs.tar.gz \
-      | tar xz -C /
+      | tar xz -C / bin etc/fonts etc/ssl lib lib64 usr/lib usr/local usr/share
