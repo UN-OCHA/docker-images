@@ -2,7 +2,7 @@ FROM unocha/alpine-base-s6:latest
 
 MAINTAINER Serban Teodorescu, teodorescu.serban@gmail.com
 
-RUN apk add --no-cache \
+RUN apk add --update --no-cache \
         python3 && \
     python3 -m ensurepip && \
     rm -r /usr/lib/python*/ensurepip && \
