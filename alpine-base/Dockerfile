@@ -8,8 +8,8 @@ ENV APPUSER_GID=4000 \
     APPUSER_UID=4000
 
 RUN apk update && \
-    apk add curl \
+    apk add --update-cache curl \
         nano && \
-    rm -rf /var/lib/apk/* && \
+    rm -rf /var/cache/apk/* && \
     addgroup -g $APPUSER_GID -S appuser && \
     adduser -u $APPUSER_UID -s /sbin/nologin -g 'Docker App User' -h /home/appuser -D -G appuser appuser

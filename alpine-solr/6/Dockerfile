@@ -11,7 +11,7 @@ ENV JDBC_PSQL_VERSION 9.4.1207
 
 COPY init-demo-core.sh run-solr /
 
-RUN apk add --update \
+RUN apk add --update-cache \
         bash \
         curl && \
     cd /tmp && \
@@ -32,7 +32,8 @@ RUN apk add --update \
     mkdir /etc/services.d/solr && \
     mv /run-solr /etc/services.d/solr/run && \
     sed -i 's/INFO/WARN/' /srv/solr/server/resources/log4j.properties && \
-    chmod +x /init-demo-core.sh
+    chmod +x /init-demo-core.sh && \
+    rm -rf /var/cache/apk/*
 
 EXPOSE 8983
 

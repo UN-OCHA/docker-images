@@ -11,7 +11,7 @@ ENV NGINX_UPLOADPROGRESS_VERSION v0.9.1
 
 RUN build_pkgs="build-base linux-headers openssl-dev pcre-dev wget zlib-dev" \
   && runtime_pkgs="ca-certificates openssl pcre zlib" \
-  && apk --update add ${build_pkgs} ${runtime_pkgs} \
+  && apk add --update-cache ${build_pkgs} ${runtime_pkgs} \
   && cd /tmp \
   && wget -q https://github.com/masterzen/nginx-upload-progress-module/archive/${NGINX_UPLOADPROGRESS_VERSION}.zip \
   && unzip ${NGINX_UPLOADPROGRESS_VERSION}.zip \
