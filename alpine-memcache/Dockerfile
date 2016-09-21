@@ -3,7 +3,7 @@ FROM unocha/alpine-base-s6:3.4
 MAINTAINER Serban Teodorescu <teodorescu.serban@gmail.com>
 
 ENV LANG=en_US.utf8 \
-    MEMCACHE_PORT=11212 \
+    MEMCACHE_PORT=11211 \
     MEMCACHE_MAX_MEMORY=1024 \
     MEMCACHE_SLAB_SIZE=1M \
     MEMCACHE_USER=memcached
@@ -17,4 +17,4 @@ RUN apk add --update-cache \
     mkdir -p /etc/services.d/memcache && \
     mv /run_memcache /etc/services.d/memcache/run
 
-EXPOSE 11212
+EXPOSE 11211
