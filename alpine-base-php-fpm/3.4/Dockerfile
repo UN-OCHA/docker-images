@@ -11,7 +11,7 @@ RUN mv /usr/bin/import /usr/bin/s6-import
 COPY php-fpm.conf run_fpm msmtprc /
 
 RUN apk update && \
-    apk add \
+    apk add --update-cache \
       msmtp \
       php5-bcmath \
       php5-bz2 \

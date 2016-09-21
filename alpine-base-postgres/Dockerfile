@@ -7,12 +7,12 @@ ENV LANG=en_US.utf8 \
 
 COPY run_postgres /
 
-RUN apk add --update \
+RUN apk add --update-cache \
         postgresql \
         postgresql-client \
         postgresql-contrib \
         && \
-    rm -rf /var/lib/apk/* && \
+    rm -rf /var/cache/apk/* && \
     mkdir -p /etc/services.d/postgres && \
     mv /run_postgres /etc/services.d/postgres/run
 

@@ -8,7 +8,7 @@ RUN sed -i s/4000/48/g /etc/group && \
 RUN cat /etc/passwd
 
 RUN apk update && \
-  apk add \
+  apk add --update-cache \
     php5-calendar \
     php5-exif \
     php5-ftp \
@@ -20,7 +20,7 @@ RUN apk update && \
   rm -rf /var/cache/apk/*
 
 RUN apk update && \
-  apk add \
+  apk add --update-cache \
     git \
     php5-dev \
     autoconf \
@@ -52,10 +52,11 @@ RUN apk update && \
   rm -rf /var/cache/apk/*
 
 # Add depends for capsper and phantom.
-RUN apk -U --no-cache add \
+RUN apk --update-cache add \
       fontconfig \
       libc6-compat \
-      python
+      python && \
+  rm -rf /var/cache/apk/*
 
 RUN curl -L -o /tmp/casperjs.zip https://github.com/n1k0/casperjs/archive/master.zip && \
     mkdir /opt && \

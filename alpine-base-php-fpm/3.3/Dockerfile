@@ -7,7 +7,7 @@ MAINTAINER Serban Teodorescu <teodorescu.serban@gmail.com>
 COPY php-fpm.conf run_fpm /
 
 RUN apk update && \
-    apk add \
+    apk add --update-cache \
       php-bcmath \
       php-bz2 \
       php-ctype \

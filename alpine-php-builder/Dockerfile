@@ -4,7 +4,7 @@ MAINTAINER orakili <docker@orakili.net>
 # Alpine based docker image.
 # Includes php composer and ruby bundler.
 
-RUN apk -U --no-cache add \
+RUN apk add --update-cache \
       curl \
       git \
       gzip \
@@ -35,6 +35,7 @@ RUN apk -U --no-cache add \
       ruby-io-console \
       ruby-rdoc \
       ruby-json \
+ && rm -rf /var/cache/apk/* \
  && curl -sS https://getcomposer.org/installer \
       | php -- --install-dir=/usr/local/bin --filename=composer
 

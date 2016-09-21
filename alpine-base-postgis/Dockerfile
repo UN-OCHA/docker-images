@@ -3,9 +3,9 @@ FROM unocha/alpine-base-postgres:latest
 MAINTAINER Serban Teodorescu <teodorescu.serban@gmail.com>
 
 ENV POSTGIS_VERSION 2.2.2
- 
+
 RUN echo "@testing http://nl.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories && \
-    apk add --update --no-cache \
+    apk add --update-cache \
         postgresql-dev \
         perl \
         file \
@@ -26,11 +26,12 @@ RUN echo "@testing http://nl.alpinelinux.org/alpine/edge/testing" >> /etc/apk/re
     ./configure && \
     echo "PERL = /usr/bin/perl" >> extensions/postgis/Makefile && \
     echo "PERL = /usr/bin/perl" >> extensions/postgis_topology/Makefile && \
-    make -s && \ 
+    make -s && \
     make -s install  && \
     cd / && \
     rm -rf /tmp/postgis-${POSTGIS_VERSION} && \
     apk del postgresql-dev perl file geos-dev \
             libxml2-dev gdal-dev proj4-dev \
-            gcc make libgcc g++
+            gcc make libgcc g++ && \
+    rm -rf /var/cache/apk/*
 

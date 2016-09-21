@@ -10,10 +10,10 @@ ENV LANG=en_US.utf8 \
 
 COPY run_memcache /
 
-RUN apk add --update \
+RUN apk add --update-cache \
         memcached \
         && \
-    rm -rf /var/lib/apk/* && \
+    rm -rf /var/cache/apk/* && \
     mkdir -p /etc/services.d/memcache && \
     mv /run_memcache /etc/services.d/memcache/run
 

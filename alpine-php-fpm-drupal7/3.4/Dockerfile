@@ -7,7 +7,7 @@ MAINTAINER Serban Teodorescu <teodorescu.serban@gmail.com>
 ENV COMPOSER_HASH e115a8dc7871f15d853148a7fbac7da27d6c0030b848d9b3dc09e2a0388afed865e6a3d6b3c0fad45c48e2b5fc1196ae
 
 RUN apk update && \
-    apk add \
+    apk add --update-cache \
       php5-cli \
       mysql-client \
       postgresql-client  && \

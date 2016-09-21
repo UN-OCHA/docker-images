@@ -7,7 +7,7 @@ MAINTAINER Serban Teodorescu <teodorescu.serban@gmail.com>
 COPY nginx.conf default.conf index.html run_nginx /
 
 # Install nginx.
-RUN apk --update add \
+RUN apk add --update-cache \
       nginx \
  && rm -rf /var/cache/apk/* \
  && mkdir -p /etc/services.d/nginx /srv/www/html /var/log/nginx /var/cache/nginx \

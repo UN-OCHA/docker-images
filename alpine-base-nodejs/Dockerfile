@@ -5,11 +5,11 @@ MAINTAINER Serban Teodorescu <teodorescu.serban@gmail.com>
 ENV NODE_APP_DIR=/srv/www \
     SRC_DIR=/src
 
-RUN apk add --update \
+RUN apk add --update-cache \
         git \
         nodejs-lts \
         && \
-    rm -rf /var/lib/apk/* && \
+    rm -rf /var/cache/apk/* && \
     npm install -g \
         grunt-cli \
         bower \

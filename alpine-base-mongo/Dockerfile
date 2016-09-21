@@ -5,6 +5,8 @@ MAINTAINER Serban Teodorescu <teodorescu.serban@gmail.com>
 ENV LANG=en_US.utf8
 
 RUN echo http://dl-cdn.alpinelinux.org/alpine/edge/testing >> /etc/apk/repositories && \
-    apk add --update --no-cache \
+    apk add --update-cache \
         mongodb \
-        mongodb-tools
+        mongodb-tools \
+        && \
+    rm -rf /var/cache/apk/*

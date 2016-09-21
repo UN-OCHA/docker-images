@@ -9,7 +9,7 @@ ENV LANG=en_US.utf8 \
 
 COPY run_filebeat filebeat* /
 
-RUN apk --update --no-cache add curl && \
+RUN apk add --update-cache curl && \
     curl https://download.elastic.co/beats/filebeat/filebeat-${FILEBEAT_VERSION}-linux-x86_64.tar.gz -o /filebeat.tar.gz && \
     echo "${FILEBEAT_SHA1}  filebeat.tar.gz" | sha1sum -c - && \
     tar xzvf filebeat.tar.gz && \
@@ -21,6 +21,7 @@ RUN apk --update --no-cache add curl && \
     cd / && \
     rm -rf filebeat* && \
     mkdir -p /etc/services.d/filebeat && \
-    mv /run_filebeat /etc/services.d/filebeat/run
+    mv /run_filebeat /etc/services.d/filebeat/run && \
+    rm -rf /var/cache/apk/*
 
 VOLUME ["/mnt"]

@@ -2,7 +2,7 @@ FROM unocha/alpine-nodejs:latest
 
 MAINTAINER Serban Teodorescu <teodorescu.serban@gmail.com>
 
-RUN apk add --no-cache --update \
+RUN apk add --update-cache \
         xvfb \
         ttf-freefont \
         fontconfig && \
@@ -10,8 +10,9 @@ RUN apk add --no-cache --update \
             --repository http://dl-3.alpinelinux.org/alpine/edge/testing/ \
             --allow-untrusted \
         wkhtmltopdf && \
-    apk add --no-cache --update \
+    apk add --update-cache \
         python \
         make \
         g++ && \
-    npm install wkhtmltox
+    npm install wkhtmltox && \
+    rm -rf /var/cache/apk/*
