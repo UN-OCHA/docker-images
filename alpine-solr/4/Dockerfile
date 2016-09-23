@@ -5,7 +5,8 @@ MAINTAINER Serban Teodorescu <teodorescu.serban@gmail.com>
 ENV SOLR_VERSION="4.10.4" \
     SOLR="solr-4.10.4" \
     JDBC_MYSQL_VERSION="5.1.38" \
-    JDBC_PSQL_VERSION="9.4.1207"
+    JDBC_PSQL_VERSION="9.4.1207" \
+    SOLR_HEAP_SIZE="512m"
 
 COPY run-solr /
 
