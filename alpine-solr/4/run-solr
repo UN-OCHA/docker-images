@@ -1,0 +1,7 @@
+#!/usr/bin/with-contenv sh
+
+BASEDIR=/srv/solr
+
+cd $BASEDIR
+
+exec bin/solr -f -m ${SOLR_HEAP_SIZE}
