@@ -27,6 +27,8 @@ COPY php-fpm.conf run_fpm msmtprc /
 
 RUN apk update && \
     apk add --update-cache \
+    apk add \
+      fcgi \
       msmtp \
       php5-bcmath \
       php5-bz2 \
@@ -76,6 +78,10 @@ RUN ln -s /usr/bin/msmtp /usr/bin/sendmail && \
     sed -i 's/^expose_php = On/expose_php = Off/' /etc/php5/php.ini
 
 EXPOSE 9000
+
+# Health check for the FPM server on port 9000.
+HEALTHCHECK --interval=30s --timeout=5s \
+        CMD REDIRECT_STATUS=true SCRIPT_NAME=/ping SCRIPT_FILENAME=/ping REQUEST_METHOD=GET cgi-fcgi -bind -connect 127.0.0.1:9000
 
 # Volumes
 # - Conf: /etc/php/ (php-fpm.conf, php.ini)
