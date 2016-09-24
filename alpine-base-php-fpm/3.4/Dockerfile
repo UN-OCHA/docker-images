@@ -27,7 +27,6 @@ COPY php-fpm.conf run_fpm msmtprc /
 
 RUN apk update && \
     apk add --update-cache \
-    apk add \
       fcgi \
       msmtp \
       php5-bcmath \
