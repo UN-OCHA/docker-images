@@ -4,6 +4,21 @@ MAINTAINER Serban Teodorescu <teodorescu.serban@gmail.com>
 
 # Thanks to orakili <docker@orakili.net>
 
+# A little bit of metadata management.
+ARG VERSION
+ARG VCS_URL
+ARG VCS_REF
+ARG BUILD_DATE
+
+LABEL org.label-schema.schema-version="1.0" \
+      org.label-schema.build-date=$BUILD_DATE \
+      org.label-schema.vendor="UN-OCHA" \
+      org.label-schema.version="5.6.26" \
+      org.label-schema.name="base-php-fpm" \
+      org.label-schema.description="This service provides a base php-fpm platform." \
+      org.label-schema.vcs-url=$VCS_URL \
+      org.label-schema.vcs-ref=$VCS_REF
+
 # Work around s6 containing a binary called `import' which
 # clashes with imagemagick. D'oh.
 RUN mv /usr/bin/import /usr/bin/s6-import

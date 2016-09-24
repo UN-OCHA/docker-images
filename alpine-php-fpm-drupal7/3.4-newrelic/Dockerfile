@@ -4,7 +4,16 @@ MAINTAINER Peter Lieverdink <peterl@humanitarianresponse.info>
 
 # Thanks to orakili <docker@orakili.net>
 
-ENV NR_VERSION php5-6.6.1.172-linux-musl
+LABEL org.label-schema.schema-version="1.0" \
+      org.label-schema.build-date=$BUILD_DATE \
+      org.label-schema.vendor="UN-OCHA" \
+      org.label-schema.version="5.6.26" \
+      org.label-schema.name="php-fpm-drupal7-nr" \
+      org.label-schema.description="This service provides a php-fpm platform with New Relic for Drupal 7 with Drush and composer." \
+      org.label-schema.vcs-url=$VCS_URL \
+      org.label-schema.vcs-ref=$VCS_REF
+
+ENV NR_VERSION php5-6.7.0.174-linux-musl
 
 COPY run_newrelic /
 
