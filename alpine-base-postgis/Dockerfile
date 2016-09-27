@@ -4,8 +4,8 @@ MAINTAINER Serban Teodorescu <teodorescu.serban@gmail.com>
 
 ENV POSTGIS_VERSION 2.2.2
 
-RUN echo "@testing http://nl.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories && \
-    apk add --update-cache \
+RUN echo "@testing http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories && \
+    apk add --update-cache --virtual .build-dependencies@testing \
         postgresql-dev \
         perl \
         file \
@@ -30,8 +30,6 @@ RUN echo "@testing http://nl.alpinelinux.org/alpine/edge/testing" >> /etc/apk/re
     make -s install  && \
     cd / && \
     rm -rf /tmp/postgis-${POSTGIS_VERSION} && \
-    apk del postgresql-dev perl file geos-dev \
-            libxml2-dev gdal-dev proj4-dev \
-            gcc make libgcc g++ && \
+    apk del .build-dependencies && \
     rm -rf /var/cache/apk/*
 
