@@ -4,28 +4,28 @@ MAINTAINER Serban Teodorescu <teodorescu.serban@gmail.com>
 
 # Thanks to orakili <docker@orakili.net>
 
-ENV COMPOSER_HASH e115a8dc7871f15d853148a7fbac7da27d6c0030b848d9b3dc09e2a0388afed865e6a3d6b3c0fad45c48e2b5fc1196ae
+ENV DRUSH_VERSION=7 \
+    DRUSH_RELEASE=7.4.0
 
-RUN apk update && \
-    apk add --update-cache \
+RUN apk add --update-cache \
       php-cli \
       mysql-client \
       postgresql-client  && \
-    rm -rf /var/cache/apk/*
-
-# Set unlimited memory for CLI php.
-RUN sed -i 's/^memory_limit = .*/memory_limit = -1/' /etc/php/php.ini
-
-# Install composer, as suggested by https://getcomposer.org/
-RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" && \
+    rm -rf /var/cache/apk/* && \
+    # Set unlimited memory for CLI php.
+    sed -i 's/^memory_limit = .*/memory_limit = -1/' /etc/php/php.ini && \
+    # Install composer, as suggested by https://getcomposer.org/
+    # and https://getcomposer.org/doc/faqs/how-to-install-composer-programmatically.md
+    COMPOSER_HASH=$(curl -sS https://composer.github.io/installer.sig) && \
+    php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" && \
     php -r "if (hash_file('SHA384', 'composer-setup.php') === '$COMPOSER_HASH') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;" && \
     php composer-setup.php --install-dir=/usr/bin --filename=composer && \
-    php -r "unlink('composer-setup.php');"
-
-# Install drush and symlink it somewhere useful.
-RUN COMPOSER_HOME=/usr/local/drush6 \
-    composer global require drush/drush 6.x
-RUN ln -sf /usr/local/drush6/vendor/bin/drush /usr/bin/drush
+    php -r "unlink('composer-setup.php');" && \
+    # Install drush and symlink it somewhere useful.
+    COMPOSER_HOME=/usr/local/drush$DRUSH_VERSION \
+      composer global require drush/drush:$DRUSH_RELEASE && \
+    ln -sf /usr/local/drush$DRUSH_VERSION/vendor/bin/drush /usr/bin/drush && \
+    drush status
 
 # Volumes
 # - Conf: /etc/php/ (php-fpm.conf, php.ini)
