@@ -6,8 +6,7 @@ MAINTAINER Serban Teodorescu <teodorescu.serban@gmail.com>
 
 COPY php-fpm.conf run_fpm /
 
-RUN apk update && \
-    apk add --update-cache \
+RUN apk add --update-cache \
       php-bcmath \
       php-bz2 \
       php-ctype \
@@ -32,23 +31,21 @@ RUN apk update && \
       php-zip \
       php-zlib && \
     rm -rf /var/cache/apk/* && \
+    # Add php5-redis from edge and fix installation.
+    apk add \
+      --update-cache --allow-untrusted \
+      --repository http://dl-3.alpinelinux.org/alpine/edge/testing/ --allow-untrusted \
+        php5-redis && \
+    rm -rf /var/cache/apk/* && \
+    mv /etc/php5/conf.d/redis.ini /etc/php/conf.d/redis.ini && \
+    rmdir /etc/php5/conf.d /etc/php5 && \
+    mv /usr/lib/php5/modules/redis.so /usr/lib/php/modules/redis.so && \
+    rmdir /usr/lib/php5/modules /usr/lib/php5 && \
+    # Setup directory structure and php config.
     mkdir -p /etc/services.d/fpm /srv/www /var/log/php && \
     mv /run_fpm /etc/services.d/fpm/run && \
     mv /etc/php/php-fpm.conf /etc/php/php-fpm.conf.verbose && \
     mv /php-fpm.conf /etc/php/php-fpm.conf
-
-# Add php5-redis from edge.
-RUN apk add \
-      --update-cache --allow-untrusted \
-      --repository http://dl-3.alpinelinux.org/alpine/edge/testing/ --allow-untrusted \
-        php5-redis && \
-    rm -rf /var/cache/apk/*
-
-# Redis installs to the wrong spot. Oops.
-RUN mv /etc/php5/conf.d/redis.ini /etc/php/conf.d/redis.ini && \
-    rmdir /etc/php5/conf.d /etc/php5 && \
-    mv /usr/lib/php5/modules/redis.so /usr/lib/php/modules/redis.so && \
-    rmdir /usr/lib/php5/modules /usr/lib/php5
 
 EXPOSE 9000
 

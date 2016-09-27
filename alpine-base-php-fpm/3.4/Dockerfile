@@ -19,13 +19,13 @@ LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.vcs-url=$VCS_URL \
       org.label-schema.vcs-ref=$VCS_REF
 
-# Work around s6 containing a binary called `import' which
-# clashes with imagemagick. D'oh.
-RUN mv /usr/bin/import /usr/bin/s6-import
-
 COPY php-fpm.conf run_fpm msmtprc /
 
-RUN apk update && \
+RUN \
+    # Work around s6 containing a binary called `import' which
+    # clashes with imagemagick.
+    mv /usr/bin/import /usr/bin/s6-import && \
+    # Install php libraries.
     apk add --update-cache \
       fcgi \
       msmtp \
@@ -54,25 +54,24 @@ RUN apk update && \
       php5-zip \
       php5-zlib && \
     rm -rf /var/cache/apk/* && \
+    # Add php-memcached and php-redis from edge.
+    apk add \
+      --update-cache --allow-untrusted \
+      --repository http://dl-3.alpinelinux.org/alpine/edge/testing/ --allow-untrusted \
+        php5-memcached php5-redis && \
+    rm -rf /var/cache/apk/* && \
+    # Restore S6 import binary.
+    mv /usr/bin/import /usr/bin/im-import && \
+    mv /usr/bin/s6-import /usr/bin/import && \
+    # Setup directory structure and php config.
     mkdir -p /etc/services.d/fpm /srv/www/html /var/log/php && \
     mv /msmtprc /etc/msmtprc && \
     mv /run_fpm /etc/services.d/fpm/run && \
     mv /etc/php5/php-fpm.conf /etc/php5/php-fpm.conf.verbose && \
-    mv /php-fpm.conf /etc/php5/php-fpm.conf
-
-RUN mv /usr/bin/import /usr/bin/im-import
-RUN mv /usr/bin/s6-import /usr/bin/import
-
-# Add php-redis from edge.
-RUN apk add \
-      --update-cache --allow-untrusted \
-      --repository http://dl-3.alpinelinux.org/alpine/edge/testing/ --allow-untrusted \
-        php5-memcached php5-redis && \
-    rm -rf /var/cache/apk/*
-
-# Fixup the sendmail path for msmtp and set it as mailer.
-# Disable expose_php so we do not advertise a potentially vulnerable version.
-RUN ln -s /usr/bin/msmtp /usr/bin/sendmail && \
+    mv /php-fpm.conf /etc/php5/php-fpm.conf && \
+    # Fixup the sendmail path for msmtp and set it as mailer.
+    # Disable expose_php so we do not advertise a potentially vulnerable version.
+    ln -s /usr/bin/msmtp /usr/bin/sendmail && \
     sed -i 's/^;sendmail_path =/sendmail_path = \/usr\/bin\/sendmail -t/' /etc/php5/php.ini && \
     sed -i 's/^expose_php = On/expose_php = Off/' /etc/php5/php.ini
 
