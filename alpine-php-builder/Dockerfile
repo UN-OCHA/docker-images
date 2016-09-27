@@ -34,10 +34,14 @@ RUN apk add --update-cache \
       ruby-bundler \
       ruby-io-console \
       ruby-rdoc \
-      ruby-json \
- && rm -rf /var/cache/apk/* \
- && curl -sS https://getcomposer.org/installer \
-      | php -- --install-dir=/usr/local/bin --filename=composer
+      ruby-json && \
+    rm -rf /var/cache/apk/* && \
+    cd /tmp && \
+    COMPOSER_HASH=$(curl -sS https://composer.github.io/installer.sig) && \
+    php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" && \
+    php -r "if (hash_file('SHA384', 'composer-setup.php') === '$COMPOSER_HASH') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;" && \
+    php composer-setup.php --install-dir=/usr/bin --filename=composer && \
+    php -r "unlink('composer-setup.php');"
 
 WORKDIR /tmp
 
