@@ -2,11 +2,11 @@ FROM unocha/alpine-jdk:8
 
 MAINTAINER Serban Teodorescu <teodorescu.serban@gmail.com>
 
-ENV SOLR_VERSION="4.10.4" \
-    SOLR="solr-4.10.4" \
-    JDBC_MYSQL_VERSION="5.1.38" \
-    JDBC_PSQL_VERSION="9.4.1207" \
-    SOLR_HEAP_SIZE="512m"
+ENV SOLR_VERSION=4.10.4 \
+    SOLR=solr-4.10.4 \
+    JDBC_MYSQL_VERSION=5.1.38 \
+    JDBC_PSQL_VERSION=9.4.1207 \
+    SOLR_HEAP_SIZE=512m
 
 COPY run-solr /
 
@@ -27,7 +27,7 @@ RUN apk add --update \
     gzip -dc /tmp/mysql-connector-java-$JDBC_MYSQL_VERSION.tar.gz | tar -x -T /tmp/include > /srv/solr/dist/mysql-connector-java-$JDBC_MYSQL_VERSION-bin.jar && \
     echo "cleaning up.." >&2 && \
     apk del curl || true && \
-    rm -rf /tmp/* && \
+    rm -rf /tmp/* /var/cache/apk/* && \
     echo "setting log level to warn.." && \
     sed -i 's/INFO/WARN/' /srv/solr/example/resources/log4j.properties && \
     echo "creating solr service.." && \
