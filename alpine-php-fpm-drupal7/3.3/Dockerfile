@@ -4,8 +4,8 @@ MAINTAINER Serban Teodorescu <teodorescu.serban@gmail.com>
 
 # Thanks to orakili <docker@orakili.net>
 
-ENV DRUSH_VERSION=7 \
-    DRUSH_RELEASE=7.4.0
+ENV DRUSH_VERSION=6 \
+    DRUSH_RELEASE=6.7.0
 
 RUN apk add --update-cache \
       php-cli \

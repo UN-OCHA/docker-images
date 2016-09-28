@@ -19,8 +19,8 @@ LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.vcs-url=$VCS_URL \
       org.label-schema.vcs-ref=$VCS_REF
 
-ENV DRUSH_VERSION=7 \
-    DRUSH_RELEASE=7.4.0
+ENV DRUSH_VERSION=6 \
+    DRUSH_RELEASE=6.7.0
 
 COPY drushrc.php /drushrc.php
 
