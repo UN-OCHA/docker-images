@@ -15,8 +15,9 @@ RUN mkdir -p /etc/services.d/mysql && \
     mv /run_mysql /etc/services.d/mysql/run && \
     mkdir -p /etc/fix-attrs.d && \
     cp /fix_data_dir /etc/fix-attrs.d/01-fix-data-dir && \
-    cp /fix_logs_dir /etc/fix-attrs.d/02-fix-logs-dir
+    cp /fix_logs_dir /etc/fix-attrs.d/02-fix-logs-dir && \
+    cp /fix_tmp_dir  /etc/fix-attrs.d/03-fix-tmp-dir
 
 EXPOSE 3306
 
-VOLUME ["/srv/db"]
+VOLUME ["/var/lib/mysql" "/var/log/mysql" "/var/tmp/mysql"]
