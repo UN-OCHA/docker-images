@@ -1,1 +1,1 @@
-/var/log/mysql mysql 0644 2700
+/var/log/mysql true mysql 0644 2700

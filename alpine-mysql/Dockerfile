@@ -3,7 +3,7 @@ FROM unocha/alpine-base-mysql
 MAINTAINER Serban Teodorescu <teodorescu.serban@gmail.com>
 
 ENV LANG=en_US.utf8 \
-    MYSQL_DIR=/srv/db \
+    MYSQL_DIR=/var/lib/mysql \
     MYSQL_ROOT_PASS=rootpass \
     MYSQL_DB=test_db \
     MYSQL_USER=test_user \
