@@ -1,0 +1,3 @@
+#!/usr/bin/with-contenv sh
+
+exec /usr/sbin/varnishd -j unix,user=$DAEMON_USER -F -a $LISTEN_ADDR:$LISTEN_PORT -f $CONFIG_FILE -s $STORAGE_BACKEND $VARNISHD_OPTS
