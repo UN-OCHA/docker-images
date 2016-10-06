@@ -19,7 +19,7 @@ RUN apk add --update-cache varnish && \
     mv /default.vcl /etc/varnish/ && \
     chown -R varnish:varnish /etc/varnish
 
+VOLUME ["/etc/varnish"]
+
 EXPOSE 80 6082
 
-# Volumes
-# - Conf: /etc/varnish (default.vcl)
