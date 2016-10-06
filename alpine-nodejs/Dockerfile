@@ -4,12 +4,12 @@ MAINTAINER Serban Teodorescu <teodorescu.serban@gmail.com>
 
 ENV NODE_APP_DIR=/srv/www
 
-COPY node-run package.json server.js /
+COPY run_node package.json server.js /
 
 WORKDIR "${NODE_APP_DIR}"
 
 RUN mkdir -p /srv/www /srv/example /etc/services.d/node && \
-    mv /node-run /etc/services.d/node/run && \
+    mv /run_node /etc/services.d/node/run && \
     mv /server.js /srv/example/ && \
     mv /package.json /srv/example/
 
