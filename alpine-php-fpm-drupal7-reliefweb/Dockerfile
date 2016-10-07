@@ -12,17 +12,11 @@ LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.vcs-ref=$VCS_REF
 
 ENV MUPDF_VERSION=1.9a \
-    PHP_HOEDOWN_VERSION=0.6.5 \
-    # Apache UID/GID on centos.
-    APPUSER_UID=48 \
-    APPUSER_GID=48
+    PHP_HOEDOWN_VERSION=0.6.5
 
-RUN \
-    # Change appuser.
-    chown -R $APPUSER_GID:$APPUSER_UID /home/appuser && \
-    deluser appuser && \
-    addgroup -g $APPUSER_GID -S appuser && \
-    adduser -u $APPUSER_UID -s /sbin/nologin -g 'Docker App User' -h /home/appuser -D -G appuser appuser && \
+COPY run_fpm /
+
+RUN mv -f /run_fpm /etc/services.d/fpm/run && \
     # Install dependencies to build MuPDF and the Hoedown php extension.
     apk add --update-cache --virtual .build-dependencies \
       autoconf \
