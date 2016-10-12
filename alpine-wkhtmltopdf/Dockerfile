@@ -2,6 +2,8 @@ FROM unocha/alpine-nodejs:latest
 
 MAINTAINER Serban Teodorescu <teodorescu.serban@gmail.com>
 
+ENV PORT=3000
+
 RUN apk add --update-cache \
         xvfb \
         ttf-freefont \
