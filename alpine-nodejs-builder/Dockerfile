@@ -13,6 +13,9 @@ RUN apk add --update \
         ruby-dev \
         libffi-dev && \
     gem install --no-document \
+        bootstrap-sass \
+        font-awesome-sass \
+        sass-globbing \
         compass && \
     npm install -g \
         less \
