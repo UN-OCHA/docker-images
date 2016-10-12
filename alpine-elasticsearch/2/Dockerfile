@@ -38,7 +38,7 @@ RUN \
 
 EXPOSE 9200 9300
 
-VOLUME /etc/elasticsearch /var/lib/elasticsearch /var/log/elasticsearch
+VOLUME ["/etc/elasticsearch" "/var/lib/elasticsearch" "/var/log/elasticsearch"]
 
 # Volumes
 # - Conf: /etc/elasticsearch
