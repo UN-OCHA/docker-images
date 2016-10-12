@@ -7,6 +7,7 @@ ENV DST_DIR=/dst
 ENTRYPOINT []
 
 RUN apk add --update \
+        rsync \
         ruby-bundler \
         build-base \
         ruby-dev \
