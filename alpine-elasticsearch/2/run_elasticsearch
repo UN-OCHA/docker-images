@@ -1,0 +1,4 @@
+#!/usr/bin/with-contenv sh
+set -e
+
+exec s6-setuidgid elasticsearch /opt/elasticsearch/bin/elasticsearch
