@@ -9,4 +9,4 @@ test "$(ls -A "$PGDATA" 2>/dev/null)" || exec s6-setuidgid postgres /usr/bin/ini
 args=""
 [ -z ${PG_CONFIG_FILE} ] || args="--config-file=${PG_CONFIG_FILE}"
 
-exec s6-setuidgid postgres /usr/bin/postgres -D ${PGDATA} $args
+exec s6-setuidgid postgres /usr/bin/postgres -h 0.0.0.0 -D ${PGDATA} $args
