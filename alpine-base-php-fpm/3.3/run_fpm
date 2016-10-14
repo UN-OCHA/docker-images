@@ -1,4 +1,0 @@
-#!/usr/bin/with-contenv sh
-set -e
-
-exec /usr/bin/php-fpm -c /etc/php/php.ini -y /etc/php/php-fpm.conf -F
