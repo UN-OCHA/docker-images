@@ -3,7 +3,7 @@ FROM unocha/alpine-base-s6:3.4
 MAINTAINER Serban Teodorescu <teodorescu.serban@gmail.com>
 
 ENV LANG=en_US.utf8 \
-    PGDATA=/srv/db
+    PGDATA=/var/lib/pgsql
 
 COPY run_postgres /
 
@@ -18,4 +18,4 @@ RUN apk add --update-cache \
 
 EXPOSE 5432
 
-VOLUME ["/srv/db"]
+VOLUME ["/var/lib/pgsql"]
