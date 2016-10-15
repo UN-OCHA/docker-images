@@ -2,7 +2,9 @@
 
 
 mkdir -p ${PGDATA}
-chown -R postgres:postgres ${PGDATA}
+
+# taken care of in initialization
+#chown -R postgres:postgres ${PGDATA}
 
 test "$(ls -A "$PGDATA" 2>/dev/null)" || exec s6-setuidgid postgres /usr/bin/initdb -D $PGDATA
 
