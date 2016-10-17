@@ -4,12 +4,14 @@ MAINTAINER Serban Teodorescu <teodorescu.serban@gmail.com>
 
 # Thanks to orakili <docker@orakili.net>
 
-# A little bit of metadata management.
+# Parse arguments for the build command.
 ARG VERSION
 ARG VCS_URL
 ARG VCS_REF
 ARG BUILD_DATE
 
+# A little bit of metadata management.
+# See http://label-schema.org/
 LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.build-date=$BUILD_DATE \
       org.label-schema.vendor="UN-OCHA" \
@@ -25,18 +27,16 @@ LABEL org.label-schema.schema-version="1.0" \
       info.humanitarianresponse.php.modules="bcmath bz2 ctype curl dom fpm gd iconv json mcrypt opcache openssl pdo pdo_mysql pdo_pgsql phar posix sockets xml xmlreader zip zlib memcached redis" \
       info.humanitarianresponse.php.sapi="fpm"
 
-# There is no php7-imagick, so no need to work around the s6 binary clash.
-# RUN mv /usr/bin/import /usr/bin/s6-import
-
 COPY php-fpm.conf run_fpm msmtprc /
 
-RUN apk update && \
-    apk add \
+RUN \
+    # Install standard packages from 3.4.
+    apk add --update-cache \
       fcgi \
       msmtp && \
     \
-    apk add \
-      --update-cache --allow-untrusted \
+    # Install php and depends from edge.
+    apk add --update-cache --allow-untrusted \
       --repository http://dl-cdn.alpinelinux.org/alpine/edge/main \
       --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing \
       --repository http://dl-cdn.alpinelinux.org/alpine/edge/community \
@@ -67,11 +67,16 @@ RUN apk update && \
         php7-zlib && \
     rm -rf /var/cache/apk/* && \
     \
+    # Setup directory structure and configure FPM.
     mkdir -p /etc/services.d/fpm /srv/www/html && \
     mv /msmtprc /etc/msmtprc && \
     mv /run_fpm /etc/services.d/fpm/run && \
     mv /php-fpm.conf /etc/php7/php-fpm.conf && \
     \
+    # Fixup the sendmail path for msmtp and set it as mailer.
+    ln -s /usr/bin/msmtp /usr/bin/sendmail && \
+    \
+     # Configure php.
     sed -i \
         -e "s/^expose_php.*/expose_php = Off/" \
         -e "s/^;date.timezone.*/date.timezone = UTC/" \
@@ -82,16 +87,17 @@ RUN apk update && \
         -e "s/^;sendmail_path =/sendmail_path = \/usr\/bin\/sendmail -t/" \
       /etc/php7/php.ini && \
     echo "error_log = \"/var/log/php/error.log\"" | tee -a /etc/php7/php.ini && \
+    \
+    # Configure PHP logs.
     rm -rf /var/log/php7 && \
     mkdir /var/log/php && \
     touch /var/log/php/error.log && \
     touch /var/log/php/fpm-error.log && \
-    touch /var/log/php/fpm-slow.log && \
-    ln -s /usr/bin/msmtp /usr/bin/sendmail
+    touch /var/log/php/fpm-slow.log
 
 EXPOSE 9000
 
-# Health check for the FPM server on port 9000.
+# Add a health check for the FPM server on port 9000.
 HEALTHCHECK --interval=30s --timeout=5s \
         CMD REDIRECT_STATUS=true SCRIPT_NAME=/ping SCRIPT_FILENAME=/ping REQUEST_METHOD=GET cgi-fcgi -bind -connect 127.0.0.1:9000
 

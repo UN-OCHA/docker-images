@@ -4,12 +4,14 @@ MAINTAINER Serban Teodorescu <teodorescu.serban@gmail.com>
 
 # Thanks to orakili <docker@orakili.net>
 
-# A little bit of metadata management.
+# Parse arguments for the build command.
 ARG VERSION
 ARG VCS_URL
 ARG VCS_REF
 ARG BUILD_DATE
 
+# A little bit of metadata management.
+# See http://label-schema.org/
 LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.build-date=$BUILD_DATE \
       org.label-schema.vendor="UN-OCHA" \
@@ -27,14 +29,17 @@ LABEL org.label-schema.schema-version="1.0" \
 
 COPY php-fpm.conf run_fpm msmtprc /
 
-# Work around s6 containing a binary called `import' which
-# clashes with imagemagick. D'oh.
-RUN mv /usr/bin/import /usr/bin/s6-import && \
+RUN \
+    # Work around s6 containing a binary called `import' which
+    # clashes with imagemagick. D'oh.
+    mv /usr/bin/import /usr/bin/s6-import && \
     \
-    apk update && \
+    # Install standard packages from 3.4.
     apk add --update-cache \
       fcgi \
       msmtp && \
+    \
+    # Install php and depends from edge.
     apk add --update-cache --allow-untrusted \
       --repository http://dl-3.alpinelinux.org/alpine/edge/main/ \
       --repository http://dl-3.alpinelinux.org/alpine/edge/testing/ \
@@ -65,16 +70,22 @@ RUN mv /usr/bin/import /usr/bin/s6-import && \
       php5-memcached \
       php5-redis && \
     rm -rf /var/cache/apk/* && \
+    \
+    # Restore S6 import binary.
+    mv /usr/bin/import /usr/bin/im-import && \
+    mv /usr/bin/s6-import /usr/bin/import && \
+    \
+    # Setup directory structure and configure FPM.
     mkdir -p /etc/services.d/fpm /srv/www/html && \
     mv /msmtprc /etc/msmtprc && \
     mv /run_fpm /etc/services.d/fpm/run && \
     mv /etc/php5/php-fpm.conf /etc/php5/php-fpm.conf.verbose && \
     mv /php-fpm.conf /etc/php5/php-fpm.conf && \
     \
-    mv /usr/bin/import /usr/bin/im-import && \
-    mv /usr/bin/s6-import /usr/bin/import && \
-    \
+    # Fixup the sendmail path for msmtp and set it as mailer.
     ln -s /usr/bin/msmtp /usr/bin/sendmail && \
+    \
+    # Configure php.
     sed -i \
         -e "s/^expose_php.*/expose_php = Off/" \
         -e "s/^;date.timezone.*/date.timezone = UTC/" \
@@ -85,6 +96,8 @@ RUN mv /usr/bin/import /usr/bin/s6-import && \
         -e "s/^;sendmail_path =/sendmail_path = \/usr\/bin\/sendmail -t/" \
       /etc/php5/php.ini && \
     echo "error_log = \"/var/log/php/error.log\"" | tee -a /etc/php5/php.ini && \
+    \
+    # Configure PHP logs.
     rm -rf /var/log/php5 && \
     mkdir /var/log/php && \
     touch /var/log/php/error.log && \
@@ -93,7 +106,7 @@ RUN mv /usr/bin/import /usr/bin/s6-import && \
 
 EXPOSE 9000
 
-# Health check for the FPM server on port 9000.
+# Add a health check for the FPM server on port 9000.
 HEALTHCHECK --interval=30s --timeout=5s \
         CMD REDIRECT_STATUS=true SCRIPT_NAME=/ping SCRIPT_FILENAME=/ping REQUEST_METHOD=GET cgi-fcgi -bind -connect 127.0.0.1:9000
 
