@@ -20,4 +20,4 @@ RUN mkdir -p /etc/services.d/mysql && \
 
 EXPOSE 3306
 
-VOLUME ["/var/lib/mysql" "/var/log/mysql" "/var/tmp/mysql"]
+VOLUME ["/var/lib/mysql", "/var/log/mysql", "/var/tmp/mysql"]
