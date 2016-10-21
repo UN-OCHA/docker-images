@@ -9,33 +9,32 @@ LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.vcs-url=$VCS_URL \
       org.label-schema.vcs-ref=$VCS_REF
 
-RUN sed -i s/4000/48/g /etc/group && \
+RUN \
+    # Change appuser UID and GID.
+    sed -i s/4000/48/g /etc/group && \
     sed -i s/4000/48/g /etc/group- && \
     sed -i s/4000/48/g /etc/passwd && \
-    sed -i s/4000/48/g /etc/shadow
-
-RUN cat /etc/passwd
-
-RUN apk update && \
-  apk add --update-cache \
-    php5-calendar \
-    php5-exif \
-    php5-ftp \
-    php5-gettext \
-    php5-imap \
-    php5-intl \
-    php5-xsl \
-    php5-soap && \
-  rm -rf /var/cache/apk/*
-
-RUN apk update && \
-  apk add --update-cache \
-    git \
-    php5-dev \
-    autoconf \
-    g++ \
-    make && \
-  cd /tmp && \
+    sed -i s/4000/48/g /etc/shadow && \
+    cat /etc/passwd && \
+    # Install additional php libraries.
+    apk add --update-cache \
+      php5-calendar \
+      php5-exif \
+      php5-ftp \
+      php5-gettext \
+      php5-imap \
+      php5-intl \
+      php5-xsl \
+      php5-soap && \
+    rm -rf /var/cache/apk/* && \
+    # Build igbinary php extension.
+    apk add --update-cache --virtual .build-dependencies \
+      git \
+      php5-dev \
+      autoconf \
+      g++ \
+      make && \
+    cd /tmp && \
     git clone https://github.com/phadej/igbinary && \
     cd igbinary && \
     phpize && \
@@ -44,30 +43,18 @@ RUN apk update && \
     make install && \
     echo 'extension=igbinary.so > /etc/php5/conf.d/igbinary.ini' && \
     cd .. && \
-  rm -rf igbinary && \
-  rm -rf /usr/include/php/ && \
-  apk del \
-    make \
-    g++ \
-    autoconf \
-    perl \
-    m4 \
-    binutils-libs \
-    binutils \
-    libpcrecpp \
-    pcre-dev \
-    php5-dev \
-    git && \
-  rm -rf /var/cache/apk/*
-
-# Add depends for capsper and phantom.
-RUN apk --update-cache add \
+    rm -rf igbinary && \
+    rm -rf /usr/include/php/ && \
+    apk del .build-dependencies && \
+    rm -rf /var/cache/apk/* && \
+    # Add dependencies for capsper and phantom.
+    apk add --update-cache \
       fontconfig \
       libc6-compat \
       python && \
-  rm -rf /var/cache/apk/*
-
-RUN curl -L -o /tmp/casperjs.zip https://github.com/n1k0/casperjs/archive/master.zip && \
+    rm -rf /var/cache/apk/* && \
+    # Install casper.
+    curl -L -o /tmp/casperjs.zip https://github.com/n1k0/casperjs/archive/master.zip && \
     mkdir /opt && \
     unzip /tmp/casperjs.zip -d /opt && \
     mv /opt/casperjs-master /opt/casperjs && \
