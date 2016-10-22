@@ -5,7 +5,7 @@ MAINTAINER Serban Teodorescu <teodorescu.serban@gmail.com>
 ENV LANG=en_US.utf8 \
     PGDATA=/var/lib/pgsql
 
-COPY run_postgres fix_data_dir /tmp
+COPY run_postgres fix_data_dir /tmp/
 
 RUN apk add --update-cache \
         postgresql \
