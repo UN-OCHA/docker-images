@@ -5,7 +5,7 @@ MAINTAINER Serban Teodorescu <teodorescu.serban@gmail.com>
 ENV LANG=en_US.utf8 \
     PGDATA=/var/lib/pgsql
 
-COPY run_postgres /
+COPY run_postgres fix_data_dir /
 
 RUN apk add --update-cache \
         postgresql \
@@ -13,7 +13,8 @@ RUN apk add --update-cache \
         postgresql-contrib \
         && \
     rm -rf /var/cache/apk/* && \
-    mkdir -p /etc/services.d/postgres && \
+    mkdir -p /etc/services.d/postgres /etc/fix-attrs.d && \
+    cp /fix_data_dir /etc/fix-attrs.d/01-fix-data-dir && \
     mv /run_postgres /etc/services.d/postgres/run
 
 EXPOSE 5432
