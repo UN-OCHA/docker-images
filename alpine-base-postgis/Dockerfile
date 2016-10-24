@@ -4,21 +4,24 @@ MAINTAINER Serban Teodorescu <teodorescu.serban@gmail.com>
 
 ENV POSTGIS_VERSION 2.2.2
 
-RUN echo "@testing http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories && \
-    apk add --update-cache --virtual .build-dependencies@testing \
-        postgresql-dev \
-        perl \
+RUN apk add --update-cache --virtual .build-dependencies \
         file \
-        geos@testing \
-        geos-dev@testing \
-        libxml2-dev \
-        gdal@testing \
-        gdal-dev@testing \
-        proj4@testing \
-        proj4-dev@testing \
+        g++ \
         gcc \
+        libgcc \
+        libxml2-dev \
         make \
-        libgcc g++ && \
+        perl \
+        postgresql-dev && \
+    # Packages from edge testing.
+    apk add --update-cache --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing \
+            --allow-untrusted --virtual .build-dependencies-testing \
+        gdal \
+        gdal-dev \
+        geos \
+        geos-dev \
+        proj4 \
+        proj4-dev && \
     cd /tmp && \
     wget http://download.osgeo.org/postgis/source/postgis-${POSTGIS_VERSION}.tar.gz -O - | tar -xz && \
     chown root:root -R postgis-${POSTGIS_VERSION} && \
@@ -30,6 +33,6 @@ RUN echo "@testing http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/ap
     make -s install  && \
     cd / && \
     rm -rf /tmp/postgis-${POSTGIS_VERSION} && \
-    apk del .build-dependencies && \
+    apk del .build-dependencies .build-dependencies-testing && \
     rm -rf /var/cache/apk/*
 
