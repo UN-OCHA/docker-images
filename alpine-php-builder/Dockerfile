@@ -9,6 +9,7 @@ ENV DRUSH_VERSION=6 \
 
 RUN apk add --update-cache \
       bash \
+      ca-certificates \
       curl \
       git \
       gzip \
@@ -16,6 +17,7 @@ RUN apk add --update-cache \
       patch \
       rsync \
       tar \
+      wget \
       php5-bcmath \
       php5-cli \
       php5-ctype \
