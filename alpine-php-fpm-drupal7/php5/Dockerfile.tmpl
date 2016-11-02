@@ -1,4 +1,4 @@
-FROM unocha/alpine-base-php-fpm:3.4
+FROM unocha/alpine-base-php-fpm:%%VERSION%%
 
 MAINTAINER Serban Teodorescu <teodorescu.serban@gmail.com>
 
@@ -13,7 +13,7 @@ ARG BUILD_DATE
 LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.build-date=$BUILD_DATE \
       org.label-schema.vendor="UN-OCHA" \
-      org.label-schema.version="5.6.26" \
+      org.label-schema.version=$VERSION \
       org.label-schema.name="php-fpm-drupal7" \
       org.label-schema.description="This service provides a php-fpm platform for Drupal 7 with Drush and composer." \
       org.label-schema.vcs-url=$VCS_URL \
@@ -46,7 +46,7 @@ RUN apk add --update-cache \
     # Install registry_rebuild to the appuser's homedir.
     drush -y @none dl --destination=/home/appuser/.drush/commands registry_rebuild && \
     # Ensure the appuser's drush directory is writable.
-    chown -R appuser:appuser /home/appuser/.drush \
+    chown -R appuser:appuser /home/appuser/.drush && \
     # Symlink the appuser's drush module to root's.
     mkdir -p /root/.drush && \
     ln -s /home/appuser/.drush/commands /root/.drush/commands && \
