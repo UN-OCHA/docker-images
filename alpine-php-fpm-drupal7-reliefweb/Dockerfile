@@ -1,4 +1,4 @@
-FROM unocha/alpine-php-fpm-drupal7:3.4
+FROM unocha/alpine-php-fpm-drupal7:5.6.26-0-1
 
 MAINTAINER orakili <docker@orakili.net>
 
