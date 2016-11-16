@@ -22,5 +22,5 @@ RUN apk add --update-cache \
     npm install wkhtmltox && \
     rm -rf /var/cache/apk/* && \
     mv /usr/bin/wkhtmltopdf /usr/bin/wkhtmltopdf.ini && \
-    mv /tmp/wrapper && \
+    mv /tmp/wrapper /usr/bin/wkhtmltopdf && \
     chmod +x /usr/bin/wkhtmltopdf
