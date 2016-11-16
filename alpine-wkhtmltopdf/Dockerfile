@@ -4,12 +4,15 @@ MAINTAINER Serban Teodorescu <teodorescu.serban@gmail.com>
 
 ENV PORT=3000
 
+COPY wrapper /tmp/
+
 RUN apk add --update-cache \
         xvfb \
+        dbus \
         ttf-freefont \
         fontconfig && \
     apk add --update-cache \
-            --repository http://dl-3.alpinelinux.org/alpine/edge/testing/ \
+            --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing/ \
             --allow-untrusted \
         wkhtmltopdf && \
     apk add --update-cache \
@@ -17,4 +20,7 @@ RUN apk add --update-cache \
         make \
         g++ && \
     npm install wkhtmltox && \
-    rm -rf /var/cache/apk/*
+    rm -rf /var/cache/apk/* && \
+    mv /usr/bin/wkhtmltopdf /usr/bin/wkhtmltopdf.ini && \
+    mv /tmp/wrapper && \
+    chmod +x /usr/bin/wkhtmltopdf
