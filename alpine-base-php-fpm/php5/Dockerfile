@@ -41,8 +41,6 @@ RUN \
     \
     # Install php and depends from edge.
     apk add --update-cache --allow-untrusted \
-      --repository http://dl-3.alpinelinux.org/alpine/edge/main/ \
-      --repository http://dl-3.alpinelinux.org/alpine/edge/testing/ \
       php5-bcmath \
       php5-bz2 \
       php5-ctype \
@@ -66,7 +64,10 @@ RUN \
       php5-xml \
       php5-xmlreader \
       php5-zip \
-      php5-zlib \
+      php5-zlib && \
+    apk add -U \
+      --repository http://dl-3.alpinelinux.org/alpine/edge/main/ \
+      --repository http://dl-3.alpinelinux.org/alpine/edge/testing/ \
       php5-memcached \
       php5-redis && \
     rm -rf /var/cache/apk/* && \
