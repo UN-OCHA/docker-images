@@ -1,7 +1,7 @@
 include ../alpine-base-php-fpm/Makefile.conf
 
 IMAGE=alpine-db-client
-VERSION=201612-01
+VERSION=201612-02
 MYSQL_VERSION=10.1.19-r0
 PGSQL_VERSION=9.5.4-r0
 

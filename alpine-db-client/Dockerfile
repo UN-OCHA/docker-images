@@ -1,4 +1,4 @@
-FROM unocha/alpine-base-s6:3.4
+FROM unocha/alpine-base-s6:latest
 MAINTAINER Peter Lieverdink <peterl@humanitarianresponse.info>
 
 # Parse arguments for the build command.
