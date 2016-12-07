@@ -1,7 +1,8 @@
 include ../alpine-base-php-fpm/Makefile.conf
 
 IMAGE=alpine-db-client
-VERSION=201612-02
+VERSION=201612-03
+MONGO_VERSION=r3.2.4-r1
 MYSQL_VERSION=10.1.19-r0
 PGSQL_VERSION=9.5.4-r0
 
@@ -35,4 +36,4 @@ clean_images:
 
 mrproper: clean_images clean
 
-.PHONY: clean
+.PHONY: clean push

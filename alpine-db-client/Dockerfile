@@ -6,6 +6,7 @@ ARG VERSION
 ARG VCS_URL
 ARG VCS_REF
 ARG BUILD_DATE
+ARG MONGO_VERSION
 ARG MYSQL_VERSION
 ARG PGSQL_VERSION
 
@@ -22,6 +23,7 @@ LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.architecture="x86_64" \
       org.label-schema.distribution="Alpine Linux" \
       org.label-schema.distribution-version="3.4" \
+      info.humanitarianresponse.mongodb=$MONGO_VERSION \
       info.humanitarianresponse.mysql=$MYSQL_VERSION \
       info.humanitarianresponse.postgres=$PGSQL_VERSION
 
@@ -33,6 +35,10 @@ RUN apk add --update-cache \
         postgresql-client \
         postgresql-contrib \
         && \
+    apk add --update-cache \
+      --repository http://dl-3.alpinelinux.org/alpine/edge/main/ \
+      --repository http://dl-3.alpinelinux.org/alpine/edge/testing/ \
+        mongodb-tools && \
     rm -rf /var/cache/apk/*
 
 WORKDIR /tmp
