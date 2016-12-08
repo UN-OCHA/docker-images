@@ -42,6 +42,10 @@ RUN apk add --update-cache \
     COMPOSER_HOME=/usr/local/drush$DRUSH_VERSION \
       composer global require drush/drush:$DRUSH_RELEASE && \
     ln -sf /usr/local/drush$DRUSH_VERSION/vendor/bin/drush /usr/bin/drush && \
+    # Patch drush to stop the "4 byte UTF-8 for mysql" warning on updb.
+    # See https://github.com/drush-ops/drush/issues/2270
+    sed -i 's/!= REQUIREMENT_OK/>= REQUIREMENT_OK/' \
+      /usr/local/drush$DRUSH_VERSION/vendor/drush/drush/commands/core/drupal/update_7.inc && \
     drush status && \
     # Install registry_rebuild to the appuser's homedir.
     drush -y @none dl --destination=/home/appuser/.drush/commands registry_rebuild && \
