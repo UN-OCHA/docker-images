@@ -1,11 +1,17 @@
-FROM unocha/alpine-php-fpm-drupal7:3.4
+FROM unocha/alpine-php-fpm-drupal7:%%UPSTREAM%%
 
-MAINTAINER Serban Teodorescu <teodorescu.serban@gmail.com>
+MAINTAINER UN-OCHA Operations <docker+ops@humanitarianresponse.info>
+
+# A little bit of metadata management.
+ARG BUILD_DATE
+ARG VERSION
+ARG VCS_URL
+ARG VCS_REF
 
 LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.build-date=$BUILD_DATE \
       org.label-schema.vendor="UN-OCHA" \
-      org.label-schema.version="5.6.26" \
+      org.label-schema.version=$VERSION \
       org.label-schema.name="php-fpm-drupal7-hrinfo" \
       org.label-schema.description="This service provides a php-fpm platform for the humanitarianresponse.info Drupal 7." \
       org.label-schema.vcs-url=$VCS_URL \

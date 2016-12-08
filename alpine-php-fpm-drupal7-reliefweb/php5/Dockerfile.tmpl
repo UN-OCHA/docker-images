@@ -1,18 +1,32 @@
-FROM unocha/alpine-php-fpm-drupal7:5.6.26-0-1
+FROM unocha/alpine-php-fpm-drupal7:%%UPSTREAM%%
 
 MAINTAINER orakili <docker@orakili.net>
+
+ENV MUPDF_VERSION=1.9a \
+    PHP_HOEDOWN_VERSION=0.6.5
+
+# A little bit of metadata management.
+ARG BUILD_DATE
+ARG VERSION
+ARG VCS_URL
+ARG VCS_REF
 
 LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.build-date=$BUILD_DATE \
       org.label-schema.vendor="UN-OCHA" \
-      org.label-schema.version="5.6.26" \
+      org.label-schema.version=$VERSION \
+      org.label-schema.vcs-url=$VCS_URL \
+      org.label-schema.vcs-ref=$VCS_REF \
       org.label-schema.name="php-fpm-drupal7-reliefweb" \
       org.label-schema.description="This service provides a php-fpm platform for the reliefweb.int Drupal 7 site with MuPDF and Hoedown." \
-      org.label-schema.vcs-url=$VCS_URL \
-      org.label-schema.vcs-ref=$VCS_REF
-
-ENV MUPDF_VERSION=1.9a \
-    PHP_HOEDOWN_VERSION=0.6.5
+      org.label-schema.architecture="x86_64" \
+      org.label-schema.distribution="Alpine Linux" \
+      org.label-schema.distribution-version="3.4" \
+      info.humanitarianresponse.php=$VERSION \
+      info.humanitarianresponse.php.modules="bcmath bz2 ctype curl dom fpm imagick json mcrypt mysql opcache openssl pdo pdo_mysql pdo_pgsql phar posix sockets xml xmlreader zip zlib memcached redis" \
+      info.humanitarianresponse.php.sapi="fpm" \
+      info.humanitarianresponse.hoedown=$PHP_HOEDOWN_VERSION \
+      info.humanitarianresponse.mupdf=$MUPDF_VERSION
 
 COPY run_fpm /
 
