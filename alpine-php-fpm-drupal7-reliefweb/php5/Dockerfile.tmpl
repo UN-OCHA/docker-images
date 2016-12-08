@@ -43,7 +43,7 @@ RUN mv -f /run_fpm /etc/services.d/fpm/run && \
     cd /tmp && \
     # Build and install MuPDF.
     mkdir -p /tmp/mupdf /opt/mupdf/bin &&\
-    curl -o mupdf-$MUPDF_VERSION-source.tar.gz http://mupdf.com/downloads/mupdf-$MUPDF_VERSION-source.tar.gz && \
+    curl -o mupdf-$MUPDF_VERSION-source.tar.gz http://mupdf.com/downloads/archive/mupdf-$MUPDF_VERSION-source.tar.gz && \
     tar -zxf mupdf-$MUPDF_VERSION-source.tar.gz && \
     cd mupdf-$MUPDF_VERSION-source && \
     # Fix CVE-2016-6265 and CVE-2016-6525.
