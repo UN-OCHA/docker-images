@@ -1,2 +1,7 @@
 .DS_Store
 buildlog.txt
+alpine-php-fpm-drupal7/php5/Dockerfile
+alpine-php-fpm-drupal7/php5-newrelic/Dockerfile
+alpine-php-fpm-drupal7-hrinfo/php5/Dockerfile
+alpine-php-fpm-drupal7-ghosts/php5/Dockerfile
+alpine-php-fpm-drupal7-reliefweb/php5/Dockerfile
