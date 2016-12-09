@@ -1,5 +1,6 @@
 FROM unocha/alpine-nodejs-builder
-MAINTAINER orakili <docker@orakili.net>
+
+MAINTAINER UN-OCHA Operations <ops+docker@humanitarianresponse.info>
 
 # Alpine based docker image.
 # Includes php composer, ruby bundler, less, npm, jasmine, compass and drush.
@@ -18,19 +19,21 @@ LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.version=$VERSION \
       org.label-schema.vcs-url=$VCS_URL \
       org.label-schema.vcs-ref=$VCS_REF \
-      org.label-schema.name="alpine-php-builder" \
+      org.label-schema.name="alpine-unified-builder" \
       org.label-schema.description="This service provides a builder container for PHP, with node and sass helpers." \
       org.label-schema.architecture="x86_64" \
       org.label-schema.distribution="Alpine Linux" \
       org.label-schema.distribution-version="3.4" \
       info.humanitarianresponse.php=$VERSION \
-      info.humanitarianresponse.php.modules="bcmath bz2 ctype curl dom fpm gd iconv imagick json mcrypt mysql opcache openssl pdo pdo_mysql pdo_pgsql phar posix sockets xml xmlreader zip zlib memcached redis" \
+      info.humanitarianresponse.php.modules="bcmath bz2 ctype curl dom gd iconv igbinary imagick json mcrypt mysql opcache openssl pdo pdo_mysql pdo_pgsql phar posix sockets xml xmlreader zip zlib memcached redis" \
       info.humanitarianresponse.php.sapi="cli" \
       info.humanitarianresponse.composer="1.2.1" \
       info.humanitarianresponse.drush="6.7.0" \
       info.humanitarianresponse.npm="2.15.1" \
       info.humanitarianresponse.compass="1.0.3" \
-      info.humanitarianresponse.jasmine="2.5.2"
+      info.humanitarianresponse.jasmine="2.5.2" \
+      info.humanitarianresponse.casperjs="1.1.3" \
+      info.humanitarianresponse.phantomjs="2.0.0"
 
 ENV DRUSH_VERSION=6 \
     DRUSH_RELEASE=6.7.0
@@ -98,6 +101,8 @@ RUN npm install --global \
     COMPOSER_HOME=/usr/local/drush$DRUSH_VERSION \
     composer global require drush/drush:$DRUSH_RELEASE && \
     ln -sf /usr/local/drush$DRUSH_VERSION/vendor/bin/drush /usr/bin/drush && \
+    sed -i 's/!= REQUIREMENT_OK/>= REQUIREMENT_OK/' \
+      /usr/local/drush$DRUSH_VERSION/vendor/drush/drush/commands/core/drupal/update_7.inc && \
     drush status && \
     # Build igbinary php extension.
     apk add --update-cache --virtual .build-dependencies \
