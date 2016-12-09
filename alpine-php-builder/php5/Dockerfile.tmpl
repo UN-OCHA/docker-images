@@ -4,8 +4,32 @@ MAINTAINER orakili <docker@orakili.net>
 # Alpine based docker image.
 # Includes php composer, ruby bundler and drush.
 
+# Parse arguments for the build command.
+ARG VERSION
+ARG VCS_URL
+ARG VCS_REF
+ARG BUILD_DATE
+
 ENV DRUSH_VERSION=6 \
     DRUSH_RELEASE=6.7.0
+
+# A little bit of metadata management.
+# See http://label-schema.org/
+LABEL org.label-schema.schema-version="1.0" \
+      org.label-schema.build-date=$BUILD_DATE \
+      org.label-schema.vendor="UN-OCHA" \
+      org.label-schema.version=$VERSION \
+      org.label-schema.vcs-url=$VCS_URL \
+      org.label-schema.vcs-ref=$VCS_REF \
+      org.label-schema.name="alpine-php-builder" \
+      org.label-schema.description="This service provides a PHP builder platform." \
+      org.label-schema.architecture="x86_64" \
+      org.label-schema.distribution="Alpine Linux" \
+      org.label-schema.distribution-version="3.4" \
+      info.humanitarianresponse.php=$VERSION \
+      info.humanitarianresponse.php.modules="bcmath bz2 ctype curl dom fpm gd iconv imagick json mcrypt mysql opcache openssl pdo pdo_mysql pdo_pgsql phar posix sockets xml xmlreader zip zlib" \
+      info.humanitarianresponse.php.sapi="cli" \
+      info.humanitarianresponse.drush=$DRUSH_RELEASE
 
 RUN apk add --update-cache \
       bash \
@@ -53,6 +77,8 @@ RUN apk add --update-cache \
     COMPOSER_HOME=/usr/local/drush$DRUSH_VERSION \
     composer global require drush/drush:$DRUSH_RELEASE && \
     ln -sf /usr/local/drush$DRUSH_VERSION/vendor/bin/drush /usr/bin/drush && \
+    sed -i 's/!= REQUIREMENT_OK/>= REQUIREMENT_OK/' \
+      /usr/local/drush$DRUSH_VERSION/vendor/drush/drush/commands/core/drupal/update_7.inc && \
     drush status
 
 WORKDIR /tmp
