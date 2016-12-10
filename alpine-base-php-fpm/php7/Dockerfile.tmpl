@@ -34,8 +34,6 @@ RUN \
     apk add --update-cache \
       fcgi \
       msmtp && \
-    \
-    # Install php and depends from edge.
     apk add --update-cache --allow-untrusted \
       --repository http://dl-cdn.alpinelinux.org/alpine/edge/main \
       --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing \
@@ -59,7 +57,6 @@ RUN \
         php7-pdo_pgsql \
         php7-phar \
         php7-posix \
-        php7-redis \
         php7-sockets \
         php7-xml \
         php7-xmlreader \
