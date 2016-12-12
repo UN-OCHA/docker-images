@@ -10,3 +10,4 @@ alpine-php-fpm-drupal7-ghosts/php5/Dockerfile
 alpine-php-fpm-drupal7-reliefweb/php5/Dockerfile
 alpine-php-fpm-drupal7-reliefweb/php5/Dockerfile
 alpine-unified-builder/php5/Dockerfile
+debian-elk/*/Dockerfile
