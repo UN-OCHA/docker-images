@@ -1,6 +1,6 @@
 include ../../Makefile.conf
 
-IMAGE=kibana
+IMAGE=logstash
 
 UPSTREAM=$$(UPSTREAM))
 VERSION=$$(VERSION))
