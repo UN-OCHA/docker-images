@@ -3,7 +3,7 @@ FROM unocha/alpine-base-s6:latest
 MAINTAINER Serban Teodorescu <teodorescu.serban@gmail.com>
 
 ENV NODE_APP_DIR=/srv/www \
-    NODE_PATH=/usr/local/lib/node_modules \
+    NODE_PATH=/usr/lib/node_modules \
     SRC_DIR=/src \
     NEW_RELIC_HOME=/srv/ \
     NEW_RELIC_LOG_LEVEL=info \
