@@ -21,7 +21,7 @@ RUN apk add --update-cache \
         newrelic \
         && \
     mkdir -p ${SRC_DIR} ${NODE_APP_DIR} && \
-    cp -a /usr/lib/node_modules/newrelic/newrelic.js ${NODE_APP_DIR}
+    cp -a /usr/lib/node_modules/newrelic/newrelic.js /srv
 
 VOLUME ["${SRC_DIR}", "${NODE_APP_DIR}"]
 
