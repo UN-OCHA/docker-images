@@ -20,8 +20,8 @@ RUN apk add --update-cache \
         bower \
         newrelic \
         && \
-    cp -a /usr/lib/node_modules/newrelic/newrelic.js /srv/www/ && \
-    mkdir -p ${SRC_DIR} ${NODE_APP_DIR}
+    mkdir -p ${SRC_DIR} ${NODE_APP_DIR} && \
+    cp -a /usr/lib/node_modules/newrelic/newrelic.js ${NODE_APP_DIR}
 
 VOLUME ["${SRC_DIR}", "${NODE_APP_DIR}"]
 
