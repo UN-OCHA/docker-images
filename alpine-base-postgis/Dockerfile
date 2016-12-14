@@ -4,21 +4,24 @@ MAINTAINER Serban Teodorescu <teodorescu.serban@gmail.com>
 
 ENV POSTGIS_VERSION 2.2.2
 
-RUN echo "@testing http://nl.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories && \
-    apk add --update-cache \
-        postgresql-dev \
-        perl \
+RUN apk add --update-cache --virtual .build-dependencies \
         file \
-        geos@testing \
-        geos-dev@testing \
-        libxml2-dev \
-        gdal@testing \
-        gdal-dev@testing \
-        proj4@testing \
-        proj4-dev@testing \
+        g++ \
         gcc \
+        libgcc \
+        libxml2-dev \
         make \
-        libgcc g++ && \
+        perl \
+        postgresql-dev && \
+    # Packages from edge testing.
+    apk add --update-cache --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing \
+            --allow-untrusted --virtual .build-dependencies-testing \
+        gdal \
+        gdal-dev \
+        geos \
+        geos-dev \
+        proj4 \
+        proj4-dev && \
     cd /tmp && \
     wget http://download.osgeo.org/postgis/source/postgis-${POSTGIS_VERSION}.tar.gz -O - | tar -xz && \
     chown root:root -R postgis-${POSTGIS_VERSION} && \
@@ -30,7 +33,5 @@ RUN echo "@testing http://nl.alpinelinux.org/alpine/edge/testing" >> /etc/apk/re
     make -s install  && \
     cd / && \
     rm -rf /tmp/postgis-${POSTGIS_VERSION} && \
-    apk del postgresql-dev perl file geos-dev \
-            libxml2-dev gdal-dev proj4-dev \
-            gcc make libgcc g++ && \
+    apk del .build-dependencies .build-dependencies-testing && \
     rm -rf /var/cache/apk/*
