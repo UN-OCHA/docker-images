@@ -2,18 +2,19 @@ FROM unocha/alpine-base-nodejs:latest
 
 MAINTAINER Serban Teodorescu <teodorescu.serban@gmail.com>
 
-ENV NODE_APP_DIR=/srv/www
+ENV NODE_APP_DIR=/srv/www \
+    PORT=3000
 
-COPY run_node package.json server.js /
+COPY run_node package.json server.js /tmp/
 
 WORKDIR "${NODE_APP_DIR}"
 
 RUN mkdir -p /srv/www /srv/example /etc/services.d/node && \
-    mv /run_node /etc/services.d/node/run && \
-    mv /server.js /srv/example/ && \
-    mv /package.json /srv/example/
+    mv /tmp/run_node /etc/services.d/node/run && \
+    mv /tmp/server.js /srv/example/ && \
+    mv /tmp/package.json /srv/example/
 
-EXPOSE 3000
+EXPOSE ${PORT}
 
 # mainly used to serve stuff so it makes sense to use ${NODE_APP_DIR} as WORKDIR
 VOLUME ["${NODE_APP_DIR}"]
