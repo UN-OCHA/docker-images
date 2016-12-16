@@ -2,6 +2,8 @@
 buildlog.txt
 alpine-base-php-fpm/*/Dockerfile
 alpine-elasticsearch/2/Dockerfile
+alpine-filebeat/Dockerfile
+alpine-logspout-logstash/Dockerfile
 alpine-php-builder/php5/Dockerfile
 alpine-php-fpm-drupal7/*/Dockerfile
 alpine-php-fpm-drupal7/php5-newrelic/Dockerfile
