@@ -1,0 +1,6 @@
+#!/usr/bin/with-contenv sh
+
+mkdir -p \
+    /var/lib/munin \
+    /var/log/munin \
+    /run/munin
