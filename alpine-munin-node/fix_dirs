@@ -1,0 +1,3 @@
+/var/lib/munin true munin 0644 0755
+/var/log/munin true munin 0644 0755
+/run/munin true munin 0644 0755

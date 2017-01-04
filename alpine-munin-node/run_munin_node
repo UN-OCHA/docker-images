@@ -1,0 +1,7 @@
+#!/usr/bin/with-contenv sh
+
+
+echo "You NEED to run this container in privileged mode, net host, and"
+echo "the following volumes read-only from the host: /, /proc, /sys"
+
+exec /usr/sbin/munin-node --config /etc/munin/munin-node.conf
