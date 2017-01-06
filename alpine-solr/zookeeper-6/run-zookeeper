@@ -1,0 +1,11 @@
+#!/usr/bin/with-contenv sh
+
+BASEDIR=/srv/zookeeper
+
+if [ -z "$ZOOKEEPER_START" ];
+  ZOOKEEPER_START="start-foreground"
+fi
+
+cd $BASEDIR
+
+bin/zkServer.sh $ZOOKEEPER_START
