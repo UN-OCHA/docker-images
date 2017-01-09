@@ -2,7 +2,7 @@
 
 BASEDIR=/srv/zookeeper
 
-if [ -z "$ZOOKEEPER_START" ];
+if [ -z "$ZOOKEEPER_START" ]; then
   ZOOKEEPER_START="start-foreground"
 fi
 

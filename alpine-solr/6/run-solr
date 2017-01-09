@@ -4,4 +4,4 @@ BASEDIR=/srv/solr
 
 cd $BASEDIR
 
-bin/solr start -f
+bin/solr start -f -force
