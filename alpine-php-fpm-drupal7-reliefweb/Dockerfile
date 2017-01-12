@@ -11,7 +11,7 @@ LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.vcs-url=$VCS_URL \
       org.label-schema.vcs-ref=$VCS_REF
 
-ENV MUPDF_VERSION=1.9a \
+ENV MUPDF_VERSION=1.10a \
     PHP_HOEDOWN_VERSION=0.6.5
 
 COPY run_fpm /
