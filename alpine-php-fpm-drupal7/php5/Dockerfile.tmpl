@@ -22,18 +22,13 @@ LABEL org.label-schema.schema-version="1.0" \
 ENV DRUSH_VERSION=6 \
     DRUSH_RELEASE=6.7.0
 
-COPY drushrc.php run_rsyslogd rsyslog.conf /
+COPY drushrc.php /
 
 RUN apk add --update-cache \
-      rsyslog \
       php5-cli \
       mysql-client \
       postgresql-client  && \
     rm -rf /var/cache/apk/* && \
-    # Add syslog with a local0 config for Drupal.
-    mkdir -p /etc/services.d/rsyslogd && \
-    mv /run_rsyslogd /etc/services.d/rsyslogd/run && \
-    mv /rsyslog.conf /etc/rsyslog.conf && \
     # Set unlimited memory for CLI php.
     sed -i 's/^memory_limit = .*/memory_limit = -1/' /etc/php5/php.ini && \
     # Install composer, as suggested by https://getcomposer.org/
