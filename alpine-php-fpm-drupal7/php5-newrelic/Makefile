@@ -1,8 +1,8 @@
 include ../../Makefile.conf
 include ../Makefile.conf
 
-VERSION=$$(VERSION)
-EXTRAVERSION=$$(EXTRAVERSION)
+UPSTREAM=$$(UPSTREAM))
+VERSION=$$(VERSION))
 
 all: template build tag clean_images
 
