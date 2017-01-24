@@ -47,8 +47,9 @@ RUN mv -f /run_fpm /etc/services.d/fpm/run && \
     tar -zxf mupdf-$MUPDF_VERSION-source.tar.gz && \
     cd mupdf-$MUPDF_VERSION-source && \
     # Fix CVE-2016-10141.
-    cd thirdparty/mujs && \
-    curl -sS -g "http://git.ghostscript.com/?p=mujs.git;a=patch;h=fa3d30fd18c348bb4b1f3858fb860f4fcd4b2045" | patch -p1 && \
+    cd thirdparty && \
+    rm -rf mujs && \
+    git clone git://git.ghostscript.com/mujs.git && \
     cd .. && \
     HAVE_X11=no make && HAVE_X11=no make prefix=/tmp/mupdf install && \
     mv /tmp/mupdf/bin/mutool /opt/mupdf/bin/mutool && \
