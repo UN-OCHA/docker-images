@@ -2,7 +2,7 @@ FROM unocha/alpine-php-fpm-drupal7:%%UPSTREAM%%
 
 MAINTAINER orakili <docker@orakili.net>
 
-ENV MUPDF_VERSION=1.9a \
+ENV MUPDF_VERSION=1.10a \
     PHP_HOEDOWN_VERSION=0.6.5
 
 # A little bit of metadata management.
@@ -43,12 +43,16 @@ RUN mv -f /run_fpm /etc/services.d/fpm/run && \
     cd /tmp && \
     # Build and install MuPDF.
     mkdir -p /tmp/mupdf /opt/mupdf/bin &&\
-    curl -o mupdf-$MUPDF_VERSION-source.tar.gz http://mupdf.com/downloads/archive/mupdf-$MUPDF_VERSION-source.tar.gz && \
+    curl -o mupdf-$MUPDF_VERSION-source.tar.gz http://mupdf.com/downloads/mupdf-$MUPDF_VERSION-source.tar.gz && \
     tar -zxf mupdf-$MUPDF_VERSION-source.tar.gz && \
     cd mupdf-$MUPDF_VERSION-source && \
     # Fix CVE-2016-6265 and CVE-2016-6525.
     curl -sS -g "http://git.ghostscript.com/?p=mupdf.git;a=patch;h=fa1936405b6a84e5c9bb440912c23d532772f958" | patch -p1 && \
     curl -sS -g "http://git.ghostscript.com/?p=mupdf.git;a=patch;h=39b0f07dd960f34e7e6bf230ffc3d87c41ef0f2e" | patch -p1 && \
+    # Fix CVE-2016-10141.
+    cd thirdparty/mujs && \
+    curl -sS -g "http://git.ghostscript.com/?p=mujs.git;a=patch;h=fa3d30fd18c348bb4b1f3858fb860f4fcd4b2045" | patch -p1 && \
+    cd .. && \
     HAVE_X11=no make && HAVE_X11=no make prefix=/tmp/mupdf install && \
     mv /tmp/mupdf/bin/mutool /opt/mupdf/bin/mutool && \
     HAVE_X11=no make clean && \
