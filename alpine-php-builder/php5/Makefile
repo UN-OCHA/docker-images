@@ -1,8 +1,9 @@
 include ../../Makefile.conf
 include ../Makefile.conf
 
-VERSION=$$(VERSION)
+UPSTREAM="none"
+VERSION=$$(VERSION))
 
-all: build tag
+all: template build tag clean_images
 
 mrproper: clean_images clean

@@ -1,5 +1,6 @@
-include ../../Makefile.conf
 include ../Makefile.conf
+
+IMAGE=alpine-hubot
 
 VERSION=$$(VERSION)
 
