@@ -33,7 +33,8 @@ LABEL org.label-schema.schema-version="1.0" \
       info.humanitarianresponse.compass="1.0.3" \
       info.humanitarianresponse.jasmine="2.5.2" \
       info.humanitarianresponse.casperjs="1.1.3" \
-      info.humanitarianresponse.phantomjs="2.0.0"
+      info.humanitarianresponse.phantomjs="2.0.0" \
+      info.humanitarianresponse.ruby="2.3.1"
 
 ENV DRUSH_VERSION=6 \
     DRUSH_RELEASE=6.7.0
@@ -87,9 +88,11 @@ RUN npm install --global \
       php5-zip \
       php5-zlib \
       ruby-bundler \
+      ruby-dev \
       ruby-io-console \
       ruby-rdoc \
-      ruby-json && \
+      ruby-json \
+      libffi-dev && \
     rm -rf /var/cache/apk/* && \
     cd /tmp && \
     COMPOSER_HASH=$(curl -sS https://composer.github.io/installer.sig) && \
