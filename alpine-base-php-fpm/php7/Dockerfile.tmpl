@@ -64,6 +64,8 @@ RUN \
         php7-zlib && \
     rm -rf /var/cache/apk/* && \
     \
+    # Symlink the PHP7 binary.
+    ln -s /usr/bin/php7 /usr/bin/php && \
     # Setup directory structure and configure FPM.
     mkdir -p /etc/services.d/fpm /srv/www/html && \
     mv /msmtprc /etc/msmtprc && \
@@ -95,7 +97,7 @@ RUN \
 EXPOSE 9000
 
 # Add a health check for the FPM server on port 9000.
-HEALTHCHECK --interval=30s --timeout=5s \
+HEALTHCHECK --interval=60s --timeout=5s \
         CMD REDIRECT_STATUS=true SCRIPT_NAME=/ping SCRIPT_FILENAME=/ping REQUEST_METHOD=GET cgi-fcgi -bind -connect 127.0.0.1:9000
 
 # Volumes
