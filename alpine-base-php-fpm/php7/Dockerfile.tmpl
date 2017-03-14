@@ -31,38 +31,37 @@ COPY php-fpm.conf run_fpm msmtprc /
 
 RUN \
     # Install standard packages from 3.4.
-    apk add --update-cache \
-      fcgi \
-      msmtp && \
+    echo "http://dl-cdn.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories && \
+    echo "http://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories && \
+    echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories && \
+    apk -U upgrade && \
     apk add --update-cache --allow-untrusted \
-      --repository http://dl-cdn.alpinelinux.org/alpine/edge/main \
-      --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing \
-      --repository http://dl-cdn.alpinelinux.org/alpine/edge/community \
-      --allow-untrusted \
-        php7-bcmath \
-        php7-bz2 \
-        php7-ctype \
-        php7-curl \
-        php7-dom \
-        php7-iconv \
-        php7-fpm \
-        php7-gd \
-        php7-iconv \
-        php7-json \
-        php7-mcrypt \
-        php7-memcached \
-        php7-opcache \
-        php7-openssl \
-        php7-pdo \
-        php7-pdo_mysql \
-        php7-pdo_pgsql \
-        php7-phar \
-        php7-posix \
-        php7-sockets \
-        php7-xml \
-        php7-xmlreader \
-        php7-zip \
-        php7-zlib && \
+      fcgi \
+      msmtp \
+      php7-bcmath \
+      php7-bz2 \
+      php7-ctype \
+      php7-curl \
+      php7-dom \
+      php7-iconv \
+      php7-fpm \
+      php7-gd \
+      php7-iconv \
+      php7-json \
+      php7-mcrypt \
+      php7-memcached \
+      php7-opcache \
+      php7-openssl \
+      php7-pdo \
+      php7-pdo_mysql \
+      php7-pdo_pgsql \
+      php7-phar \
+      php7-posix \
+      php7-sockets \
+      php7-xml \
+      php7-xmlreader \
+      php7-zip \
+      php7-zlib && \
     rm -rf /var/cache/apk/* && \
     \
     # Symlink the PHP7 binary.
