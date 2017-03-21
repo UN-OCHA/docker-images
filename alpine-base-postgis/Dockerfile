@@ -34,3 +34,5 @@ RUN echo "@testing http://nl.alpinelinux.org/alpine/edge/testing" >> /etc/apk/re
             libxml2-dev gdal-dev proj4-dev \
             gcc make libgcc g++ && \
     rm -rf /var/cache/apk/*
+
+COPY init.sh /srv/
