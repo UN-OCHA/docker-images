@@ -2,6 +2,30 @@
 // Specify a default drupal root.
 $options['r'] = '/srv/www/html';
 
+// What table *data* do we not need to backup or sync?
+$options['structure-tables'] = array(
+  'common' => array(
+    'accesslog',
+    'batch',
+    'cache',
+    'cache_*',
+    'ctools_css_cache',
+    'ctools_object_cache',
+    'flood',
+    'history',
+    'queue',
+    'semaphore',
+    'sessions',
+    'watchdog',
+  ),
+  'caches' => array(
+    'cache',
+    'cache_*',
+    'ctools_css_cache',
+    'ctools_object_cache',
+  ),
+);
+
 /**
  * Restore drush_backend_fork().
  */
