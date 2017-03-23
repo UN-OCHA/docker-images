@@ -4,7 +4,10 @@ MAINTAINER Serban Teodorescu <teodorescu.serban@gmail.com>
 
 ENV POSTGIS_VERSION 2.2.2
 
+COPY run_postgres /tmp/
+
 RUN echo "@testing http://nl.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories && \
+    mv /tmp/run_postgres /etc/services.s/postgres/run
     apk add --update-cache \
         postgresql-dev \
         perl \
