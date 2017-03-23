@@ -1,4 +1,4 @@
-FROM unocha/alpine-base-postgres:latest
+FROM unocha/alpine-postgres:latest
 
 MAINTAINER Serban Teodorescu <teodorescu.serban@gmail.com>
 
