@@ -1,5 +1,3 @@
 #!/usr/bin/with-contenv sh
 
-chown -R mongodb:mongodb ${DB_PATH}
-
-exec s6-setuidgid mongodb mongod --dbpath ${DB_PATH} ${EXTRA_OPTIONS}
+exec s6-setuidgid mongodb mongod --dbpath /srv/db --logpath /var/log/mongodb/mongo.log ${EXTRA_OPTIONS}
