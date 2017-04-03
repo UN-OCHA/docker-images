@@ -1,10 +1,13 @@
-FROM unocha/alpine-base-postgres:latest
+FROM unocha/alpine-postgres:latest
 
 MAINTAINER Serban Teodorescu <teodorescu.serban@gmail.com>
 
 ENV POSTGIS_VERSION 2.2.2
 
+COPY run_postgres /tmp/
+
 RUN echo "@testing http://nl.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories && \
+    mv /tmp/run_postgres /etc/services.d/postgres/run && \
     apk add --update-cache \
         postgresql-dev \
         perl \
@@ -34,5 +37,3 @@ RUN echo "@testing http://nl.alpinelinux.org/alpine/edge/testing" >> /etc/apk/re
             libxml2-dev gdal-dev proj4-dev \
             gcc make libgcc g++ && \
     rm -rf /var/cache/apk/*
-
-COPY init.sh /srv/
