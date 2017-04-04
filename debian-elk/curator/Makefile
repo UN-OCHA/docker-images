@@ -2,7 +2,8 @@ include ../../Makefile.conf
 
 IMAGE=curator
 
-UPSTREAM=$$(UPSTREAM))
+PYTHON=python:2.7-slim
+UPSTREAM=2.7-slim
 VERSION=$$(VERSION))
 EXTRAVERSION=$$(EXTRAVERSION))
 

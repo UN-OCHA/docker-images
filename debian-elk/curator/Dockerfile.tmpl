@@ -27,9 +27,15 @@ LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.distribution-version="8.5" \
       info.humanitarianresponse.curator=${VERSION}
 
-RUN pip install --quiet elasticsearch-curator==${CURATOR_VERSION} && \
+RUN apt-get update && \
+    apt-get install -y python-yaml build-essential && \
+    pip install elasticsearch-curator==${CURATOR_VERSION} && \
     groupadd -r -g ${CURATOR_GID} curator && \
     useradd -r -g curator -u ${CURATOR_UID} curator && \
-    mkdir -p /etc/curator
+    mkdir -p /etc/curator && \
+    apt-get remove --purge build-essential -y && \
+    apt-get autoremove -y && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* /tmp/*
 
 ENTRYPOINT [ "/usr/local/bin/curator", "--config", "/etc/curator/curator.yml" ]
