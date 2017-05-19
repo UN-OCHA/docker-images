@@ -1,4 +1,4 @@
-FROM unocha/alpine-base-s6:3.4
+FROM unocha/alpine-base-s6:%%UPSTREAM%%
 
 MAINTAINER Serban Teodorescu <teodorescu.serban@gmail.com>
 
@@ -22,19 +22,21 @@ LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.description="This service provides a base php-fpm platform." \
       org.label-schema.architecture="x86_64" \
       org.label-schema.distribution="Alpine Linux" \
-      org.label-schema.distribution-version="3.4" \
+      org.label-schema.distribution-version="3.5" \
       info.humanitarianresponse.php=$VERSION \
       info.humanitarianresponse.php.modules="bcmath bz2 ctype curl dom fpm gd iconv imagick json mcrypt mysql opcache openssl pdo pdo_mysql pdo_pgsql phar posix sockets xml xmlreader zip zlib memcached redis" \
       info.humanitarianresponse.php.sapi="fpm"
 
 COPY php-fpm.conf run_fpm msmtprc /
+COPY APKBUILD-php5-memcached APKBUILD-php5-redis abuild-root.patch /
 
 RUN \
-    # Work around s6 containing a binary called `import' which
-    # clashes with imagemagick. D'oh.
-    mv /usr/bin/import /usr/bin/s6-import && \
-    \
-    # Install standard packages from 3.4.
+    # This needs to happen here, or the root user won't be in
+    # the abuild group in the next command shell.
+    adduser root abuild
+
+RUN \
+    # Install standard packages from 3.5.
     apk add --update-cache \
       fcgi \
       msmtp && \
@@ -66,17 +68,44 @@ RUN \
       php5-zip \
       php5-zlib && \
     \
-    # Add extensions from edge.
-    apk add --update-cache --allow-untrusted \
-      --repository http://dl-3.alpinelinux.org/alpine/edge/main/ \
-      --repository http://dl-3.alpinelinux.org/alpine/edge/testing/ \
-      php5-memcached \
-      php5-redis && \
-    rm -rf /var/cache/apk/* && \
+    # Build php5-memcached and php5-redis from source.
+    apk add alpine-sdk && \
     \
-    # Restore S6 import binary.
-    mv /usr/bin/import /usr/bin/im-import && \
-    mv /usr/bin/s6-import /usr/bin/import && \
+    # Patch abuild, so it will run as root.
+    cd /usr/bin && \
+      patch -p0 -i /abuild-root.patch && \
+      rm -f /abuild-root.patch && \
+    \
+    # Add root to the abuild group and create abuild key.
+    abuild-keygen -a -q -n && \
+    \
+    # Setup our build environments.
+    mkdir -p /usr/src/php5-memcached && \
+      mv /APKBUILD-php5-memcached /usr/src/php5-memcached/APKBUILD && \
+    mkdir -p /usr/src/php5-redis && \
+      mv /APKBUILD-php5-redis /usr/src/php5-redis/APKBUILD && \
+    \
+    # Build the memcached extension. Delete the generated index, or the next
+    # step will fail because our key is not trusted.
+    cd /usr/src/php5-memcached && \
+      abuild -F -r -P /usr && \
+      rm -f /usr/src/x86_64/APKINDEX.tar.gz && \
+    \
+    # Build the redis extension. Delete the generated index, or the next
+    # step will fail because our key is not trusted.
+    cd /usr/src/php5-redis && \
+      abuild -F -r -P /usr && \
+      rm -f /usr/src/x86_64/APKINDEX.tar.gz && \
+    \
+    # Install all built extensions.
+    apk add -U --allow-untrusted /usr/src/x86_64/php5-*.apk && \
+    \
+    # Cleanup.
+    apk del alpine-sdk && \
+    rm -rf /root/.abuild && \
+    rm -rf /usr/src/* && \
+    rm -rf /var/cache/distfiles && \
+    rm -rf /var/cache/apk/* && \
     \
     # Setup directory structure and configure FPM.
     mkdir -p /etc/services.d/fpm /srv/www/html && \
