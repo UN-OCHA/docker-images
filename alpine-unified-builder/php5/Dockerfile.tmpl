@@ -1,4 +1,4 @@
-FROM unocha/alpine-nodejs-builder
+FROM unocha/alpine-nodejs-builder:%%UPSTREAM%%
 
 MAINTAINER UN-OCHA Operations <ops+docker@humanitarianresponse.info>
 
@@ -25,7 +25,7 @@ LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.distribution="Alpine Linux" \
       org.label-schema.distribution-version="3.6" \
       info.humanitarianresponse.php=$VERSION \
-      info.humanitarianresponse.php.modules="bcmath bz2 ctype curl dom gd iconv igbinary imagick json mcrypt mysql opcache openssl pdo pdo_mysql pdo_pgsql phar posix sockets xml xmlreader zip zlib memcached redis" \
+      info.humanitarianresponse.php.modules="bcmath bz2 ctype curl dom gd iconv igbinary json mcrypt mysql opcache openssl pdo pdo_mysql pdo_pgsql phar posix sockets xml xmlreader zip zlib memcached redis" \
       info.humanitarianresponse.php.sapi="cli" \
       info.humanitarianresponse.composer="1.2.1" \
       info.humanitarianresponse.drush="6.7.0" \
@@ -70,7 +70,6 @@ RUN npm install --global \
       php5-gd \
       php5-gettext \
       php5-iconv \
-      php5-imagick \
       php5-imap \
       php5-intl \
       php5-json \
@@ -119,7 +118,7 @@ RUN npm install --global \
     git clone https://github.com/phadej/igbinary && \
     cd igbinary && \
     phpize5 && \
-    ./configure CFLAGS="-O2 -g" --enable-igbinary 0-with-php-config=/usr/bin/php-config5 && \
+    ./configure CFLAGS="-O2 -g" --enable-igbinary --with-php-config=/usr/bin/php-config5 && \
     make && \
     make install && \
     echo 'extension=igbinary.so > /etc/php5/conf.d/igbinary.ini' && \
