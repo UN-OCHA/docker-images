@@ -1,4 +1,4 @@
-FROM unocha/alpine-base-s6:3.4
+FROM unocha/alpine-base-s6:3.6
 
 MAINTAINER Serban Teodorescu <teodorescu.serban@gmail.com>
 
@@ -22,7 +22,7 @@ LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.description="This service provides a base php-fpm platform." \
       org.label-schema.architecture="x86_64" \
       org.label-schema.distribution="Alpine Linux" \
-      org.label-schema.distribution-version="3.4" \
+      org.label-schema.distribution-version="3.6" \
       info.humanitarianresponse.php=$VERSION \
       info.humanitarianresponse.php.modules="bcmath bz2 ctype curl dom fpm gd iconv json mcrypt opcache openssl pdo pdo_mysql pdo_pgsql phar posix sockets xml xmlreader zip zlib memcached redis" \
       info.humanitarianresponse.php.sapi="fpm"
@@ -30,7 +30,7 @@ LABEL org.label-schema.schema-version="1.0" \
 COPY php-fpm.conf run_fpm msmtprc /
 
 RUN \
-    # Install standard packages from 3.4.
+    # Install standard packages from 3.6.
     echo "http://dl-cdn.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories && \
     echo "http://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories && \
     echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories && \
@@ -64,8 +64,6 @@ RUN \
       php7-zlib && \
     rm -rf /var/cache/apk/* && \
     \
-    # Symlink the PHP7 binary.
-    ln -s /usr/bin/php7 /usr/bin/php && \
     # Setup directory structure and configure FPM.
     mkdir -p /etc/services.d/fpm /srv/www/html && \
     mv /msmtprc /etc/msmtprc && \
