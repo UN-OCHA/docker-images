@@ -18,8 +18,10 @@ builddir="$srcdir/$_pkgreal-$_pkgver"
 
 build() {
  cd "$builddir"
- phpize || return 1
- ./configure --prefix=/usr || return 1
+ phpize5 || return 1
+ ./configure \
+    --prefix=/usr \
+    --with-php-config=/usr/bin/php-config5 || return 1
  make || return 1
 }
 

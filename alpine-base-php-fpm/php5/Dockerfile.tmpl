@@ -22,13 +22,13 @@ LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.description="This service provides a base php-fpm platform." \
       org.label-schema.architecture="x86_64" \
       org.label-schema.distribution="Alpine Linux" \
-      org.label-schema.distribution-version="3.5" \
+      org.label-schema.distribution-version="3.6" \
       info.humanitarianresponse.php=$VERSION \
       info.humanitarianresponse.php.modules="bcmath bz2 ctype curl dom fpm gd iconv imagick json mcrypt mysql opcache openssl pdo pdo_mysql pdo_pgsql phar posix sockets xml xmlreader zip zlib memcached redis" \
       info.humanitarianresponse.php.sapi="fpm"
 
 COPY php-fpm.conf run_fpm msmtprc /
-COPY APKBUILD-php5-memcached APKBUILD-php5-redis abuild-root.patch /
+COPY APKBUILD-php5-imagick APKBUILD-php5-memcached APKBUILD-php5-redis abuild-root.patch /
 
 RUN \
     # This needs to happen here, or the root user won't be in
@@ -36,7 +36,7 @@ RUN \
     adduser root abuild
 
 RUN \
-    # Install standard packages from 3.5.
+    # Install standard packages from 3.6.
     apk add --update-cache \
       fcgi \
       msmtp && \
@@ -51,7 +51,6 @@ RUN \
       php5-fpm \
       php5-gd \
       php5-iconv \
-      php5-imagick \
       php5-json \
       php5-mcrypt \
       php5-mysql \
@@ -68,7 +67,7 @@ RUN \
       php5-zip \
       php5-zlib && \
     \
-    # Build php5-memcached and php5-redis from source.
+    # Build php5-imagick, php5-memcached and php5-redis from source.
     apk add alpine-sdk && \
     \
     # Patch abuild, so it will run as root.
@@ -80,10 +79,18 @@ RUN \
     abuild-keygen -a -q -n && \
     \
     # Setup our build environments.
+    mkdir -p /usr/src/php5-imagick && \
+      mv /APKBUILD-php5-imagick /usr/src/php5-imagick/APKBUILD && \
     mkdir -p /usr/src/php5-memcached && \
       mv /APKBUILD-php5-memcached /usr/src/php5-memcached/APKBUILD && \
     mkdir -p /usr/src/php5-redis && \
       mv /APKBUILD-php5-redis /usr/src/php5-redis/APKBUILD && \
+    \
+    # Build the imagick extension. Delete the generated index, or the next
+    # step will fail because our key is not trusted.
+    cd /usr/src/php5-imagick && \
+      abuild -F -r -P /usr && \
+      rm -f /usr/src/x86_64/APKINDEX.tar.gz && \
     \
     # Build the memcached extension. Delete the generated index, or the next
     # step will fail because our key is not trusted.
@@ -101,7 +108,7 @@ RUN \
     apk add -U --allow-untrusted /usr/src/x86_64/php5-*.apk && \
     \
     # Cleanup.
-    apk del alpine-sdk && \
+    apk del libc-dev musl-dev alpine-sdk && \
     rm -rf /root/.abuild && \
     rm -rf /usr/src/* && \
     rm -rf /var/cache/distfiles && \
