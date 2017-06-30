@@ -63,7 +63,7 @@ RUN mv -f /run_fpm /etc/services.d/fpm/run && \
     # Build and install php-ext-hoedown.
     git clone --recursive --depth=1 --branch=$PHP_HOEDOWN_VERSION https://github.com/orakili/php-ext-hoedown.git /tmp/php-ext-hoedown && \
     cd /tmp/php-ext-hoedown && \
-    phpize && ./configure && make && make install && \
+    phpize5 && ./configure --with-php-config=/usr/bin/php-config5 && make && make install && \
     cd /tmp && rm -rf /tmp/php* && \
     echo "extension=/usr/lib/php5/modules/hoedown.so" > /etc/php5/conf.d/hoedown.ini && \
     # Remove build dependencies.

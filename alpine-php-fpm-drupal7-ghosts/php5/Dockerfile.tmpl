@@ -52,8 +52,8 @@ RUN \
     cd /tmp && \
     git clone https://github.com/phadej/igbinary && \
     cd igbinary && \
-    phpize && \
-    ./configure CFLAGS="-O2 -g" -enable-igbinary -with-php-config=/usr/bin/php-config && \
+    phpize5 && \
+    ./configure CFLAGS="-O2 -g" --enable-igbinary --with-php-config=/usr/bin/php-config5 && \
     make && \
     make install && \
     echo 'extension=igbinary.so > /etc/php5/conf.d/igbinary.ini' && \
