@@ -1,5 +1,7 @@
 .DS_Store
 buildlog.txt
+alpine-base/3.6/Dockerfile
+alpine-base-s6/3.6/Dockerfile
 alpine-base-php-fpm/*/Dockerfile
 alpine-elasticsearch/2/Dockerfile
 alpine-filebeat/Dockerfile
