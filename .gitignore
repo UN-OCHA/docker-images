@@ -4,6 +4,7 @@ alpine-base/3.5/Dockerfile
 alpine-base/3.6/Dockerfile
 alpine-base-nginx/Dockerfile
 alpine-base-nginx-extras/Dockerfile
+alpine-base-redis/Dockerfile
 alpine-base-s6/3.5/Dockerfile
 alpine-base-s6/3.6/Dockerfile
 alpine-base-php-fpm/*/Dockerfile
@@ -14,6 +15,7 @@ alpine-php-builder/*/Dockerfile
 alpine-php-fpm-drupal7/*/Dockerfile
 alpine-php-fpm-drupal7-*/*/Dockerfile
 alpine-php-fpm-drupal8/*/Dockerfile
+alpine-redis/Dockerfile
 alpine-solr/*/Dockerfile
 alpine-unified-builder/*/Dockerfile
 alpine-varnish/Dockerfile
