@@ -1,4 +1,4 @@
-FROM unocha/alpine-base-s6:3.4
+FROM unocha/alpine-base-s6:%%UPSTREAM%%
 
 MAINTAINER Serban Teodorescu <teodorescu.serban@gmail.com>
 
@@ -6,15 +6,38 @@ MAINTAINER Serban Teodorescu <teodorescu.serban@gmail.com>
 # and: Pavel Litvinenko <gerasim13@gmail.com>
 # and: Adrian B. Danieli "https://github.com/sickp"
 
-ENV NGINX_VERSION nginx-1.10.1
-ENV NGINX_UPLOADPROGRESS_VERSION v0.9.1
+# Parse arguments for the build command.
+ARG VERSION
+ARG VCS_URL
+ARG VCS_REF
+ARG BUILD_DATE
+
+ENV NGINX_VERSION nginx-${VERSION}
+ENV NGINX_UPLOADPROGRESS_VERSION 0.9.2
+
+# A little bit of metadata management.
+# See http://label-schema.org/
+LABEL org.label-schema.schema-version="1.0" \
+      org.label-schema.build-date=$BUILD_DATE \
+      org.label-schema.vendor="UN-OCHA" \
+      org.label-schema.version=$VERSION \
+      org.label-schema.vcs-url=$VCS_URL \
+      org.label-schema.vcs-ref=$VCS_REF \
+      org.label-schema.name="alpine-base-nginx-extras" \
+      org.label-schema.description="This service provides a base nginx platform with uploadprogress module." \
+      org.label-schema.architecture="x86_64" \
+      org.label-schema.distribution="Alpine Linux" \
+      org.label-schema.distribution-version="3.6" \
+      info.humanitarianresponse.nginx=$VERSION \
+      info.humanitarianresponse.nginx.modules="ssl realip addition sub sav flv mp4 gunzip gzip_static random_index secure_link stub_status auth_request threads stream ssl slice file-aio http_v2 uploadprogress" \
+      info.humanitarianresponse.nginx.uploadprogress=$NGINX_UPLOADPROGRESS_VERSION
 
 RUN build_pkgs="build-base linux-headers openssl-dev pcre-dev wget zlib-dev" \
   && runtime_pkgs="ca-certificates openssl pcre zlib" \
   && apk add --update-cache ${build_pkgs} ${runtime_pkgs} \
   && cd /tmp \
-  && wget -q https://github.com/masterzen/nginx-upload-progress-module/archive/${NGINX_UPLOADPROGRESS_VERSION}.zip \
-  && unzip ${NGINX_UPLOADPROGRESS_VERSION}.zip \
+  && wget -q https://github.com/masterzen/nginx-upload-progress-module/archive/v${NGINX_UPLOADPROGRESS_VERSION}.zip \
+  && unzip v${NGINX_UPLOADPROGRESS_VERSION}.zip \
   && wget http://nginx.org/download/${NGINX_VERSION}.tar.gz \
   && tar xzf ${NGINX_VERSION}.tar.gz \
   && cd /tmp/${NGINX_VERSION} \
@@ -52,7 +75,7 @@ RUN build_pkgs="build-base linux-headers openssl-dev pcre-dev wget zlib-dev" \
     --with-http_slice_module \
     --with-file-aio \
     --with-http_v2_module \
-    --add-module=/tmp/nginx-upload-progress-module-0.9.1 \
+    --add-module=/tmp/nginx-upload-progress-module-${NGINX_UPLOADPROGRESS_VERSION} \
   && make \
   && make install \
   && sed -i -e 's/#access_log  logs\/access.log  main;/access_log \/dev\/stdout;/' -e 's/#error_log  logs\/error.log  notice;/error_log stderr notice;/' /etc/nginx/nginx.conf \
