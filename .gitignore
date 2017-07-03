@@ -2,6 +2,7 @@
 buildlog.txt
 alpine-base/3.5/Dockerfile
 alpine-base/3.6/Dockerfile
+alpine-base-nginx/Dockerfile
 alpine-base-s6/3.5/Dockerfile
 alpine-base-s6/3.6/Dockerfile
 alpine-base-php-fpm/*/Dockerfile
