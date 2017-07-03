@@ -16,4 +16,5 @@ alpine-php-fpm-drupal7-*/*/Dockerfile
 alpine-php-fpm-drupal8/*/Dockerfile
 alpine-solr/*/Dockerfile
 alpine-unified-builder/*/Dockerfile
+alpine-varnish/Dockerfile
 debian-elk/*/Dockerfile
