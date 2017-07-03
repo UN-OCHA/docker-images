@@ -1,4 +1,4 @@
-FROM unocha/alpine-base-nginx-extras:%%UPSTREAM%%
+FROM unocha/alpine-base-nginx-extras:1.13.2-201707-02
 
 MAINTAINER Serban Teodorescu <teodorescu.serban@gmail.com>
 
