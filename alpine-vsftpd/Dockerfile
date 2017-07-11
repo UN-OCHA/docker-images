@@ -10,6 +10,7 @@ COPY vsftpd* /tmp/
 RUN apk add --update-cache \
         build-base \
         linux-pam-dev \
+        curl \
         openssl \
         ncftp \
         vsftpd && \
@@ -26,7 +27,8 @@ RUN apk add --update-cache \
     rm -rf /pwdfile && \
     apk del \
         build-base \
-        linux-pam-dev && \
+        linux-pam-dev \
+        curl && \
     rm -rf /var/cache/apk/*
 
 VOLUME /var/lib/ftp
