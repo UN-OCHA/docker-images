@@ -2,12 +2,22 @@ FROM unocha/alpine-base:3.6
 
 MAINTAINER Serban Teodorescu <teodorescu.serban@gmail.com>
 
-COPY vsftpd.conf /etc/vsftpd/
+ENV FTPUSER=ftpuser \
+    FTPPASS=ftppass
+
+COPY vsftpd* /tmp/
 
 RUN apk add --update-cache \
         build-base \
         linux-pam-dev \
+        openssl \
+        ncftp \
         vsftpd && \
+    mv /etc/vsftpd/vsftpd.conf /etc/vsftpd/vsftpd.conf.orig && \
+    mv /tmp/vsftpd.conf /etc/vsftpd && \
+    mv /tmp/vsftpd /etc/pam.d && \
+    mv /tmp/vsftpd.sh / && \
+    chmod +x /vsftpd.sh && \
     mkdir /pwdfile && \
     cd /pwdfile && \
     curl -sSL https://github.com/tiwe-de/libpam-pwdfile/archive/v1.0.tar.gz | tar xz --strip 1 && \
@@ -26,4 +36,7 @@ WORKDIR /var/lib/ftp
 
 EXPOSE 21
 
-CMD ["vsftpd", "/etc/vsftpd/vsftpd.conf"]
+CMD ["/vsftpd.sh"]
+
+    # mkdir /srv/ftp && \
+    # chown ftp /srv/ftp && \
