@@ -1,4 +1,4 @@
-FROM unocha/alpine-base:3.6
+FROM alpine:3.6
 
 MAINTAINER Serban Teodorescu <teodorescu.serban@gmail.com>
 
@@ -27,8 +27,6 @@ RUN apk add --update-cache \
     apk del \
         build-base \
         linux-pam-dev && \
-    passwd -l root && \
-    adduser -D virtual && \
     rm -rf /var/cache/apk/*
 
 VOLUME /var/lib/ftp
@@ -37,6 +35,3 @@ WORKDIR /var/lib/ftp
 EXPOSE 21
 
 CMD ["/vsftpd.sh"]
-
-    # mkdir /srv/ftp && \
-    # chown ftp /srv/ftp && \
