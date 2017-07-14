@@ -1,4 +1,4 @@
-FROM unocha/alpine-base-s6:latest
+FROM unocha/alpine-base-s6:3.6
 
 MAINTAINER Serban Teodorescu <teodorescu.serban@gmail.com>
 
@@ -12,15 +12,18 @@ ENV NODE_APP_DIR=/srv/www \
     NEW_RELIC_NO_CONFIG_FILE=True
 
 RUN apk add --update-cache \
-        git \
-        nodejs-lts \
-        && \
+        git && \
+    apk add --update-cache --repository http://dl-cdn.alpinelinux.org/alpine/edge/main \
+        nodejs \
+        nodejs-npm && \
     rm -rf /var/cache/apk/* && \
     npm install -g \
         grunt-cli \
         bower \
         newrelic \
-        && \
+        webpack \
+        yarn && \
+    npm cache clean && \
     mkdir -p ${SRC_DIR} ${NODE_APP_DIR} && \
     cp -a /usr/lib/node_modules/newrelic/newrelic.js /srv
 
