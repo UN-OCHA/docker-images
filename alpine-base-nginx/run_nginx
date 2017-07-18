@@ -1,4 +1,5 @@
-#!/bin/sh
+#!/usr/bin/with-contenv sh
+
 set -e
 
 exec /usr/sbin/nginx -c /etc/nginx/nginx.conf
