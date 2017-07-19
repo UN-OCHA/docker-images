@@ -1,0 +1,11 @@
+#!/usr/bin/with-contenv sh
+set -e -u
+
+# Change the appuser UID/GID.
+chown -R $APPUSER_UID:$APPUSER_GID /home/appuser
+deluser appuser
+addgroup -g $APPUSER_GID -S appuser
+adduser -u $APPUSER_UID -s /sbin/nologin -g 'Docker App User' -h /home/appuser -D -G appuser appuser
+
+# Launch php fpm process in the foreground.
+exec /usr/sbin/php-fpm7 -c /etc/php7/php.ini -y /etc/php7/php-fpm.conf -F
