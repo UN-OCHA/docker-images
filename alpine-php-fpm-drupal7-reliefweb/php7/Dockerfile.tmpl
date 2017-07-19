@@ -22,9 +22,10 @@ LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.distribution="Alpine Linux" \
       org.label-schema.distribution-version="3.6" \
       info.humanitarianresponse.php=$VERSION \
-      info.humanitarianresponse.php.modules="bcmath bz2 ctype curl dom fpm imagick json mcrypt mysql opcache openssl pdo pdo_mysql pdo_pgsql phar posix sockets xml xmlreader zip zlib memcached redis" \
+      info.humanitarianresponse.php.modules="bcmath bz2 ctype curl dom fpm gmp imagick json mbstring mcrypt mysql opcache openssl pdo pdo_mysql pdo_pgsql phar posix sockets xml xmlreader xmlwriter zip zlib memcached redis" \
       info.humanitarianresponse.php.sapi="fpm" \
-      info.humanitarianresponse.hoedown=$PHP_HOEDOWN_VERSION
+      info.humanitarianresponse.hoedown=$PHP_HOEDOWN_VERSION \
+      info.humanitarianresponse.mupdf="1.11-r1"
 
 COPY run_fpm /
 
