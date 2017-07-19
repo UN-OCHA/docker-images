@@ -42,10 +42,12 @@ RUN mv -f /run_fpm /etc/services.d/fpm/run && \
     apk add --virtual .build-dependencies \
       autoconf \
       build-base \
+      file \
       git \
       gzip \
       patch \
       php7-dev \
+      re2c \
       tar && \
     cd /tmp && \
     # Build and install php-ext-hoedown.
