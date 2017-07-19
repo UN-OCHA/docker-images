@@ -22,7 +22,9 @@ LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.distribution="Alpine Linux" \
       org.label-schema.distribution-version="3.4" \
       info.humanitarianresponse.hubot=$VERSION \
-      info.humanitarianresponse.hubot.plugins="hubot-auth hubot-brain-inspect hubot-diagnostics hubot-factoids hubot-flowdock hubot-google-images hubot-google-translate hubot-help hubot-karma hubot-maps hubot-pugme hubot-redis-brain hubot-rules hubot-scripts hubot-shipit"
+      info.humanitarianresponse.hubot.plugins="hubot-auth hubot-brain-inspect hubot-diagnostics hubot-factoids hubot-flowdock hubot-google-images hubot-google-translate hubot-help hubot-karma hubot-maps hubot-pugme hubot-redis-brain hubot-rules hubot-scripts hubot-shipit" \
+      info.humanitarianresponse.hubot.depends="twilio"
+
 
 COPY package.json /
 
