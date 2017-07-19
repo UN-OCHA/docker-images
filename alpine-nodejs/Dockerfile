@@ -9,7 +9,7 @@ COPY run_node package.json server.js /tmp/
 
 WORKDIR "${NODE_APP_DIR}"
 
-RUN mkdir -p /srv/www /srv/example /etc/services.d/node && \
+RUN mkdir -p /srv/www /srv/example /etc/services.d/node /root && \
     mv /tmp/run_node /etc/services.d/node/run && \
     mv /tmp/server.js /srv/example/ && \
     mv /tmp/package.json /srv/example/
