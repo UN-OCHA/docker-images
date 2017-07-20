@@ -35,6 +35,7 @@ RUN apk add --update-cache \
         curl \
         make \
         build-base \
+        openssh-client \
         && \
     mkdir -p $NODE_APP_DIR && \
     mv /package.json $NODE_APP_DIR && \
