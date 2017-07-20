@@ -9,7 +9,7 @@
     "hubot-auth": "^2.0.0",
     "hubot-brain-inspect": "0.0.1",
     "hubot-diagnostics": "0.0.1",
-    "hubot-factoids": "git://github.com/attiks/hubot-factoids#private-factoid",
+    "hubot-factoids": "git://github.com/attiks/hubot-factoids#dev",
     "hubot-flowdock": "^0.7.6",
     "hubot-google-images": "^0.2.6",
     "hubot-google-translate": "^0.2.0",
