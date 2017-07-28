@@ -24,7 +24,7 @@ LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.distribution="Alpine Linux" \
       org.label-schema.distribution-version="3.6" \
       info.humanitarianresponse.php=$VERSION \
-      info.humanitarianresponse.php.modules="bcmath bz2 ctype curl dom fpm gd iconv imagick json mcrypt mysql opcache openssl pdo pdo_mysql pdo_pgsql phar posix sockets xml xmlreader zip zlib memcached redis" \
+      info.humanitarianresponse.php.modules="bcmath bz2 ctype curl dom fpm gd iconv imagick json mcrypt mysql opcache openssl pdo pdo_mysql pdo_pgsql phar posix sockets xml xmlreader xmlwriter zip zlib memcached redis" \
       info.humanitarianresponse.php.sapi="fpm"
 
 COPY php-fpm.conf run_fpm msmtprc /
@@ -64,11 +64,13 @@ RUN \
       php5-sockets \
       php5-xml \
       php5-xmlreader \
+      php5-xmlwriter \
       php5-zip \
       php5-zlib && \
     \
     # Build php5-imagick, php5-memcached and php5-redis from source.
-    apk add alpine-sdk && \
+    apk add --virtual .build-dependencies \
+      alpine-sdk && \
     \
     # Patch abuild, so it will run as root.
     cd /usr/bin && \
@@ -108,7 +110,7 @@ RUN \
     apk add -U --allow-untrusted /usr/src/x86_64/php5-*.apk && \
     \
     # Cleanup.
-    apk del libc-dev musl-dev alpine-sdk && \
+    apk del .build-dependencies && \
     rm -rf /root/.abuild && \
     rm -rf /usr/src/* && \
     rm -rf /var/cache/distfiles && \
@@ -122,6 +124,7 @@ RUN \
     mv /php-fpm.conf /etc/php5/php-fpm.conf && \
     \
     # Fixup the sendmail path for msmtp and set it as mailer.
+    ln -s /usr/bin/msmtp /usr/sbin/sendmail && \
     ln -s /usr/bin/msmtp /usr/bin/sendmail && \
     \
     # Configure php.
@@ -132,7 +135,7 @@ RUN \
         -e "s/^max_execution_time.*/max_execution_time = 300/" \
         -e "s/^post_max_size.*/post_max_size = 128M/" \
         -e "s/^upload_max_filesize.*/upload_max_filesize = 128M/" \
-        -e "s/^;sendmail_path =/sendmail_path = \/usr\/bin\/sendmail -t/" \
+        -e "s/^;sendmail_path =/sendmail_path = \/usr\/sbin\/sendmail -t/" \
       /etc/php5/php.ini && \
     echo "error_log = \"/var/log/php/error.log\"" | tee -a /etc/php5/php.ini && \
     \
