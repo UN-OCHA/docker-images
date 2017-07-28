@@ -76,8 +76,8 @@ RUN \
     mv /php-fpm.conf /etc/php7/php-fpm.conf && \
     \
     # Fixup the sendmail path for msmtp and set it as mailer.
-    ln -s /usr/bin/msmtp /usr/sbin/sendmail && \
-    ln -s /usr/bin/msmtp /usr/bin/sendmail && \
+    ln -sf /usr/bin/msmtp /usr/sbin/sendmail && \
+    ln -sf /usr/bin/msmtp /usr/bin/sendmail && \
     \
      # Configure php.
     sed -i \
