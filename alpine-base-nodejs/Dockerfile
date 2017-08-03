@@ -4,6 +4,8 @@ MAINTAINER Serban Teodorescu <teodorescu.serban@gmail.com>
 
 ENV NODE_APP_DIR=/srv/www \
     NODE_PATH=/usr/lib/node_modules \
+    NPM_CONFIG_SPIN=false \
+    NPM_CONFIG_PROGRESS=false \
     SRC_DIR=/src \
     NEW_RELIC_HOME=/srv/ \
     NEW_RELIC_LOG_LEVEL=info \
@@ -24,10 +26,15 @@ RUN apk add --update-cache \
         webpack \
         yarn && \
     npm cache clean && \
+    rm -rf /tmp && \
+    mkdir -p /tmp && \
+    chmod 1777 /tmp && \
     mkdir -p ${SRC_DIR} ${NODE_APP_DIR} && \
     cp -a /usr/lib/node_modules/newrelic/newrelic.js /srv
 
-VOLUME ["${SRC_DIR}", "${NODE_APP_DIR}"]
+#define the volumes at run time - far better
+#VOLUME ["${SRC_DIR}", "${NODE_APP_DIR}"]
 
 # mainly used to build stuff so it makes sense to use ${SRC_DIR} as WORKDIR
-WORKDIR ${SRC_DIR}
+# but we let the downstream images to decide
+#WORKDIR ${SRC_DIR}
