@@ -17,4 +17,5 @@ RUN mkdir -p /srv/www /srv/example /etc/services.d/node /root && \
 EXPOSE ${PORT}
 
 # mainly used to serve stuff so it makes sense to use ${NODE_APP_DIR} as WORKDIR
-VOLUME ["${NODE_APP_DIR}"]
+# but it doesnt make sense to make a volume out of it, unless you are doing it at runtime.
+# VOLUME ["${NODE_APP_DIR}"]
