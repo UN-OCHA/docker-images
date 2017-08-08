@@ -26,7 +26,7 @@ LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.architecture="x86_64" \
       org.label-schema.distribution="Alpine Linux" \
       org.label-schema.distribution-version="3.6" \
-      info.humanitarianresponse.elasticsearch=$VERSION
+      info.humanitarianresponse.elasticsearch=$ELASTICSEARCH_VERSION
 
 COPY run_elasticsearch fix_* elasticsearch.yml logging.yml /
 
