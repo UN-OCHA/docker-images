@@ -1,6 +1,11 @@
-FROM unocha/alpine-base-s6:3.4
+FROM unocha/alpine-base-s6:3.6
 
 MAINTAINER orakili <docker@orakili.net>
+
+ENV ELASTICSEARCH_VERSION=2.4.6 \
+    ELASTICSEARCH_SHA1=c3441bef89cd91206edf3cf3bd5c4b62550e60a9 \
+    ELASTICSEARCH_URL=https://download.elastic.co/elasticsearch/release/org/elasticsearch/distribution/tar/elasticsearch \
+    ES_HEAP_SIZE=1g
 
 # Parse arguments for the build command.
 ARG VERSION
@@ -20,15 +25,10 @@ LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.description="This service provides an elasticsearch container." \
       org.label-schema.architecture="x86_64" \
       org.label-schema.distribution="Alpine Linux" \
-      org.label-schema.distribution-version="3.4" \
+      org.label-schema.distribution-version="3.6" \
       info.humanitarianresponse.elasticsearch=$VERSION
 
 COPY run_elasticsearch fix_* elasticsearch.yml logging.yml /
-
-ENV ELASTICSEARCH_VERSION=2.4.1 \
-    ELASTICSEARCH_SHA1=6a6acfc7bf7b4354dc6136daea54db1c844d632f \
-    ELASTICSEARCH_URL=https://download.elastic.co/elasticsearch/release/org/elasticsearch/distribution/tar/elasticsearch \
-    ES_HEAP_SIZE=1g
 
 RUN \
     # Install OpenJRE.
