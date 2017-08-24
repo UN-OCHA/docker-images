@@ -10,6 +10,7 @@ alpine-base-s6/3.6/Dockerfile
 alpine-base-php-fpm/*/Dockerfile
 alpine-elasticsearch/2/Dockerfile
 alpine-filebeat/Dockerfile
+alpine-keepalived/Dockerfile
 alpine-memcache/Dockerfile
 alpine-nginx-extras/Dockerfile
 alpine-logspout-logstash/Dockerfile
