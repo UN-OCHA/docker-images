@@ -1,4 +1,4 @@
-FROM unocha/alpine-base-nodejs:latest
+FROM unocha/alpine-base-nodejs:3.6-201708-01
 
 MAINTAINER Serban Teodorescu <teodorescu.serban@gmail.com>
 

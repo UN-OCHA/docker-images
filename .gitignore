@@ -13,6 +13,7 @@ alpine-filebeat/Dockerfile
 alpine-keepalived/Dockerfile
 alpine-memcache/Dockerfile
 alpine-nginx-extras/Dockerfile
+alpine-nodejs-builder/Dockerfile
 alpine-logspout-logstash/Dockerfile
 alpine-php-builder/*/Dockerfile
 alpine-php-fpm-drupal7/*/Dockerfile

@@ -1,4 +1,4 @@
-FROM unocha/alpine-base-s6:3.6
+FROM unocha/alpine-base-s6:3.6-201708-01
 
 MAINTAINER Serban Teodorescu <teodorescu.serban@gmail.com>
 
