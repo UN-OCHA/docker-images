@@ -16,6 +16,7 @@ alpine-memcache/Dockerfile
 alpine-mysql/Dockerfile
 alpine-nginx-extras/Dockerfile
 alpine-nodejs-builder/Dockerfile
+alpine-nodejs-hid/Dockerfile
 alpine-logspout-logstash/Dockerfile
 alpine-php-builder/*/Dockerfile
 alpine-php-fpm-drupal7/*/Dockerfile
