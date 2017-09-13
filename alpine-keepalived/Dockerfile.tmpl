@@ -1,4 +1,4 @@
-FROM alpine:3.6
+FROM alpine:%%UPSTREAM%%
 
 # Parse arguments for the build command.
 ARG VERSION
@@ -20,13 +20,18 @@ LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.distribution="Alpine Linux" \
       org.label-schema.distribution-version="3.6" \
       info.humanitarianresponse.ipvsadm="1.29-r0" \
-      info.humanitarianresponse.keepalived="1.2.24-r1"
+      info.humanitarianresponse.keepalived=$VERSION
 
-RUN apk add --update-cache \
+RUN apk update && \
+    apk upgrade && \
+    apk add \
         keepalived \
+        # Bash allows us to monitor services via /dev/tcp :-) \
         bash \
         curl \
+        mongodb-tools \
         mysql-client \
+        postgresql-client \
         && \
     apk add --update-cache --repository http://dl-cdn.alpinelinux.org/alpine/edge/main \
       ipvsadm \

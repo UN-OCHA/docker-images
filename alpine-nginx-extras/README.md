@@ -1,0 +1,3 @@
+make \
+  VERSION=1.13.2 EXTRAVERSION=-201707-02 UPSTREAM=1.13.2-201707-02 \
+  clean build tag

@@ -29,6 +29,8 @@ RUN apk add --update-cache \
       mysql-client \
       postgresql-client  && \
     rm -rf /var/cache/apk/* && \
+    # Symlink php5 binary.
+    ln -sf /usr/bin/php5 /usr/bin/php && \
     # Set unlimited memory for CLI php.
     sed -i 's/^memory_limit = .*/memory_limit = -1/' /etc/php5/php.ini && \
     # Install composer, as suggested by https://getcomposer.org/
