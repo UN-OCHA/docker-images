@@ -104,7 +104,9 @@ EXPOSE 9000
 HEALTHCHECK --interval=60s --timeout=5s \
         CMD REDIRECT_STATUS=true SCRIPT_NAME=/ping SCRIPT_FILENAME=/ping REQUEST_METHOD=GET cgi-fcgi -bind -connect 127.0.0.1:9000
 
+VOLUME ["/etc/php7"]
+
 # Volumes
-# - Conf: /etc/php/ (php-fpm.conf, php.ini)
+# - Conf: /etc/php7/ (php-fpm.conf, php.ini)
 # - Logs: /var/log/php
 # - Data: /srv/www, /var/lib/php/session

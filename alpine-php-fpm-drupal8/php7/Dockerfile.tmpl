@@ -56,6 +56,8 @@ RUN apk add --update-cache --allow-untrusted \
     mkdir -p /etc/drush && \
     mv /drushrc.php /etc/drush/drushrc.php
 
+VOLUME ["/etc/php7"]
+
 # Volumes
 # - Conf: /etc/php7/ (php.ini, php-fpm.conf, conf.d/)
 # - Logs: /var/log/php
