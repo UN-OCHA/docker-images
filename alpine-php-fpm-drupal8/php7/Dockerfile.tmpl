@@ -23,11 +23,10 @@ ENV DRUSH_VERSION=8 \
     DRUSH_RELEASE=8.x-dev
 
 COPY drushrc.php /drushrc.php
+COPY drush8-2567.patch /tmp/drush8-2567.patch
 
-RUN apk add --update-cache --allow-untrusted \
-      --repository http://dl-cdn.alpinelinux.org/alpine/edge/main \
-      --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing \
-      --repository http://dl-cdn.alpinelinux.org/alpine/edge/community \
+RUN apk add --update-cache \
+        git \
         php7 \
         mysql-client \
         postgresql-client  && \
@@ -44,6 +43,9 @@ RUN apk add --update-cache --allow-untrusted \
     # Install drush and symlink it somewhere useful.
     COMPOSER_HOME=/usr/local/drush$DRUSH_VERSION \
       composer global require drush/drush:$DRUSH_RELEASE && \
+    cd /usr/local/drush8/vendor/drush/drush && \
+      patch -p1 -i /tmp/drush8-2567.patch && \
+    cd -
     ln -sf /usr/local/drush$DRUSH_VERSION/vendor/bin/drush /usr/bin/drush && \
     drush status && \
     # Ensure the appuser's drush directory exists and is writable.
