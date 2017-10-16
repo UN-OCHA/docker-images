@@ -56,7 +56,9 @@ RUN apk add --update-cache \
     ln -s /home/appuser/.drush/commands /root/.drush/commands && \
     # Add our default drushrc.php file.
     mkdir -p /etc/drush && \
-    mv /drushrc.php /etc/drush/drushrc.php
+    mv /drushrc.php /etc/drush/drushrc.php && \
+    # Cleanup.
+    rm -f /tmp/drush8-2567.patch
 
 VOLUME ["/etc/php7"]
 

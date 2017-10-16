@@ -24,7 +24,7 @@ LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.distribution="Alpine Linux" \
       org.label-schema.distribution-version="3.6" \
       info.humanitarianresponse.php=$VERSION \
-      info.humanitarianresponse.php.modules="bcmath bz2 ctype curl dom fpm gd iconv json mcrypt opcache openssl pdo pdo_mysql pdo_pgsql phar posix simplexml sockets xml xmlreader xmlwriter zip zlib memcached redis" \
+      info.humanitarianresponse.php.modules="bcmath bz2 ctype curl dom fpm gd iconv imagick json mcrypt opcache openssl pdo pdo_mysql pdo_pgsql phar posix simplexml sockets xml xmlreader xmlwriter zip zlib memcached redis" \
       info.humanitarianresponse.php.sapi="fpm"
 
 COPY php-fpm.conf run_fpm msmtprc /
@@ -35,8 +35,9 @@ RUN \
     # echo "http://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories && \
     # echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories && \
     apk -U upgrade && \
-    apk add --update-cache --allow-untrusted \
+    apk add --update-cache \
       fcgi \
+      imagemagick \
       msmtp \
       php7-bcmath \
       php7-bz2 \
@@ -47,6 +48,7 @@ RUN \
       php7-fpm \
       php7-gd \
       php7-iconv \
+      php7-imagick \
       php7-json \
       php7-mbstring \
       php7-mcrypt \
