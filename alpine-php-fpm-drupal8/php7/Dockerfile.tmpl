@@ -20,7 +20,7 @@ LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.vcs-ref=$VCS_REF
 
 ENV DRUSH_VERSION=8 \
-    DRUSH_RELEASE=8.*
+    DRUSH_RELEASE=8.x-dev
 
 COPY drushrc.php /drushrc.php
 
@@ -55,6 +55,8 @@ RUN apk add --update-cache --allow-untrusted \
     # Add our default drushrc.php file.
     mkdir -p /etc/drush && \
     mv /drushrc.php /etc/drush/drushrc.php
+
+VOLUME ["/etc/php7"]
 
 # Volumes
 # - Conf: /etc/php7/ (php.ini, php-fpm.conf, conf.d/)

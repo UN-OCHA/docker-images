@@ -31,9 +31,9 @@ COPY php-fpm.conf run_fpm msmtprc /
 
 RUN \
     # Install standard packages from 3.6.
-    echo "http://dl-cdn.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories && \
-    echo "http://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories && \
-    echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories && \
+    # echo "http://dl-cdn.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories && \
+    # echo "http://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories && \
+    # echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories && \
     apk -U upgrade && \
     apk add --update-cache --allow-untrusted \
       fcgi \
@@ -79,7 +79,7 @@ RUN \
     ln -sf /usr/bin/msmtp /usr/sbin/sendmail && \
     ln -sf /usr/bin/msmtp /usr/bin/sendmail && \
     \
-     # Configure php.
+    # Configure php.
     sed -i \
         -e "s/^expose_php.*/expose_php = Off/" \
         -e "s/^;date.timezone.*/date.timezone = UTC/" \
@@ -104,7 +104,9 @@ EXPOSE 9000
 HEALTHCHECK --interval=60s --timeout=5s \
         CMD REDIRECT_STATUS=true SCRIPT_NAME=/ping SCRIPT_FILENAME=/ping REQUEST_METHOD=GET cgi-fcgi -bind -connect 127.0.0.1:9000
 
+VOLUME ["/etc/php7"]
+
 # Volumes
-# - Conf: /etc/php/ (php-fpm.conf, php.ini)
+# - Conf: /etc/php7/ (php-fpm.conf, php.ini)
 # - Logs: /var/log/php
 # - Data: /srv/www, /var/lib/php/session

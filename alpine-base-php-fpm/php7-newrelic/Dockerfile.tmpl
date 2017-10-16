@@ -27,7 +27,7 @@ LABEL org.label-schema.schema-version="1.0" \
       info.humanitarianresponse.php.modules="bcmath bz2 ctype curl dom fpm gd iconv imagick json mcrypt mysql opcache openssl pdo pdo_mysql pdo_pgsql phar posix sockets xml xmlreader xmlwriter zip zlib memcached redis newrelic" \
       info.humanitarianresponse.php.sapi="fpm"
 
-ENV NR_VERSION php5-7.5.0.199-linux-musl
+ENV NR_VERSION php5-7.6.0.201-linux-musl
 
 COPY run_newrelic /
 
@@ -46,6 +46,8 @@ RUN curl -s -o /tmp/newrelic.tar.gz \
     rm -rf /tmp/newrelic-php5-$NR_VERSION /tmp/newrelic.tar.gz && \
     mkdir -p /etc/services.d/newrelic && \
     mv /run_newrelic /etc/services.d/newrelic/run
+
+VOLUME ["/etc/php7"]
 
 # Volumes
 # - Conf: /etc/php/ (php-fpm.conf, php.ini)
