@@ -45,7 +45,7 @@ RUN apk add --update-cache \
       composer global require drush/drush:$DRUSH_RELEASE && \
     cd /usr/local/drush8/vendor/drush/drush && \
       patch -p1 -i /tmp/drush8-2567.patch && \
-    cd -
+    cd / && \
     ln -sf /usr/local/drush$DRUSH_VERSION/vendor/bin/drush /usr/bin/drush && \
     drush status && \
     # Ensure the appuser's drush directory exists and is writable.
