@@ -5,6 +5,7 @@ alpine-base/3.6/Dockerfile
 alpine-base-mysql/Dockerfile
 alpine-base-nginx/Dockerfile
 alpine-base-nginx-extras/Dockerfile
+alpine-base-nodejs/Dockerfile
 alpine-base-redis/Dockerfile
 alpine-base-s6/3.5/Dockerfile
 alpine-base-s6/3.6/Dockerfile
