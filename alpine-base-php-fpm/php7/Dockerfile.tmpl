@@ -24,7 +24,7 @@ LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.distribution="Alpine Linux" \
       org.label-schema.distribution-version="3.6" \
       info.humanitarianresponse.php=$VERSION \
-      info.humanitarianresponse.php.modules="bcmath bz2 ctype curl dom fpm gd iconv imagick json mcrypt opcache openssl pdo pdo_mysql pdo_pgsql phar posix simplexml sockets xml xmlreader xmlwriter zip zlib memcached redis" \
+      info.humanitarianresponse.php.modules="bcmath bz2 calendar ctype curl dom exif fileinfo fpm gd gettext iconv imagick json mcrypt memcached opcache openssl pdo pdo_mysql pdo_pgsql phar posix redis shmop sysvmsg sysvsem sysvshm simplexml sockets wddx xml xmlreader xmlwriter xsl zip zlib" \
       info.humanitarianresponse.php.sapi="fpm"
 
 COPY php-fpm.conf run_fpm msmtprc /
@@ -41,12 +41,16 @@ RUN \
       msmtp \
       php7-bcmath \
       php7-bz2 \
+      php7-calendar \
       php7-ctype \
       php7-curl \
       php7-dom \
+      php7-exif \
       php7-iconv \
+      php7-fileinfo \
       php7-fpm \
       php7-gd \
+      php7-gettext \
       php7-iconv \
       php7-imagick \
       php7-json \
@@ -61,12 +65,18 @@ RUN \
       php7-phar \
       php7-posix \
       php7-redis \
+      php7-shmop \
+      php7-sysvmsg \
+      php7-sysvsem \
+      php7-sysvshm \
       php7-simplexml \
       php7-sockets \
       php7-tokenizer \
+      php7-wddx \
       php7-xml \
       php7-xmlreader \
       php7-xmlwriter \
+      php7-xsl \
       php7-zip \
       php7-zlib && \
     rm -rf /var/cache/apk/* && \
