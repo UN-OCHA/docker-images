@@ -32,12 +32,16 @@ RUN apk update && \
         mongodb-tools \
         mysql-client \
         postgresql-client \
+        redis \
         && \
     apk add --update-cache --repository http://dl-cdn.alpinelinux.org/alpine/edge/main \
       ipvsadm \
+        && \
+    apk add --update-cache --repository http://dl-cdn.alpinelinux.org/alpine/edge/community \
+      docker \
         && \
     rm -rf /var/cache/apk/*
 
 ENTRYPOINT ["/usr/sbin/keepalived", "-D", "-n"]
 
-# Wants /etc/keepalived mounted as well as /dev/log.
+# Wants /etc/keepalived mounted as well as /dev/log and /var/run/docker.sock
