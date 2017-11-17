@@ -19,8 +19,9 @@ LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.architecture="x86_64" \
       org.label-schema.distribution="Alpine Linux" \
       org.label-schema.distribution-version="3.6" \
-      info.humanitarianresponse.node="6.12.0" \
-      info.humanitarianresponse.npm="3.10.10" \
+      info.humanitarianresponse.nodejs="$NODE_VERSION" \
+      info.humanitarianresponse.npm="$NPM_VERSION" \
+      info.humanitarianresponse.yarn="$YARN_VERSION" \
       info.humanitarianresponse.ruby="2.4.2-r0"
 
 ENV DST_DIR=/dst
@@ -40,7 +41,6 @@ RUN apk update && \
         font-awesome-sass \
         sass-globbing \
         compass && \
-    mkdir -p /root/.npm && \
     yarn global add \
         less \
         karma && \
@@ -49,7 +49,7 @@ RUN apk update && \
         build-base \
         ruby-dev \
         libffi-dev && \
-    rm -rf /var/cache/apk/* /root/.npm
+    rm -rf /var/cache/apk/*
 
 # inherits also as volumes SRC_DIR=/src and $NODE_APP_DIR=/srv/www
 # we'd better NOT expose this as a volume, unless we really intend mapping to a host folder
