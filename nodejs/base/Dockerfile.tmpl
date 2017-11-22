@@ -41,11 +41,12 @@ LABEL org.label-schema.schema-version="1.0" \
 
 RUN  apk add --no-cache \
         libstdc++ \
+  && apk add --no-cache
+        curl \
+        git \
   && apk add --no-cache --virtual .build-deps \
         binutils-gold \
         build-base \
-        curl \
-        git \
         gnupg \
         linux-headers \
         python \
