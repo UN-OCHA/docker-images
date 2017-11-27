@@ -1,4 +1,4 @@
-FROM unocha/alpine-base-nodejs:%%UPSTREAM%%
+FROM unocha/nodejs-base:%%UPSTREAM%%
 
 # Parse arguments for the build command.
 ARG VERSION
@@ -20,7 +20,7 @@ LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.description="This service provides a hubot platform." \
       org.label-schema.architecture="x86_64" \
       org.label-schema.distribution="Alpine Linux" \
-      org.label-schema.distribution-version="3.4" \
+      org.label-schema.distribution-version="3.6" \
       info.humanitarianresponse.hubot=$VERSION \
       info.humanitarianresponse.hubot.plugins="hubot-auth hubot-brain-inspect hubot-diagnostics hubot-factoids hubot-flowdock hubot-google-images hubot-google-translate hubot-help hubot-karma hubot-maps hubot-pugme hubot-redis-brain hubot-rules hubot-scripts hubot-shipit" \
       info.humanitarianresponse.hubot.depends="twilio modern-syslog"
@@ -40,8 +40,8 @@ RUN apk add --update-cache \
     mkdir -p $NODE_APP_DIR && \
     mv /package.json $NODE_APP_DIR && \
     cd $NODE_APP_DIR && \
-    npm i -g coffee-script && \
-    npm i && \
+    yarn global add coffee-script && \
+    yarn && \
     apk del git python make build-base && \
     rm -rf /var/cache/apk/*
 
