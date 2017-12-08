@@ -21,7 +21,7 @@ alpine-logspout-logstash/Dockerfile
 alpine-php-builder/*/Dockerfile
 alpine-php-fpm-drupal7/*/Dockerfile
 alpine-php-fpm-drupal7-*/*/Dockerfile
-alpine-php-fpm-drupal8/*/Dockerfile
+alpine-php-fpm-drupal8/**/Dockerfile
 alpine-redis/Dockerfile
 alpine-solr/*/Dockerfile
 alpine-unified-builder/*/Dockerfile
