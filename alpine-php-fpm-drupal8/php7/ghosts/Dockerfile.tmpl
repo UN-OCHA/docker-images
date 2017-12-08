@@ -25,6 +25,8 @@ LABEL org.label-schema.schema-version="1.0" \
       info.humanitarianresponse.casperjs="1.1.3" \
       info.humanitarianresponse.phantomjs="2.0.0"
 
+COPY igbinary.ini /etc/php7/conf.d/igbinary.ini
+
 RUN \
     # Change appuser UID and GID.
     sed -i s/4000/48/g /etc/group && \
@@ -52,7 +54,6 @@ RUN \
     ./configure CFLAGS="-O2 -g" --enable-igbinary --with-php-config=/usr/bin/php-config7 && \
     make && \
     make install && \
-    echo 'extension=igbinary.so > /etc/php7/conf.d/igbinary.ini' && \
     cd .. && \
     rm -rf igbinary && \
     rm -rf /usr/include/php/ && \
