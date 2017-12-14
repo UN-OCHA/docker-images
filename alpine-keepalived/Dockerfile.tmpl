@@ -32,6 +32,7 @@ RUN apk update && \
         mongodb-tools \
         mysql-client \
         postgresql-client \
+        python3 \
         redis \
         && \
     apk add --update-cache --repository http://dl-cdn.alpinelinux.org/alpine/edge/main \
@@ -40,6 +41,7 @@ RUN apk update && \
     apk add --update-cache --repository http://dl-cdn.alpinelinux.org/alpine/edge/community \
       docker \
         && \
+    pip3 install --no-cache-dir docker-compose && \
     rm -rf /var/cache/apk/*
 
 ENTRYPOINT ["/usr/sbin/keepalived", "-D", "-n"]
