@@ -22,12 +22,14 @@ LABEL org.label-schema.schema-version="1.0" \
       info.humanitarianresponse.nodejs="$NODE_VERSION" \
       info.humanitarianresponse.npm="$NPM_VERSION" \
       info.humanitarianresponse.yarn="$YARN_VERSION" \
-      info.humanitarianresponse.vips="8.5.8"
+      info.humanitarianresponse.vips="8.6.1"
 
 RUN \
-    apk add --update-cache --repository https://dl-cdn.alpinelinux.org/alpine/edge/testing \
+    apk add --update-cache --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing \
       build-base fftw-dev vips-dev vips-tools && \
-    npm install -g sharp && \
+    SHORT_VERSION=$(echo ${VERSION} | sed 's/-.*//g') && \
+    mkdir -p /root/.node-gyp/${SHORT_VERSION} && \
+    USER=root npm install -g sharp --unsafe-perm && \
     apk del build-base fftw-dev vips-dev && \
     rm -rf /var/cache/apk/* /root/.npm /root/.node-gyp
 
