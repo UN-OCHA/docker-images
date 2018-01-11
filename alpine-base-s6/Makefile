@@ -1,5 +1,5 @@
-include ../../Makefile.conf
 include ../Makefile.conf
+include ./Makefile.conf
 
 VERSION=$$(VERSION)
 

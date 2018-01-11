@@ -2,13 +2,13 @@ FROM unocha/alpine-base:%%UPSTREAM%%
 
 MAINTAINER Serban Teodorescu, teodorescu.serban@gmail.com
 
-ENV S6_VERSION=1.19.1.1
-
 # Parse arguments for the build command.
 ARG VERSION
 ARG VCS_URL
 ARG VCS_REF
 ARG BUILD_DATE
+
+ARG S6_VERSION=1.21.0.0
 
 # A little bit of metadata management.
 # See http://label-schema.org/
@@ -25,7 +25,7 @@ LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.distribution-version=$VERSION \
       org.label-schema.s6-version=$S6_VERSION
 
-RUN curl -sL https://github.com/just-containers/s6-overlay/releases/download/v${S6_VERSION}/s6-overlay-amd64.tar.gz -o /tmp/s6.tgz && \
+RUN curl -sL https://github.com/just-containers/s6-overlay/releases/download/${S6_VERSION}/s6-overlay-amd64.tar.gz -o /tmp/s6.tgz && \
     tar xzf /tmp/s6.tgz -C / && \
     rm -f /tmp/s6.tgz
 
