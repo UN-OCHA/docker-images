@@ -20,8 +20,8 @@ LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.description="This service provides a base nodejs platform." \
       org.label-schema.architecture="x86_64" \
       org.label-schema.distribution="Alpine Linux" \
-      org.label-schema.distribution-version="3.6" \
-      info.humanitarianresponse.nodejs="6.11.4-r0"
+      org.label-schema.distribution-version="3.7" \
+      info.humanitarianresponse.nodejs="8.9.3-r0"
 
 ENV NODE_APP_DIR=/srv/www \
     NODE_PATH=/usr/lib/node_modules \
@@ -38,17 +38,17 @@ RUN apk add --update-cache \
         build-base \
         git \
         python && \
-    apk add --update-cache --repository http://dl-cdn.alpinelinux.org/alpine/edge/main \
+    apk add --update-cache --repository http://dl-cdn.alpinelinux.org/alpine/v3.7/main \
         nodejs \
         nodejs-npm && \
-    mkdir -p /root/.node-gyp/6.11.4 && \
-    USER=root npm install -g \
+    mkdir -p /root/.node-gyp/8.9.3 && \
+    USER=root npm install -g --unsafe-perm \
         grunt-cli \
         bower \
         newrelic \
         webpack \
         yarn && \
-    npm cache clean && \
+    npm cache verify && \
     rm -rf /tmp /root/.node-gyp && \
     apk del build-base && \
     rm -rf /var/cache/apk/* && \
