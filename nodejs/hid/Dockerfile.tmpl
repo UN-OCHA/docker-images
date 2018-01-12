@@ -31,11 +31,7 @@ RUN \
     mkdir -p /root/.node-gyp/${SHORT_VERSION} && \
     USER=root npm install -g sharp --unsafe-perm && \
     apk del build-base fftw-dev vips-dev && \
-    rm -rf /var/cache/apk/* /root/.npm /root/.node-gyp && \
-    yarn global add \
-        newrelic && \
-    yarn cache clean
-
+    rm -rf /var/cache/apk/* /root/.npm /root/.node-gyp
 
 # inherits also as volumes SRC_DIR=/src and $NODE_APP_DIR=/srv/www
 # we'd better NOT expose this as a volume, unless we really intend mapping to a host folder
