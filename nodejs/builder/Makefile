@@ -4,6 +4,6 @@ IMAGE=nodejs-builder
 UPSTREAM=$$((UPSTREAM))
 VERSION=$$(VERSION))
 
-all: template build tag clean_images
+all: build tag
 
 mrproper: clean_images clean

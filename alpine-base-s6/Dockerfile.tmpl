@@ -1,12 +1,14 @@
-FROM alpine:3.6
+FROM unocha/alpine-base:%%UPSTREAM%%
 
-MAINTAINER Serban Teodorescu <teodorescu.serban@gmail.com>
+MAINTAINER Serban Teodorescu, teodorescu.serban@gmail.com
 
 # Parse arguments for the build command.
 ARG VERSION
 ARG VCS_URL
 ARG VCS_REF
 ARG BUILD_DATE
+
+ARG S6_VERSION=v1.21.0.0
 
 # A little bit of metadata management.
 # See http://label-schema.org/
@@ -16,21 +18,17 @@ LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.version=$VERSION \
       org.label-schema.vcs-url=$VCS_URL \
       org.label-schema.vcs-ref=$VCS_REF \
-      org.label-schema.name="base" \
+      org.label-schema.name="base-s6" \
       org.label-schema.description="This service provides a base Alpine Linux container." \
       org.label-schema.architecture="x86_64" \
       org.label-schema.distribution="Alpine Linux" \
-      org.label-schema.distribution-version=$VERSION
+      org.label-schema.distribution-version=$VERSION \
+      org.label-schema.s6-version=$S6_VERSION
 
-# Default user id and group id.
-# a good idea from orakili <docker@orakili.net>
-ENV APPUSER_GID=4000 \
-    APPUSER_UID=4000
+RUN curl -sL https://github.com/just-containers/s6-overlay/releases/download/${S6_VERSION}/s6-overlay-amd64.tar.gz -o /tmp/s6.tgz && \
+    tar xzf /tmp/s6.tgz -C / && \
+    rm -f /tmp/s6.tgz
 
-RUN apk update && \
-    apk upgrade && \
-    apk add --update-cache curl \
-        nano && \
-    rm -rf /var/cache/apk/* && \
-    addgroup -g $APPUSER_GID -S appuser && \
-    adduser -u $APPUSER_UID -s /sbin/nologin -g 'Docker App User' -h /home/appuser -D -G appuser appuser
+ENTRYPOINT ["/init"]
+
+CMD []

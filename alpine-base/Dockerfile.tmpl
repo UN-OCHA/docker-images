@@ -1,6 +1,4 @@
-FROM alpine:3.5
-
-MAINTAINER Serban Teodorescu <teodorescu.serban@gmail.com>
+FROM alpine:%%UPSTREAM%%
 
 # Parse arguments for the build command.
 ARG VERSION
@@ -28,6 +26,7 @@ ENV APPUSER_GID=4000 \
     APPUSER_UID=4000
 
 RUN apk update && \
+    apk upgrade && \
     apk add --update-cache curl \
         nano && \
     rm -rf /var/cache/apk/* && \
