@@ -33,9 +33,6 @@ RUN mv -f /run_fpm /etc/services.d/fpm/run && \
     # Upgrade to have the proper musl library
     # needed for the build dependencies below.
     apk --update-cache upgrade && \
-    # Install mutools.
-    apk add --update-cache --repository http://dl-cdn.alpinelinux.org/alpine/edge/main --allow-untrusted \
-      mupdf-tools && \
     # Install extra PHP packages.
     apk add \
       php7-gmp \
@@ -60,6 +57,10 @@ RUN mv -f /run_fpm /etc/services.d/fpm/run && \
     echo "extension=/usr/lib/php7/modules/hoedown.so" > /etc/php7/conf.d/hoedown.ini && \
     # Remove build dependencies.
     apk del .build-dependencies && \
+    # Install mutools.
+    apk add --update-cache --repository http://dl-cdn.alpinelinux.org/alpine/edge/main --allow-untrusted \
+      mupdf-tools && \
+    # Clear the package cache.
     rm -rf /var/cache/apk/*
 
 EXPOSE 9000
