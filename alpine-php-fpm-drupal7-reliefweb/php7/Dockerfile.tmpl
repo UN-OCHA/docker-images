@@ -25,7 +25,7 @@ LABEL org.label-schema.schema-version="1.0" \
       info.humanitarianresponse.php.modules="bcmath bz2 ctype curl dom fpm gmp imagick json mbstring mcrypt mysql opcache openssl pdo pdo_mysql pdo_pgsql phar posix simplexml sockets xml xmlreader xmlwriter zip zlib memcached redis" \
       info.humanitarianresponse.php.sapi="fpm" \
       info.humanitarianresponse.hoedown=$PHP_HOEDOWN_VERSION \
-      info.humanitarianresponse.mupdf="1.11-r1"
+      info.humanitarianresponse.mupdf="1.12.0-r0"
 
 COPY run_fpm /
 
@@ -33,9 +33,8 @@ RUN mv -f /run_fpm /etc/services.d/fpm/run && \
     # Upgrade to have the proper musl library
     # needed for the build dependencies below.
     apk --update-cache upgrade && \
-    # Install mutools.
+    # Install extra PHP packages.
     apk add \
-      mupdf-tools \
       php7-gmp \
       php7-simplexml && \
     # Install dependencies to build the Hoedown php extension.
@@ -58,6 +57,10 @@ RUN mv -f /run_fpm /etc/services.d/fpm/run && \
     echo "extension=/usr/lib/php7/modules/hoedown.so" > /etc/php7/conf.d/hoedown.ini && \
     # Remove build dependencies.
     apk del .build-dependencies && \
+    # Install mutools.
+    apk add --update-cache --repository http://dl-cdn.alpinelinux.org/alpine/edge/main --allow-untrusted \
+      mupdf-tools && \
+    # Clear the package cache.
     rm -rf /var/cache/apk/*
 
 EXPOSE 9000
