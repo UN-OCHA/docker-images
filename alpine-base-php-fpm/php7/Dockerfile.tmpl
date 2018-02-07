@@ -24,7 +24,7 @@ LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.distribution="Alpine Linux" \
       org.label-schema.distribution-version="3.6" \
       info.humanitarianresponse.php=$VERSION \
-      info.humanitarianresponse.php.modules="bcmath bz2 calendar ctype curl dom exif fileinfo fpm gd gettext iconv imagick json mcrypt memcached opcache openssl pdo pdo_mysql pdo_pgsql phar posix redis shmop sysvmsg sysvsem sysvshm simplexml sockets wddx xml xmlreader xmlwriter xsl zip zlib" \
+      info.humanitarianresponse.php.modules="bcmath bz2 calendar ctype curl dom exif fileinfo fpm gd gettext iconv imagick intl json mcrypt memcached opcache openssl pdo pdo_mysql pdo_pgsql phar posix redis shmop sysvmsg sysvsem sysvshm simplexml sockets wddx xml xmlreader xmlwriter xsl zip zlib" \
       info.humanitarianresponse.php.sapi="fpm"
 
 COPY php-fpm.conf run_fpm msmtprc /
@@ -53,6 +53,7 @@ RUN \
       php7-gettext \
       php7-iconv \
       php7-imagick \
+      php7-intl \
       php7-json \
       php7-mbstring \
       php7-mcrypt \
@@ -107,8 +108,8 @@ RUN \
     rm -rf /var/log/php7 && \
     mkdir /var/log/php && \
     touch /var/log/php/error.log && \
-    touch /var/log/php/fpm-error.log && \
-    touch /var/log/php/fpm-slow.log
+    touch /var/log/php/www-error.log && \
+    touch /var/log/php/www-slow.log
 
 EXPOSE 9000
 
