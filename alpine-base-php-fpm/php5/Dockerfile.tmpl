@@ -142,8 +142,8 @@ RUN \
     rm -rf /var/log/php5 && \
     mkdir /var/log/php && \
     touch /var/log/php/error.log && \
-    touch /var/log/php/fpm-error.log && \
-    touch /var/log/php/fpm-slow.log
+    touch /var/log/php/www-error.log && \
+    touch /var/log/php/www-slow.log
 
 EXPOSE 9000
 
