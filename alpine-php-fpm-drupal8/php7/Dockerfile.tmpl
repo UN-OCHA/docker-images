@@ -50,8 +50,9 @@ RUN apk add --update-cache \
     cd / && \
     ln -sf /usr/local/drush$DRUSH_VERSION/vendor/bin/drush /usr/bin/drush && \
     drush status && \
-    # Ensure the appuser's drush directory exists and is writable.
-    mkdir -p -m 0775 /home/appuser/.drush && \
+    # Install registry_rebuild to the appuser's homedir.
+    drush -y @none dl --destination=/home/appuser/.drush/commands registry_rebuild-7.x && \
+    # Ensure the appuser's drush directory is writable.
     chown -R appuser:appuser /home/appuser/.drush && \
     # Symlink the appuser's drush module to root's.
     mkdir -p /root/.drush && \
