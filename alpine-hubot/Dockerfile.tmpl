@@ -40,8 +40,10 @@ RUN apk add --update-cache \
     mkdir -p $NODE_APP_DIR && \
     mv /package.json $NODE_APP_DIR && \
     cd $NODE_APP_DIR && \
-    npm i -g coffee-script && \
+    mkdir -p /root/.npm && \
+    npm i -g coffeescript && \
     npm i && \
+    rm -rf  /root/.npm && \
     apk del git python make build-base && \
     rm -rf /var/cache/apk/*
 
