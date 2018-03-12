@@ -1,0 +1,47 @@
+FROM unocha/alpine-base-s6:%%UPSTREAM%%
+
+# Parse arguments for the build command.
+ARG VERSION
+ARG VCS_URL
+ARG VCS_REF
+ARG BUILD_DATE
+
+ENV EXTRA_OPTIONS="-d 0"
+
+# A little bit of metadata management.
+# See http://label-schema.org/
+LABEL org.label-schema.schema-version="1.0" \
+      org.label-schema.build-date=$BUILD_DATE \
+      org.label-schema.vendor="UN-OCHA" \
+      org.label-schema.version=$VERSION \
+      org.label-schema.vcs-url=$VCS_URL \
+      org.label-schema.vcs-ref=$VCS_REF \
+      org.label-schema.name="openldap" \
+      org.label-schema.description="This service provides a base openldap platform." \
+      org.label-schema.architecture="x86_64" \
+      org.label-schema.distribution="Alpine Linux" \
+      org.label-schema.distribution-version="3.7" \
+      info.humanitarianresponse.openldap="2.4.45-r3"
+
+COPY run_slapd /tmp/
+
+# Install openldap.
+RUN apk update && \
+    apk upgrade && \
+    apk add \
+      openldap-back-mdb \
+      openldap-clients \
+      openldap && \
+    rm -rf /var/cache/apk/* && \
+    mkdir -p /run/openldap && \
+    chown ldap:ldap /run/openldap && \
+    mkdir -p /etc/services.d/slapd && \
+    mv /tmp/run_slapd /etc/services.d/slapd/run && \
+    mv /var/lib/openldap/openldap-data/DB_CONFIG.example /var/lib/openldap/openldap-data/DB_CONFIG
+
+EXPOSE 389 636
+
+# Volumes
+# - Conf: /etc/openldap
+# - Logs: /var/log/openldap
+# - Data: /var/lib/opeldap

@@ -1,0 +1,5 @@
+#!/usr/bin/with-contenv sh
+
+set -e
+
+exec /usr/sbin/slapd -u ldap -g ldap -f /etc/openldap/slapd.conf $EXTRA_OPTIONS
