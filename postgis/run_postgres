@@ -3,7 +3,7 @@
 mkdir -p $PGDATA
 
 # if data folder is empty
-if [ "$(find $PGDATA ! -path $PGDATA | wc -l)" == "0" ]; then
+if [ "$(find $PGDATA -maxdepth 1 ! -path $PGDATA | wc -l)" == "0" ]; then
 
     # initialize db
     s6-setuidgid postgres pg_ctl initdb -w -D $PGDATA
