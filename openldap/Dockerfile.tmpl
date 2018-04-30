@@ -6,7 +6,11 @@ ARG VCS_URL
 ARG VCS_REF
 ARG BUILD_DATE
 
-ENV EXTRA_OPTIONS="-d 0"
+ENV EXTRA_OPTIONS="-d 0" \
+    SUFFIX=org \
+    DOMAIN=example \
+    MNGRPASS=changeit \
+    JOHNPASS=doe123
 
 # A little bit of metadata management.
 # See http://label-schema.org/
@@ -20,10 +24,10 @@ LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.description="This service provides a base openldap platform." \
       org.label-schema.architecture="x86_64" \
       org.label-schema.distribution="Alpine Linux" \
-      org.label-schema.distribution-version="3.7" \
+      org.label-schema.distribution-version="%%UPSTREAM%%" \
       info.humanitarianresponse.openldap="2.4.45-r3"
 
-COPY run_slapd /tmp/
+COPY base.ldif.tpl fix_ldap_dirs john.ldif.tpl run_slapd slapd-init.conf slapd.tpl /tmp/
 
 # Install openldap.
 RUN apk update && \
@@ -31,13 +35,21 @@ RUN apk update && \
     apk add \
       openldap-back-mdb \
       openldap-clients \
-      openldap && \
+      openldap \
+      gettext && \
     rm -rf /var/cache/apk/* && \
-    mkdir -p /run/openldap && \
-    chown ldap:ldap /run/openldap && \
-    mkdir -p /etc/services.d/slapd && \
+    mkdir -p /run/openldap /etc/fix-attrs.d /etc/services.d/slapd && \
+    mv /tmp/base.ldif.tpl /etc/openldap/ && \
+    mv /tmp/john.ldif.tpl /etc/openldap/ && \
+    mv /tmp/slapd-init.conf /etc/openldap/ && \
+    chown root:ldap /etc/openldap/slapd-init.conf && \
+    chmod 640 /etc/openldap/slapd-init.conf && \
+    mv /tmp/slapd.tpl /etc/openldap/ && \
     mv /tmp/run_slapd /etc/services.d/slapd/run && \
-    mv /var/lib/openldap/openldap-data/DB_CONFIG.example /var/lib/openldap/openldap-data/DB_CONFIG
+    mv /tmp/fix_ldap_dirs /etc/fix-attrs.d/
+
+    #mv /var/lib/openldap/openldap-data/DB_CONFIG.example /var/lib/openldap/openldap-data/DB_CONFIG
+    #mv /etc/openldap/slapd.conf /etc/openldap/slapd.conf.orig && \
 
 EXPOSE 389 636
 

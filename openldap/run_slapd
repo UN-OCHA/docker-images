@@ -2,4 +2,32 @@
 
 set -e
 
-exec /usr/sbin/slapd -u ldap -g ldap -f /etc/openldap/slapd.conf $EXTRA_OPTIONS
+DATADIR=/var/lib/openldap/openldap-data
+CONFDIR=/etc/openldap/conf.d
+
+# no conf yet? lets create it.
+if [ "$(find $CONFDIR -maxdepth 1 -iname '*.conf' | wc -l)" == "0" ]; then
+    MNGRPASS=$(slappasswd -s $MNGRPASS) \
+        envsubst '$DOMAIN $SUFFIX $MNGRPASS' \
+        < /etc/openldap/slapd.tpl > $CONFDIR/slapd.conf
+fi
+
+# no data yet? lets add some.
+if [ "$(find $DATADIR -maxdepth 1 ! -path $DATADIR | wc -l)" == "0" ]; then
+    MNGRPASS=$(slappasswd -s $MNGRPASS) \
+        envsubst '$DOMAIN $SUFFIX $MNGRPASS' \
+        < /etc/openldap/base.ldif.tpl > $CONFDIR/base.ldif
+    JOHNPASS=$(slappasswd -s $JOHNPASS) \
+        envsubst '$DOMAIN $SUFFIX $JOHNPASS' \
+        < /etc/openldap/john.ldif.tpl > $CONFDIR/john.ldif
+    echo -e '\nAdd the base skeleton on your ldap:'
+    echo '  ldapadd -D "cn=Manager,dc=$DOMAIN,dc=$SUFFIX" -w $MNGRPASS -f /etc/openldap/conf.d/base.ldif'
+    echo 'Add a John Doe entry:'
+    echo '  ldapadd -D "cn=Manager,dc=$DOMAIN,dc=$SUFFIX" -w $MNGRPASS -f /etc/openldap/conf.d/john.ldif'
+    echo 'Search with:'
+    echo -e '  ldapsearch -x -b "dc=$DOMAIN,dc=$SUFFIX" "(objectclass=*)"\n'
+    cp -a /etc/openldap/DB_CONFIG.example /var/lib/openldap/openldap-data/DB_CONFIG
+
+fi
+
+exec /usr/sbin/slapd -u ldap -g ldap -f /etc/openldap/slapd-init.conf $EXTRA_OPTIONS
