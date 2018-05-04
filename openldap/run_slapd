@@ -20,7 +20,7 @@ if [ "$(find $DATADIR -maxdepth 1 ! -path $DATADIR | wc -l)" == "0" ]; then
         < /etc/openldap/john.ldif.tpl > $CONFDIR/john.ldif
     echo -e '\nAdding the base skeleton of your ldap org...'
     # echo '  ldapadd -D "cn=Manager,dc=$DOMAIN,dc=$SUFFIX" -w $MNGRPASS -f /etc/openldap/conf.d/base.ldif'
-    slapadd -l /etc/openldap/conf.d/base.ldif -f /etc/openldap/slapd-init.conf -d 12
+    s6-setuidgid ldap slapadd -l /etc/openldap/conf.d/base.ldif -f /etc/openldap/slapd-init.conf -d 12
     echo 'Done.'
     echo -e '\nYou may add a John Doe entry:'
     echo '  ldapadd -D "cn=Manager,dc=$DOMAIN,dc=$SUFFIX" -w $MNGRPASS -f /etc/openldap/conf.d/john.ldif'
@@ -30,9 +30,4 @@ if [ "$(find $DATADIR -maxdepth 1 ! -path $DATADIR | wc -l)" == "0" ]; then
 
 fi
 
-LISTEN=""
-if [ "$LDAPS" == "yes" ]; then
-    LISTEN="-h \"ldap:/// ldaps:///\""
-fi
-
-exec /usr/sbin/slapd -u ldap -g ldap -f /etc/openldap/slapd-init.conf $LISTEN $EXTRA_OPTIONS
+exec /usr/sbin/slapd -u ldap -g ldap -f /etc/openldap/slapd-init.conf -h "ldap:/// ldaps:///" $EXTRA_OPTIONS
