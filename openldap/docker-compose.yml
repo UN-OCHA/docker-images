@@ -1,0 +1,12 @@
+version: '2.1'
+
+services:
+
+  ldap:
+    image: unocha/openldap:dev
+    volumes:
+      # - "./slapd.conf:/etc/openldap/slapd.conf"
+      - "./conf.d:/etc/openldap/conf.d"
+      - "./data:/var/lib/openldap/openldap-data"
+    environment:
+      EXTRA_OPTIONS: "-d 0"

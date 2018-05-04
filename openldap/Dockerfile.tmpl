@@ -6,7 +6,8 @@ ARG VCS_URL
 ARG VCS_REF
 ARG BUILD_DATE
 
-ENV EXTRA_OPTIONS="-d 0" \
+ENV LDAPS=no \
+    EXTRA_OPTIONS="-d 0" \
     SUFFIX=org \
     DOMAIN=example \
     MNGRPASS=changeit \
