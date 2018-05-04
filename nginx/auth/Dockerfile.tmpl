@@ -26,9 +26,11 @@ WORKDIR /src
 COPY . .
 
 # Install nginx.
-RUN mkdir -p /etc/services.d/nginx /run/nginx /srv/www/html /var/log/nginx /var/cache/nginx && \
+RUN mkdir -p /etc/services.d/nginx /etc/services.d/nslcd /run/nginx /srv/www/html /var/log/nginx /var/cache/nginx && \
     apk update && \
     apk upgrade && \
+    apk add \
+        nss-pam-ldapd && \
     echo "/src/packages/main" >> /etc/apk/repositories && \
     apk update --allow-untrusted && \
     apk add --allow-untrusted \
@@ -36,6 +38,7 @@ RUN mkdir -p /etc/services.d/nginx /run/nginx /srv/www/html /var/log/nginx /var/
         nginx-mod-http-lua \
         nginx-mod-http-upload-progress && \
     mv run_nginx /etc/services.d/nginx/run && \
+    mv run_nslcd /etc/services.d/nslcd/run && \
     mv default.conf /etc/nginx/conf.d/ && \
     mv index.html /srv/www/html/ && \
     rm -rf /var/cache/apk/* && \
