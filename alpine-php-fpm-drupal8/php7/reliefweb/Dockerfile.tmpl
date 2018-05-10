@@ -2,7 +2,7 @@ FROM unocha/alpine-php-fpm-drupal8:%%UPSTREAM%%
 
 MAINTAINER orakili <docker@orakili.net>
 
-ENV PHP_HOEDOWN_VERSION=0.6.5
+ENV PHP_HOEDOWN_VERSION=0.6.7
 
 # A little bit of metadata management.
 ARG BUILD_DATE
@@ -53,7 +53,7 @@ RUN mv -f /run_fpm /etc/services.d/fpm/run && \
     # Build and install php-ext-hoedown.
     git clone --recursive --depth=1 --branch=$PHP_HOEDOWN_VERSION https://github.com/reliefweb/php-ext-hoedown.git /tmp/php-ext-hoedown && \
     cd /tmp/php-ext-hoedown && \
-    phpize && ./configure && make && make install && \
+    phpize && ./configure && make && make test && make install && \
     cd /tmp && rm -rf /tmp/php* && \
     echo "extension=/usr/lib/php7/modules/hoedown.so" > /etc/php7/conf.d/hoedown.ini && \
     # Remove build dependencies.
