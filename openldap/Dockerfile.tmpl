@@ -34,10 +34,11 @@ COPY base.ldif.tpl fix_ldap_dirs john.ldif.tpl run_slapd slapd-init.conf slapd.t
 RUN apk update && \
     apk upgrade && \
     apk add \
+      gettext \
       openldap-back-mdb \
       openldap-clients \
       openldap \
-      gettext && \
+      openldap-overlay-syncprov && \
     rm -rf /var/cache/apk/* && \
     mkdir -p /run/openldap /etc/fix-attrs.d /etc/services.d/slapd && \
     mv /tmp/base.ldif.tpl /etc/openldap/ && \
