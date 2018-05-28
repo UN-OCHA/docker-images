@@ -1,4 +1,4 @@
-FROM unocha/alpine-base:3.6
+FROM unocha/alpine-base:%%UPSTREAM%%
 MAINTAINER orakili <docker@orakili.net>
 
 # Alpine based docker image.
@@ -25,7 +25,7 @@ LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.description="This service provides a PHP builder platform." \
       org.label-schema.architecture="x86_64" \
       org.label-schema.distribution="Alpine Linux" \
-      org.label-schema.distribution-version="3.6" \
+      org.label-schema.distribution-version="3.7" \
       info.humanitarianresponse.php=$VERSION \
       info.humanitarianresponse.php.modules="bcmath bz2 ctype curl dom fpm gd iconv imagick json mcrypt mysql opcache openssl pdo pdo_mysql pdo_pgsql phar posix sockets xml xmlreader zip zlib" \
       info.humanitarianresponse.php.sapi="cli" \
