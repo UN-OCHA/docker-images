@@ -11,6 +11,10 @@ ENV LDAPS=no \
     SUFFIX=org \
     DOMAIN=example \
     MNGRPASS=changeit \
+    REPLICATE=yes \
+    REMOTE=ldap2 \
+    REPLPASS=changeit \
+    SID=1 \
     JOHNPASS=doe123
 
 # A little bit of metadata management.
@@ -28,7 +32,7 @@ LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.distribution-version="%%UPSTREAM%%" \
       info.humanitarianresponse.openldap="2.4.45-r3"
 
-COPY base.ldif.tpl fix_ldap_dirs john.ldif.tpl run_slapd slapd-init.conf slapd.tpl /tmp/
+COPY base.ldif.tpl fix_ldap_dirs john.ldif.tpl run_slapd slapd-init.conf slapd.tpl syncrepl.tpl /tmp/
 
 # Install openldap.
 RUN apk update && \
@@ -47,6 +51,7 @@ RUN apk update && \
     chown root:ldap /etc/openldap/slapd-init.conf && \
     chmod 640 /etc/openldap/slapd-init.conf && \
     mv /tmp/slapd.tpl /etc/openldap/ && \
+    mv /tmp/syncrepl.tpl /etc/openldap/ && \
     mv /tmp/run_slapd /etc/services.d/slapd/run && \
     mv /tmp/fix_ldap_dirs /etc/fix-attrs.d/
 

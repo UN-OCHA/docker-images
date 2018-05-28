@@ -13,6 +13,14 @@ objectClass: organizationalRole
 objectClass: top
 roleOccupant: dc=$DOMAIN,dc=$SUFFIX
 
+dn: cn=Replicator,dc=example,dc=org
+cn: Replicator
+description: LDAP replicator
+objectClass: organizationalPerson
+objectClass: top
+sn: Replicator
+userPassword: $REPLPASSCRYPT
+
 # People, $DOMAIN.$SUFFIX
 dn: ou=People,dc=$DOMAIN,dc=$SUFFIX
 ou: People

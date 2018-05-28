@@ -5,15 +5,23 @@ CONFDIR=/etc/openldap/conf.d
 
 # no conf yet? lets create it.
 if [ "$(find $CONFDIR -maxdepth 1 -iname '*.conf' | wc -l)" == "0" ]; then
+    if [ "$REPLICATE" == "yes" ]; then
+        sed -i 's|.*syncrepl.conf$|include /etc/openldap/conf.d/syncrepl.conf|' /etc/openldap/slapd.tpl
+    else
+        sed -i 's|.*syncrepl.conf$|#include /etc/openldap/conf.d/syncrepl.conf|' /etc/openldap/slapd.tpl
+    fi
     MNGRPASS=$(slappasswd -s $MNGRPASS) \
-        envsubst '$DOMAIN $SUFFIX $MNGRPASS' \
+        envsubst '$DOMAIN $SUFFIX $MNGRPASS $REPLPASS $SID' \
         < /etc/openldap/slapd.tpl > $CONFDIR/slapd.conf
+    envsubst '$DOMAIN $SUFFIX $REPLPASS $REMOTE $SID' \
+        < /etc/openldap/syncrepl.tpl > $CONFDIR/syncrepl.conf
 fi
 
 # no data yet? lets add some.
 if [ "$(find $DATADIR -maxdepth 1 ! -path $DATADIR | wc -l)" == "0" ]; then
     MNGRPASS=$(slappasswd -s $MNGRPASS) \
-        envsubst '$DOMAIN $SUFFIX $MNGRPASS' \
+    REPLPASSCRYPT=$(slappasswd -s $REPLPASS) \
+        envsubst '$DOMAIN $SUFFIX $MNGRPASS $REPLPASS $REPLPASSCRYPT $SID' \
         < /etc/openldap/base.ldif.tpl > $CONFDIR/base.ldif
     JOHNPASS=$(slappasswd -s $JOHNPASS) \
         envsubst '$DOMAIN $SUFFIX $JOHNPASS' \
