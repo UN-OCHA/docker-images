@@ -28,9 +28,16 @@ objectClass: top
 objectClass: organizationalUnit
 
 # Groups, $DOMAIN.$SUFFIX
-dn: ou=Group,dc=$DOMAIN,dc=$SUFFIX
-ou: Group
+dn: ou=Groups,dc=$DOMAIN,dc=$SUFFIX
+ou: Groups
 objectClass: top
 objectClass: organizationalUnit
 
+# Users, Group, example.org
+dn: cn=Users,ou=Groups,$DOMAIN.$SUFFIX
+objectClass: top
+objectClass: posixGroup
+cn: Users
+description: Generic Users Group
+gidNumber: 32000
 ############
