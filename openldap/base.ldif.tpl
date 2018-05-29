@@ -33,7 +33,7 @@ ou: Groups
 objectClass: top
 objectClass: organizationalUnit
 
-# Users, Group, example.org
+# Users, Groups, $DOMAIN.$SUFFIX
 dn: cn=Users,ou=Groups,$DOMAIN.$SUFFIX
 objectClass: top
 objectClass: posixGroup
