@@ -1,0 +1,5 @@
+#!/usr/bin/with-contenv sh
+
+echo "Just ignore the error about libnss_ldap.so.2 library. We don't use it anyway."
+
+exec /usr/sbin/nslcd -n
