@@ -1,0 +1,19 @@
+#!/usr/bin/with-contenv sh
+
+adduser -h ${SCP_HOME} -D ${SCP_USER}
+echo "${SCP_USER}:${SCP_PASS}" | chpasswd
+
+mkdir -p /etc/dropbear ${SCP_HOME}/.ssh
+
+echo "${SCP_KEY}" > ${SCP_HOME}/.ssh/authorized_keys
+
+chown -R ${SCP_USER} ${SCP_HOME}
+chmod 700 ${SCP_HOME}/.ssh
+chmod 600 ${SCP_HOME}/.ssh/authorized_keys
+
+EXTRA_OPTIONS=""
+if [ "${SCP_PASS_AUTH}" == "no" ]; then
+    EXTRA_OPTIONS="-s"
+fi
+
+exec dropbear -RFEmwgjk $EXTRA_OPTIONS -p 22
