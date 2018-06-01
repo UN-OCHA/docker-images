@@ -2,7 +2,7 @@ version: '2.1'
 
 services:
   sftp:
-    image: unocha/sftp
+    image: unocha/sftpd
     ports:
       - "0.0.0.0:2223:22"
     environment:
