@@ -1,14 +1,14 @@
 version: '2.1'
 
 services:
-  scp:
+  sftp:
     image: unocha/sftp
     ports:
       - "0.0.0.0:2223:22"
     environment:
-      SCP_USER: gigi
-      SCP_PASS: 1234
-      #SCP_KEY: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDHw+VuDh0n7MNYarTZ3m5ooBshXXQ2zekQr8ytTeJAdUrC4t7KwGxcn2swyE1HbaQLE7qWK5QhOqXbNCWqSdH8mYMtJ3xTvT/qjDPI4k5VoJMd/N1ikFpvYQQ96gY3FM+CmdnbOrxsA1aTf4NUQUk26n6s89rNqW7WMLtwneDMadvuo2ZTXm85uCUDl6wWQsTRlhyiHzIcE06m2G2S4DI/Kyjqkz2vdxGSqLD0E8T62JjZdeUz56LYiusqhG9K7oS5+2RpoogYeacPt/h5ed04wf5Co+/zTJNOZDDHi6FMa5ALfwSLIsHX/swSDtvG2Q/7YIfU+dc5MeYimR77EKeL serban@BlackBox'
-      #SCP_PASS_AUTH: 'no'
-      SCP_PASS_AUTH: 'yes'
-      SCP_HOME: /srv/scp
+      SFTP_USER: user
+      SFTP_PASS: pass
+      #SFTP_KEY: 'public key'
+      #SFTP_PASS_AUTH: 'no'
+      SFTP_PASS_AUTH: 'yes'
+      SFTP_HOME: /srv/sftp

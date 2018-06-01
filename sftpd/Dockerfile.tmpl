@@ -20,19 +20,19 @@ LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.distribution="Alpine Linux" \
       org.label-schema.distribution-version=$VERSION
 
-ENV SCP_USER=user \
-    SCP_PASS=pass \
-    SCP_PKEY=garblegarblegarble \
-    SCP_PASS_AUTH=no \
-    SCP_HOME=/srv/user
+ENV SFTP_USER=user \
+    SFTP_PASS=pass \
+    SFTP_PKEY=garblegarblegarble \
+    SFTP_PASS_AUTH=no \
+    SFTP_HOME=/srv/user
 
-COPY run_scp /tmp/
+COPY run_sftp /tmp/
 
 RUN apk add --update-cache \
         openssh-sftp-server \
         dropbear && \
     rm -rf /var/cache/apk/* && \
-    mkdir -p /etc/dropbear /etc/services.d/scp && \
-    mv /tmp/run_scp /etc/services.d/scp/run
+    mkdir -p /etc/dropbear /etc/services.d/sftp && \
+    mv /tmp/run_sftp /etc/services.d/sftp/run
 
 EXPOSE 22
