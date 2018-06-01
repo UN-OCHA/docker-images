@@ -1,0 +1,13 @@
+#!/usr/bin/with-contenv sh
+
+cd $NODE_APP_DIR
+
+# if $NODE_APP_DIR is empty, this will just spin up a lame nodejs instance
+$(test "$(ls -A "$NODE_APP_DIR" 2>/dev/null)") || \
+ (ln -s /srv/example/server.js /srv/www/ && ln -s /srv/example/package.json /srv/www/)
+
+echo "==> Installing npm dependencies"
+npm install
+
+echo "==> Starting the server"
+exec npm start
