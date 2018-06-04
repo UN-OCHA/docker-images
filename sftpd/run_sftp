@@ -5,11 +5,13 @@ echo "${SFTP_USER}:${SFTP_PASS}" | chpasswd
 
 mkdir -p /etc/dropbear ${SFTP_HOME}/.ssh
 
-echo "${SFTP_KEY}" > ${SFTP_HOME}/.ssh/authorized_keys
+echo "${SFTP_PUBKEY}" > ${SFTP_HOME}/.ssh/authorized_keys
 
 chown -R ${SFTP_USER} ${SFTP_HOME}
 chmod 700 ${SFTP_HOME}/.ssh
 chmod 600 ${SFTP_HOME}/.ssh/authorized_keys
+
+touch /var/log/lastlog
 
 EXTRA_OPTIONS=""
 if [ "${SFTP_PASS_AUTH}" == "no" ]; then
