@@ -13,7 +13,7 @@ objectClass: organizationalRole
 objectClass: top
 roleOccupant: dc=$DOMAIN,dc=$SUFFIX
 
-dn: cn=Replicator,dc=example,dc=org
+dn: cn=Replicator,dc=$DOMAIN,dc=$SUFFIX
 cn: Replicator
 description: LDAP replicator
 objectClass: organizationalPerson
