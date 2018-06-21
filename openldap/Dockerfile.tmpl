@@ -42,6 +42,7 @@ RUN apk update && \
       openldap-back-mdb \
       openldap-clients \
       openldap \
+      openldap-overlay-memberof \
       openldap-overlay-syncprov && \
     rm -rf /var/cache/apk/* && \
     mkdir -p /run/openldap /etc/fix-attrs.d /etc/services.d/slapd && \

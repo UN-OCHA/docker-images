@@ -19,7 +19,10 @@ overlay syncprov
 syncprov-checkpoint 100 10
 syncprov-sessionlog 100
 
+overlay memberof
+
 access to attrs=userPassword
+    by dn="cn=Replicator,dc=$DOMAIN,dc=$SUFFIX" write
     by anonymous auth
     by self write
     by * none

@@ -17,6 +17,7 @@ postalAddress: AddressLine1$AddressLine2$AddressLine3
 userPassword: $JOHNPASS
 labeledURI: https://$DOMAIN.$SUFFIX/
 loginShell: /bin/bash
+mail: john.doe@$DOMAIN.$SUFFIX
 uidNumber: 16000
 gidNumber: 32000
 homeDirectory: /home/johndoe/
