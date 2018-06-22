@@ -47,9 +47,9 @@ ou: Role
 objectClass: top
 objectClass: organizationalUnit
 
-# Visitors, Role, $DOMAIN.$SUFFIX
-dn: cn=Visitors,ou=Role,dc=$DOMAIN,dc=$SUFFIX
-cn: Visitors
+# Visitor, Role, $DOMAIN.$SUFFIX
+dn: cn=Visitor,ou=Role,dc=$DOMAIN,dc=$SUFFIX
+cn: Visitor
 objectClass: groupOfNames
 member: cn=Manager,dc=$DOMAIN,dc=$SUFFIX
 ############
