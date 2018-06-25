@@ -43,9 +43,10 @@ RUN apk update && \
       openldap-clients \
       openldap \
       openldap-overlay-memberof \
+      openldap-overlay-ppolicy \
       openldap-overlay-syncprov && \
     rm -rf /var/cache/apk/* && \
-    mkdir -p /run/openldap /etc/fix-attrs.d /etc/services.d/slapd && \
+    mkdir -p /run/openldap /etc/fix-attrs.d /etc/services.d/slapd /etc/openldap/conf.d && \
     mv /tmp/base.ldif.tpl /etc/openldap/ && \
     mv /tmp/john.ldif.tpl /etc/openldap/ && \
     mv /tmp/slapd-init.conf /etc/openldap/ && \
