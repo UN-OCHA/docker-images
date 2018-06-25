@@ -27,6 +27,35 @@ ou: People
 objectClass: top
 objectClass: organizationalUnit
 
+# Policy, $DOMAIN.$SUFFIX
+dn: ou=Policy,dc=$DOMAIN,dc=$SUFFIX
+objectClass: organizationalUnit
+objectClass: top
+ou: Policy
+
+# default, Policy, $DOMAIN.$SUFFIX
+dn: cn=default,ou=Policy,dc=$DOMAIN,dc=$SUFFIX
+cn: default policy
+objectClass: pwdPolicy
+objectClass: person
+objectClass: top
+pwdAllowUserChange: TRUE
+pwdAttribute: userPassword
+pwdCheckQuality: 2
+pwdExpireWarning: 600
+pwdFailureCountInterval: 30
+pwdGraceAuthNLimit: 5
+pwdInHistory: 5
+pwdLockout: TRUE
+pwdLockoutDuration: 0
+pwdMaxAge: 0
+pwdMaxFailure: 5
+pwdMinAge: 0
+pwdMinLength: 5
+pwdMustChange: FALSE
+pwdSafeModify: FALSE
+sn: default
+
 # Group, $DOMAIN.$SUFFIX
 dn: ou=Group,dc=$DOMAIN,dc=$SUFFIX
 ou: Group

@@ -2,6 +2,7 @@ include /etc/openldap/schema/core.schema
 include /etc/openldap/schema/cosine.schema
 include /etc/openldap/schema/inetorgperson.schema
 include /etc/openldap/schema/nis.schema
+include /etc/openldap/schema/ppolicy.schema
 
 serverID $SID
 
@@ -20,6 +21,9 @@ syncprov-checkpoint 100 10
 syncprov-sessionlog 100
 
 overlay memberof
+
+overlay ppolicy
+ppolicy_default "cn=default,ou=Policy,dc=$DOMAIN,dc=$SUFFIX"
 
 access to attrs=userPassword
     by dn="cn=Replicator,dc=$DOMAIN,dc=$SUFFIX" write
