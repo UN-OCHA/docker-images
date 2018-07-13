@@ -10,9 +10,18 @@ if [ "$(find $CONFDIR -maxdepth 1 -iname '*.conf' | wc -l)" == "0" ]; then
     else
         sed -i 's|.*syncrepl.conf$|#include /etc/openldap/conf.d/syncrepl.conf|' /etc/openldap/slapd.tpl
     fi
+    
+    if [ "$LDAPS" == "yes" ]; then
+        sed -i 's|.*ssl.conf$|include /etc/openldap/conf.d/ssl.conf|' /etc/openldap/slapd.tpl
+    else
+        sed -i 's|.*ssl.conf$|#include /etc/openldap/conf.d/ssl.conf|' /etc/openldap/slapd.tpl
+    fi
+
     MNGRPASS=$(slappasswd -s $MNGRPASS) \
         envsubst '$DOMAIN $SUFFIX $MNGRPASS $REPLPASS $SID' \
         < /etc/openldap/slapd.tpl > $CONFDIR/slapd.conf
+    envsubst \
+        < /etc/openldap/ssl.tpl > $CONFDIR/ssl.conf
     envsubst '$DOMAIN $SUFFIX $REPLPASS $REMOTE $SID' \
         < /etc/openldap/syncrepl.tpl > $CONFDIR/syncrepl.conf
 fi
