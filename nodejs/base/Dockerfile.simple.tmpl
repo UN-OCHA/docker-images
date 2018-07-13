@@ -1,9 +1,9 @@
 FROM unocha/alpine-base-s6:%%UPSTREAM%%
 
 # Parse arguments for the build command.
-ARG NODE_VERSION=8.9.3
-ARG NPM_VERSION=5.5.1
-ARG YARN_VERSION=1.3.2
+ARG NODE_VERSION=8.11.3-r1
+ARG NPM_VERSION=8.11.3-r1
+ARG YARN_VERSION=1.7.0-r0
 ARG VERSION
 ARG VCS_URL
 ARG VCS_REF
@@ -35,7 +35,7 @@ LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.description="This service provides a base nodejs platform." \
       org.label-schema.architecture="x86_64" \
       org.label-schema.distribution="Alpine Linux" \
-      org.label-schema.distribution-version="3.6" \
+      org.label-schema.distribution-version="3.8" \
       info.humanitarianresponse.nodejs="$NODE_VERSION" \
       info.humanitarianresponse.npm="$NPM_VERSION" \
       info.humanitarianresponse.yarn="$YARN_VERSION"

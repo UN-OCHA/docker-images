@@ -18,11 +18,11 @@ LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.description="This service provides a builder container for node." \
       org.label-schema.architecture="x86_64" \
       org.label-schema.distribution="Alpine Linux" \
-      org.label-schema.distribution-version="3.6" \
+      org.label-schema.distribution-version="3.8" \
       info.humanitarianresponse.nodejs="$NODE_VERSION" \
       info.humanitarianresponse.npm="$NPM_VERSION" \
       info.humanitarianresponse.yarn="$YARN_VERSION" \
-      info.humanitarianresponse.ruby="2.4.3-r0"
+      info.humanitarianresponse.ruby="2.5.1-r2"
 
 ENV DST_DIR=/dst
 
@@ -33,6 +33,7 @@ RUN apk update && \
     apk add \
         rsync \
         ruby-bundler \
+        ruby-rake-compiler \
         build-base \
         ruby-dev \
         libffi-dev && \
