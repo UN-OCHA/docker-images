@@ -9,4 +9,6 @@ services:
       - "./conf.d:/etc/openldap/conf.d"
       - "./data:/var/lib/openldap/openldap-data"
     environment:
-      EXTRA_OPTIONS: "-d 0"
+      EXTRA_OPTIONS: "-d 4"
+      REPLICATE: 'no'
+      LDAPS: 'no'
