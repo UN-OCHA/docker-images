@@ -35,23 +35,23 @@ ou: Policy
 
 # default, Policy, $DOMAIN.$SUFFIX
 dn: cn=default,ou=Policy,dc=$DOMAIN,dc=$SUFFIX
-cn: default policy
+cn: default
 objectClass: pwdPolicy
 objectClass: person
 objectClass: top
 pwdAllowUserChange: TRUE
 pwdAttribute: userPassword
 pwdCheckQuality: 2
-pwdExpireWarning: 600
-pwdFailureCountInterval: 30
+pwdExpireWarning: 259200
+pwdFailureCountInterval: 3600
 pwdGraceAuthNLimit: 5
 pwdInHistory: 5
 pwdLockout: TRUE
 pwdLockoutDuration: 0
-pwdMaxAge: 0
+pwdMaxAge: 7776000
 pwdMaxFailure: 5
 pwdMinAge: 0
-pwdMinLength: 5
+pwdMinLength: 8
 pwdMustChange: FALSE
 pwdSafeModify: FALSE
 sn: default
