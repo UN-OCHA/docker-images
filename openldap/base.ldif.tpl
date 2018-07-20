@@ -48,7 +48,7 @@ pwdGraceAuthNLimit: 5
 pwdInHistory: 5
 pwdLockout: TRUE
 pwdLockoutDuration: 0
-pwdMaxAge: 7776000
+pwdMaxAge: 15552000
 pwdMaxFailure: 5
 pwdMinAge: 0
 pwdMinLength: 8
