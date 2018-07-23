@@ -45,8 +45,9 @@ if [ "$(find $DATADIR -maxdepth 1 ! -path $DATADIR | wc -l)" == "0" ]; then
     # echo '  ldapadd -D "cn=Manager,dc=$DOMAIN,dc=$SUFFIX" -w $MNGRPASS -f /etc/openldap/conf.d/base.ldif'
     s6-setuidgid ldap slapadd -l /etc/openldap/conf.d/base.ldif -f /etc/openldap/slapd-init.conf -d 12
     echo 'Done.'
-    echo -e '\nAdding a John Doe entry:'
-    s6-setuidgid ldap slapadd -l /etc/openldap/conf.d/john.ldif -f /etc/openldap/slapd-init.conf -d 12
+    echo -e '\nYou may add a John Doe entry:'
+    #s6-setuidgid ldap slapadd -l /etc/openldap/conf.d/john.ldif -f /etc/openldap/slapd-init.conf -d 12
+    echo '  ldapadd -D "cn=Manager,dc=$DOMAIN,dc=$SUFFIX" -w $MNGRPASS -f /etc/openldap/conf.d/john.ldif'
     echo 'Done.'
     echo 'Search with:'
     echo -e '  ldapsearch -x -b "dc=$DOMAIN,dc=$SUFFIX" "(objectclass=*)"\n'
