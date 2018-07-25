@@ -1,4 +1,4 @@
-FROM unocha/alpine-php-fpm-drupal8:%%UPSTREAM%%
+FROM unocha/alpine-php7:%%UPSTREAM%%
 
 MAINTAINER UN-OCHA Operations <docker+ops@humanitarianresponse.info>
 
@@ -20,11 +20,11 @@ LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.version=$VERSION \
       org.label-schema.vcs-url=$VCS_URL \
       org.label-schema.vcs-ref=$VCS_REF \
-      org.label-schema.name="php-fpm-drupal8-puppeteer" \
-      org.label-schema.description="This service provides a php-fpm platform for the FTS Public and HPC Viewer Drupal 7 sites." \
+      org.label-schema.name="php7-puppeteer" \
+      org.label-schema.description="This service provides a php-fpm platform for the FTS Public and HPC Viewer Drupal sites." \
       org.label-schema.architecture="x86_64" \
       org.label-schema.distribution="Alpine Linux" \
-      org.label-schema.distribution-version="3.7" \
+      org.label-schema.distribution-version="3.8" \
       info.humanitarianresponse.php=$VERSION \
       info.humanitarianresponse.php.modules="bcmath bz2 calendar ctype curl dom exif fileinfo fpm ftp gd gettext iconv igbinary imagick imap intl json mcrypt memcached opcache openssl pdo pdo_mysql pdo_pgsql phar posix redis shmop soap sysvmsg sysvsem sysvshm simplexml sockets wddx xml xmlreader xmlwriter xsl zip zlib" \
       info.humanitarianresponse.php.sapi="fpm" \
