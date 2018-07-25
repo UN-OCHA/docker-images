@@ -4,7 +4,7 @@ include ../../Makefile.conf
 UPSTREAM=$$(UPSTREAM))
 VERSION=$$(VERSION))
 
-IMAGE=alpine-php-fpm-drupal8-ghosts
+IMAGE=php7-ghosts
 
 all: template build tag clean_images
 
