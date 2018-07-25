@@ -1,6 +1,6 @@
 FROM unocha/alpine-base-s6:%%UPSTREAM%%
 
-MAINTAINER Serban Teodorescu <teodorescu.serban@gmail.com>
+MAINTAINER UN-OCHA Operations <ops+docker@humanitarianresponse.info>
 
 # Thanks to orakili <docker@orakili.net>
 
@@ -22,7 +22,7 @@ LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.description="This service provides a base php-fpm platform." \
       org.label-schema.architecture="x86_64" \
       org.label-schema.distribution="Alpine Linux" \
-      org.label-schema.distribution-version="3.7" \
+      org.label-schema.distribution-version="3.8" \
       info.humanitarianresponse.php=$VERSION \
       info.humanitarianresponse.php.modules="bcmath bz2 ctype curl dom fpm gd iconv imagick json mcrypt mysql opcache openssl pdo pdo_mysql pdo_pgsql phar posix sockets xml xmlreader zip zlib memcached redis" \
       info.humanitarianresponse.php.sapi="fpm"
@@ -36,12 +36,56 @@ RUN \
     adduser root abuild
 
 RUN \
-    # Install standard packages from 3.6.
+    # Install standard packages from 3.8.
     apk add --update-cache \
       fcgi \
       msmtp && \
     \
-    # Install php and depends.
+    # Install php build dependencies.
+    apk add --virtual .build-dependencies \
+      php5-dev alpine-sdk && \
+    \
+    # Patch abuild, so it will run as root.
+    cd /usr/bin && \
+      patch -p0 -i /abuild-root.patch && \
+      rm -f /abuild-root.patch && \
+    \
+    # Add root to the abuild group and create abuild key.
+    abuild-keygen -a -q -n && \
+    \
+    # Setup our build environments.
+    mkdir -p /usr/src/php5-imagick && \
+      mv /APKBUILD-php5-imagick /usr/src/php5-imagick/APKBUILD && \
+    mkdir -p /usr/src/php5-memcached && \
+      mv /APKBUILD-php5-memcached /usr/src/php5-memcached/APKBUILD && \
+    mkdir -p /usr/src/php5-redis && \
+      mv /APKBUILD-php5-redis /usr/src/php5-redis/APKBUILD
+RUN \
+    # Build the imagick extension. Delete the generated index, or the next
+    # step will fail because our key is not trusted.
+    cd /usr/src/php5-imagick && \
+      abuild -F -r -P /usr && \
+      rm -f /usr/src/x86_64/APKINDEX.tar.gz && \
+    \
+    # Build the memcached extension. Delete the generated index, or the next
+    # step will fail because our key is not trusted.
+    cd /usr/src/php5-memcached && \
+      abuild -F -r -P /usr && \
+      rm -f /usr/src/x86_64/APKINDEX.tar.gz && \
+    \
+    # Build the redis extension. Delete the generated index, or the next
+    # step will fail because our key is not trusted.
+    cd /usr/src/php5-redis && \
+      abuild -F -r -P /usr && \
+      rm -f /usr/src/x86_64/APKINDEX.tar.gz && \
+    \
+    # Install all built extensions.
+    apk add -U --allow-untrusted /usr/src/x86_64/php5-*.apk && \
+    \
+    # Install php5-cli *specifically*.
+    apk add --update-cache \
+      php5-cli && \
+    # Install constrib php packages and depends.
     apk add --update-cache \
       php5-bcmath \
       php5-bz2 \
@@ -68,46 +112,6 @@ RUN \
       php5-zlib && \
     \
     # Build php5-imagick, php5-memcached and php5-redis from source.
-    apk add --virtual .build-dependencies \
-      alpine-sdk && \
-    \
-    # Patch abuild, so it will run as root.
-    cd /usr/bin && \
-      patch -p0 -i /abuild-root.patch && \
-      rm -f /abuild-root.patch && \
-    \
-    # Add root to the abuild group and create abuild key.
-    abuild-keygen -a -q -n && \
-    \
-    # Setup our build environments.
-    mkdir -p /usr/src/php5-imagick && \
-      mv /APKBUILD-php5-imagick /usr/src/php5-imagick/APKBUILD && \
-    mkdir -p /usr/src/php5-memcached && \
-      mv /APKBUILD-php5-memcached /usr/src/php5-memcached/APKBUILD && \
-    mkdir -p /usr/src/php5-redis && \
-      mv /APKBUILD-php5-redis /usr/src/php5-redis/APKBUILD && \
-    \
-    # Build the imagick extension. Delete the generated index, or the next
-    # step will fail because our key is not trusted.
-    cd /usr/src/php5-imagick && \
-      abuild -F -r -P /usr && \
-      rm -f /usr/src/x86_64/APKINDEX.tar.gz && \
-    \
-    # Build the memcached extension. Delete the generated index, or the next
-    # step will fail because our key is not trusted.
-    cd /usr/src/php5-memcached && \
-      abuild -F -r -P /usr && \
-      rm -f /usr/src/x86_64/APKINDEX.tar.gz && \
-    \
-    # Build the redis extension. Delete the generated index, or the next
-    # step will fail because our key is not trusted.
-    cd /usr/src/php5-redis && \
-      abuild -F -r -P /usr && \
-      rm -f /usr/src/x86_64/APKINDEX.tar.gz && \
-    \
-    # Install all built extensions.
-    apk add -U --allow-untrusted /usr/src/x86_64/php5-*.apk && \
-    \
     # Cleanup.
     apk del .build-dependencies && \
     rm -rf /root/.abuild && \
