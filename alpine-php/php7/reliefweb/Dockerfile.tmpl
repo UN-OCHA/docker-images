@@ -1,4 +1,4 @@
-FROM unocha/alpine-php-fpm-drupal8:%%UPSTREAM%%
+FROM unocha/alpine-php7:%%UPSTREAM%%
 
 MAINTAINER orakili <docker@orakili.net>
 
@@ -16,11 +16,11 @@ LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.version=$VERSION \
       org.label-schema.vcs-url=$VCS_URL \
       org.label-schema.vcs-ref=$VCS_REF \
-      org.label-schema.name="php-fpm-drupal8-reliefweb" \
-      org.label-schema.description="This service provides a php-fpm platform for the reliefweb.int Drupal 7 site with MuPDF and Hoedown." \
+      org.label-schema.name="php7-reliefweb" \
+      org.label-schema.description="This service provides a php-fpm platform for the reliefweb.int Drupal site with MuPDF and Hoedown." \
       org.label-schema.architecture="x86_64" \
       org.label-schema.distribution="Alpine Linux" \
-      org.label-schema.distribution-version="3.7" \
+      org.label-schema.distribution-version="3.8" \
       info.humanitarianresponse.php=$VERSION \
       info.humanitarianresponse.php.modules="bcmath bz2 ctype curl dom fpm gmp imagick json mbstring mcrypt mysql opcache openssl pdo pdo_mysql pdo_pgsql phar posix simplexml sockets xml xmlreader xmlwriter zip zlib memcached redis" \
       info.humanitarianresponse.php.sapi="fpm" \

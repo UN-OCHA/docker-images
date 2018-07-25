@@ -3,8 +3,7 @@ include ../../Makefile.conf
 
 UPSTREAM=$$(UPSTREAM))
 VERSION=$$(VERSION))
-
-IMAGE=alpine-php-fpm-drupal8-reliefweb
+IMAGE=alpine-php7-reliefweb
 
 all: template build tag clean_images
 
