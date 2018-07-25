@@ -4,7 +4,7 @@ include ../../Makefile.conf
 UPSTREAM=$$(UPSTREAM))
 VERSION=$$(VERSION))
 
-IMAGE=alpine-php-fpm-drupal8-puppeteer
+IMAGE=alpine-php7-puppeteer
 
 all: template build tag clean_images
 
