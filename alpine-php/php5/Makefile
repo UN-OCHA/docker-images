@@ -3,7 +3,7 @@ include ../Makefile.conf
 
 UPSTREAM=$$((UPSTREAM))
 VERSION=$$((VERSION))
-IMAGE=alpine-php5
+IMAGE=php5
 
 all: template build tag clean_images
 

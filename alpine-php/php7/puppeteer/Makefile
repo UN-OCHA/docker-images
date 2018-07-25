@@ -4,7 +4,7 @@ include ../../Makefile.conf
 UPSTREAM=$$(UPSTREAM))
 VERSION=$$(VERSION))
 
-IMAGE=alpine-php7-puppeteer
+IMAGE=php7-puppeteer
 
 all: template build tag clean_images
 

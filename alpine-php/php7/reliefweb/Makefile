@@ -3,7 +3,7 @@ include ../../Makefile.conf
 
 UPSTREAM=$$(UPSTREAM))
 VERSION=$$(VERSION))
-IMAGE=alpine-php7-reliefweb
+IMAGE=php7-reliefweb
 
 all: template build tag clean_images
 
