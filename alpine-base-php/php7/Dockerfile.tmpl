@@ -1,6 +1,6 @@
 FROM unocha/alpine-base-s6:%%UPSTREAM%%
 
-MAINTAINER Serban Teodorescu <teodorescu.serban@gmail.com>
+MAINTAINER UN-OCHA Operations <ops+docker@humanitarianresponse.info>
 
 # Thanks to orakili <docker@orakili.net>
 
@@ -18,11 +18,11 @@ LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.version=$VERSION \
       org.label-schema.vcs-url=$VCS_URL \
       org.label-schema.vcs-ref=$VCS_REF \
-      org.label-schema.name="base-php-fpm" \
+      org.label-schema.name="base-php" \
       org.label-schema.description="This service provides a base php-fpm platform." \
       org.label-schema.architecture="x86_64" \
       org.label-schema.distribution="Alpine Linux" \
-      org.label-schema.distribution-version="3.7" \
+      org.label-schema.distribution-version="3.8" \
       info.humanitarianresponse.php=$VERSION \
       info.humanitarianresponse.php.modules="bcmath bz2 calendar ctype curl dom exif fileinfo fpm gd gettext iconv imagick intl json mcrypt memcached mysqli opcache openssl pdo pdo_mysql pdo_pgsql phar posix redis shmop sysvmsg sysvsem sysvshm simplexml sockets wddx xml xmlreader xmlwriter xsl zip zlib" \
       info.humanitarianresponse.php.sapi="fpm"
@@ -30,10 +30,7 @@ LABEL org.label-schema.schema-version="1.0" \
 COPY php-fpm.conf run_fpm msmtprc /
 
 RUN \
-    # Install standard packages from 3.6.
-    # echo "http://dl-cdn.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories && \
-    # echo "http://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories && \
-    # echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories && \
+    # Install standard packages from 3.8.
     apk -U upgrade && \
     apk add --update-cache \
       fcgi \
