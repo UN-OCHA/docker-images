@@ -1,8 +1,9 @@
 include ../../Makefile.conf
 include ../Makefile.conf
 
-UPSTREAM=$$(UPSTREAM))
-VERSION=$$(VERSION))
+UPSTREAM=$$(UPSTREAM)
+VERSION=$$(VERSION)
+IMAGE=alpine-php7
 
 all: template build tag clean_images
 
