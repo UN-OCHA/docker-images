@@ -28,3 +28,4 @@ alpine-unified-builder/*/Dockerfile
 alpine-varnish/Dockerfile
 debian-elk/*/Dockerfile
 **/Dockerfile
+**/buildlog.txt
