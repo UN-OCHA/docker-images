@@ -9,7 +9,7 @@ alpine-base-nodejs/Dockerfile
 alpine-base-redis/Dockerfile
 alpine-base-s6/3.5/Dockerfile
 alpine-base-s6/3.6/Dockerfile
-alpine-base-php-fpm/*/Dockerfile
+alpine-base-php/*/Dockerfile
 alpine-elasticsearch/2/Dockerfile
 alpine-filebeat/Dockerfile
 alpine-keepalived/Dockerfile
@@ -27,3 +27,5 @@ alpine-solr/*/Dockerfile
 alpine-unified-builder/*/Dockerfile
 alpine-varnish/Dockerfile
 debian-elk/*/Dockerfile
+**/Dockerfile
+**/buildlog.txt
