@@ -1,4 +1,4 @@
-FROM unocha/alpine-nodejs:latest
+FROM unocha/nodejs:8.11.3
 
 MAINTAINER Serban Teodorescu <teodorescu.serban@gmail.com>
 
@@ -21,6 +21,5 @@ RUN apk add --update-cache \
         g++ && \
     npm install wkhtmltox && \
     rm -rf /var/cache/apk/* && \
-    mv /usr/bin/wkhtmltopdf /usr/bin/wkhtmltopdf.ini && \
-    mv /tmp/wrapper /usr/bin/wkhtmltopdf && \
-    chmod +x /usr/bin/wkhtmltopdf
+    mv /tmp/wrapper /usr/bin/service-wrapper && \
+    chmod +x /usr/bin/service-wrapper
