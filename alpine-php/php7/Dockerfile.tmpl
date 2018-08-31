@@ -10,17 +10,25 @@ ARG VCS_URL
 ARG VCS_REF
 ARG BUILD_DATE
 
+ENV DRUSH_VERSION=8 \
+    DRUSH_RELEASE=8.x-dev \
+    WP_RELEASE=dev-master \
+    PAGER=more
+
 LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.build-date=$BUILD_DATE \
       org.label-schema.vendor="UN-OCHA" \
       org.label-schema.version=$VERSION \
       org.label-schema.name="php7" \
-      org.label-schema.description="This service provides a php-fpm platform with drush and composer." \
+      org.label-schema.description="This service provides a php-fpm platform with composer, drush and wp-cli." \
       org.label-schema.vcs-url=$VCS_URL \
-      org.label-schema.vcs-ref=$VCS_REF
-
-ENV DRUSH_VERSION=8 \
-    DRUSH_RELEASE=8.x-dev
+      org.label-schema.vcs-ref=$VCS_REF \
+      info.humanitarianresponse.php=$VERSION \
+      info.humanitarianresponse.php.modules="bcmath bz2 calendar ctype curl dom exif fileinfo fpm ftp gd gettext iconv igbinary imagick imap intl json mcrypt memcached opcache openssl pdo pdo_mysql pdo_pgsql phar posix redis shmop soap sysvmsg sysvsem sysvshm simplexml sockets wddx xml xmlreader xmlwriter xsl zip zlib" \
+      info.humanitarianresponse.php.sapi="fpm" \
+      info.humanitarianresponse.composer="1.7.2" \
+      info.humanitarianresponse.drush=$DRUSH_RELEASE \
+      info.humanitarianresponse.wp=$WP_RELEASE
 
 COPY drushrc.php /drushrc.php
 COPY drush8-2282.patch /tmp/drush8-2282.patch
@@ -61,7 +69,12 @@ RUN apk add --update-cache \
     mkdir -p /etc/drush && \
     mv /drushrc.php /etc/drush/drushrc.php && \
     # Cleanup.
-    rm -f /tmp/drush8-2282.patch /tmp/drush8-2567.patch
+    rm -f /tmp/drush8-2282.patch /tmp/drush8-2567.patch && \
+    # Install wp-cli and symlink it somewhere useful.
+    COMPOSER_HOME=/usr/local/wp$WP_RELEASE  \
+      composer global require wp-cli/wp-cli:$WP_RELEASE && \
+    ln -sf /usr/local/wp$WP_RELEASE/vendor/wp-cli/wp-cli/bin/wp /usr/bin/wp && \
+    wp --info
 
 VOLUME ["/etc/php7"]
 
