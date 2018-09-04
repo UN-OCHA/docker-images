@@ -14,6 +14,8 @@ suffix "dc=$DOMAIN,dc=$SUFFIX"
 rootdn "cn=Manager,dc=$DOMAIN,dc=$SUFFIX"
 rootpw $MNGRPASS
 
+include /etc/openldap/conf.d/bcrypt.conf
+
 include /etc/openldap/conf.d/ssl.conf
 
 include /etc/openldap/conf.d/syncrepl.conf
