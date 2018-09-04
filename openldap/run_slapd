@@ -18,16 +18,21 @@ if [ "$(find $CONFDIR -maxdepth 1 -iname '*.conf' | wc -l)" == "0" ]; then
     fi
 
     if [ "$BCRYPT" == "yes" ]; then
-        sed -i 's|.*bcrypt.so$|moduleload pw-bcrypt.so|' /etc/openldap/slapd-init.conf
+        sed -i 's|.*bcrypt.so$|moduleload pw-bcrypt.so|' /etc/openldap/bcrypt.tpl
     else
-        sed -i 's|.*bcrypt.so$|#moduleload pw-bcrypt.so|' /etc/openldap/slapd-init.conf
+        sed -i 's|.*bcrypt.so$|#moduleload pw-bcrypt.so|' /etc/openldap/bcrypt.tpl
     fi
+
+    envsubst \
+        < /etc/openldap/bcrypt.tpl > $CONFDIR/bcrypt.conf
 
     MNGRPASS=$(slappasswd -s $MNGRPASS) \
         envsubst '$DOMAIN $SUFFIX $MNGRPASS $REPLPASS $SID' \
         < /etc/openldap/slapd.tpl > $CONFDIR/slapd.conf
+    
     envsubst \
         < /etc/openldap/ssl.tpl > $CONFDIR/ssl.conf
+    
     envsubst '$DOMAIN $SUFFIX $REPLPASS $REMOTE $SID' \
         < /etc/openldap/syncrepl.tpl > $CONFDIR/syncrepl.conf
 fi

@@ -33,7 +33,7 @@ LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.distribution-version="%%UPSTREAM%%" \
       info.humanitarianresponse.openldap="2.4.46-r0"
 
-COPY base.ldif.tpl fix_ldap_dirs john.ldif.tpl pw-bcrypt.so run_slapd slapd-init.conf slapd.tpl ssl.tpl syncrepl.tpl /tmp/
+COPY base.ldif.tpl bcrypt.tpl fix_ldap_dirs john.ldif.tpl pw-bcrypt.so run_slapd slapd-init.conf slapd.tpl ssl.tpl syncrepl.tpl /tmp/
 
 # Install openldap.
 RUN apk update && \
@@ -53,6 +53,7 @@ RUN apk update && \
     mv /tmp/slapd-init.conf /etc/openldap/ && \
     chown root:ldap /etc/openldap/slapd-init.conf && \
     chmod 640 /etc/openldap/slapd-init.conf && \
+    mv /tmp/bcrypt.tpl /etc/openldap/ && \
     mv /tmp/slapd.tpl /etc/openldap/ && \
     mv /tmp/ssl.tpl /etc/openldap/ && \
     mv /tmp/syncrepl.tpl /etc/openldap/ && \
