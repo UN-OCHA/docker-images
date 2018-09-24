@@ -28,6 +28,8 @@ LABEL org.label-schema.schema-version="1.0" \
       info.humanitarianresponse.php.sapi="fpm"
 
 ENV NR_VERSION php5-8.2.0.221-linux-musl
+ENV NR_INSTALL_SILENT true
+ENV NR_INSTALL_USE_CP_NOT_LN true
 
 COPY run_newrelic /
 
@@ -35,14 +37,11 @@ RUN curl -s -o /tmp/newrelic.tar.gz \
       https://download.newrelic.com/php_agent/release/newrelic-$NR_VERSION.tar.gz && \
     mkdir -p /etc/newrelic /var/log/newrelic && \
     tar xvf /tmp/newrelic.tar.gz -C /tmp && \
-    mv /tmp/newrelic-$NR_VERSION/daemon/newrelic-daemon.x64 \
-       /usr/bin/newrelic-daemon && \
-    mv /tmp/newrelic-$NR_VERSION/agent/x64/newrelic-20160303.so \
-       /usr/lib/php7/modules/newrelic.so && \
-    mv /tmp/newrelic-$NR_VERSION/scripts/newrelic.cfg.template \
-       /etc/newrelic/newrelic.cfg && \
-    mv /tmp/newrelic-$NR_VERSION/scripts/newrelic.ini.template \
-       /etc/php7/conf.d/newrelic.ini && \
+    cd /tmp/newrelic-$NR_VERSION && \
+       ./newrelic-install install && \
+       cd .. && \
+    mv /etc/php7/conf.d/newrelic.ini \
+       /etc/php7/conf.d/10_newrelic.ini && \
     rm -rf /tmp/newrelic-php5-$NR_VERSION /tmp/newrelic.tar.gz && \
     mkdir -p /etc/services.d/newrelic && \
     mv /run_newrelic /etc/services.d/newrelic/run
