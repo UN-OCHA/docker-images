@@ -24,7 +24,7 @@ LABEL org.label-schema.schema-version="1.0" \
 ENV NODE_APP_DIR=/srv/www \
     PORT=8442
 
-COPY run_node package.json server.js /tmp/
+COPY run_node package.json server.js usr/share/fonts/truetype/roboto /tmp/
 
 RUN mkdir -p /var/run/s6 && \
     curl -s https://dl-ssl.google.com/linux/linux_signing_key.pub -o /tmp/linux_signing_key.pub && \
@@ -42,6 +42,7 @@ RUN mkdir -p /var/run/s6 && \
     apt-get -qy install \
         --no-install-recommends \
         google-chrome-unstable && \
+    mv -f /tmp/Roboto*.ttf /usr/share/fonts/truetype/roboto/ && \
     curl -sL https://deb.nodesource.com/setup_8.x | bash - && \
     apt-get install -y nodejs && \
     apt-get clean && \
@@ -51,7 +52,8 @@ RUN mkdir -p /var/run/s6 && \
     mv /tmp/run_node /etc/services.d/node/run && \
     mv /tmp/server.js /srv/example/ && \
     mv /tmp/package.json /srv/example/ && \
-    rm -rf /etc/services.d/chromeheadless
+    rm -rf /etc/services.d/chromeheadless && \
+    rm -rf /tmp/*
 
 WORKDIR "${NODE_APP_DIR}"
 
