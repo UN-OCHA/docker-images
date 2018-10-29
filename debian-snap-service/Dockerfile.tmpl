@@ -1,4 +1,4 @@
-FROM unocha/hpc-headless-chrome:%%UPSTREAM%%
+FROM unocha/debian-base-s6:8-slim
 
 # Parse arguments for the build command.
 ARG VERSION
@@ -21,22 +21,39 @@ LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.distribution-version="Jessie" \
       info.humanitarianresponse.nodejs="$NODE_VERSION"
 
-RUN curl -sL https://deb.nodesource.com/setup_8.x | bash - && \
-    apt-get install -y nodejs && \
-    apt-get clean
-
 ENV NODE_APP_DIR=/srv/www \
     PORT=8442
 
 COPY run_node package.json server.js /tmp/
 
-WORKDIR "${NODE_APP_DIR}"
-
-RUN mkdir -p /srv/www /srv/example /etc/services.d/node /root && \
+RUN mkdir -p /var/run/s6 && \
+    curl -s https://dl-ssl.google.com/linux/linux_signing_key.pub -o /tmp/linux_signing_key.pub && \
+    apt-key add /tmp/linux_signing_key.pub && \
+    rm -f /tmp/linux_signing_key.pub && \
+    echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list && \
+    apt-get -qy update && \
+    apt-get -qy install \
+        psmisc \
+        net-tools \
+        libgconf-2-4 \
+        imagemagick \
+        ttf-freefont \
+        fonts-roboto && \
+    apt-get -qy install \
+        --no-install-recommends \
+        google-chrome-unstable && \
+    curl -sL https://deb.nodesource.com/setup_8.x | bash - && \
+    apt-get install -y nodejs && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* && \
+    # Cleanup done, now ensure node starts at boot.
+    mkdir -p /srv/www /srv/example /etc/services.d/node /root && \
     mv /tmp/run_node /etc/services.d/node/run && \
     mv /tmp/server.js /srv/example/ && \
     mv /tmp/package.json /srv/example/ && \
     rm -rf /etc/services.d/chromeheadless
+
+WORKDIR "${NODE_APP_DIR}"
 
 EXPOSE ${PORT}
 
