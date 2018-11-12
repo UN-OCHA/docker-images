@@ -1,6 +1,6 @@
 include ../Makefile.conf
 
-IMAGE=postgis
+IMAGE=sak
 VERSION=$$(VERSION)
 
 all: build tag
