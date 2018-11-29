@@ -1,6 +1,6 @@
 include ../Makefile.conf
 
-IMAGE=debian-snap-service
+IMAGE=debian-snap-base
 VERSION=$$(VERSION)
 
 all: build tag

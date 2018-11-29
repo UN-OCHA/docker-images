@@ -52,6 +52,8 @@ RUN mkdir -p /var/run/s6 && \
     mv /tmp/run_node /etc/services.d/node/run && \
     mv /tmp/server.js /srv/example/ && \
     mv /tmp/package.json /srv/example/ && \
+    cd /srv/example && \
+      npm install && \
     rm -rf /etc/services.d/chromeheadless && \
     rm -rf /tmp/*
 
