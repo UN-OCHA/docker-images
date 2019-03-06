@@ -9,8 +9,6 @@ ARG VCS_REF
 ARG BUILD_DATE
 
 ENV CURATOR_VERSION ${VERSION}
-ENV CURATOR_UID 555
-ENV CURATOR_GID 555
 
 # A little bit of metadata management.
 # See http://label-schema.org/
@@ -24,18 +22,19 @@ LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.description="This service provides the elasticsearch curator." \
       org.label-schema.architecture="x86_64" \
       org.label-schema.distribution="Debian Linux" \
-      org.label-schema.distribution-version="8.5" \
+      org.label-schema.distribution-version="9.5" \
       info.humanitarianresponse.curator=${VERSION}
 
 RUN apt-get update && \
-    apt-get install -y python-yaml build-essential && \
-    pip install elasticsearch-curator==${CURATOR_VERSION} && \
-    groupadd -r -g ${CURATOR_GID} curator && \
-    useradd -r -g curator -u ${CURATOR_UID} curator && \
-    mkdir -p /etc/curator && \
-    apt-get remove --purge build-essential -y && \
+      apt-get install apt-transport-https gnupg wget -y && \
+      wget -qO - https://packages.elastic.co/GPG-KEY-elasticsearch | apt-key add - && \
+    echo "deb [arch=amd64] https://packages.elastic.co/curator/5/debian9 stable main" | tee -a /etc/apt/sources.list.d/curator.list && \
+    apt-get update && \
+    apt-get upgrade -y && \
+    apt-get install elasticsearch-curator=${CURATOR_VERSION} -y && \
+    apt-get remove --purge wget gnupg apt-transport-https -y && \
     apt-get autoremove -y && \
-    apt-get clean && \
+    apt-get clean -y && \
     rm -rf /var/lib/apt/lists/* /tmp/*
 
-ENTRYPOINT [ "/usr/local/bin/curator", "--config", "/etc/curator/curator.yml" ]
+ENTRYPOINT [ "/usr/bin/curator", "--config", "/etc/curator/curator.yml" ]
