@@ -36,8 +36,8 @@ RUN apk update && \
     mkdir -p /etc/services.d/mongo && \
     mv /tmp/run_mongo /etc/services.d/mongo/run && \
     mkdir -p /etc/fix-attrs.d && \
-    cp /tmp/fix_data_dir /etc/fix-attrs.d/01-fix-data-dir && \
-    cp /tmp/fix_logs_dir /etc/fix-attrs.d/02-fix-logs-dir
+    mv /tmp/fix_data_dir /etc/fix-attrs.d/01-fix-data-dir && \
+    mv /tmp/fix_logs_dir /etc/fix-attrs.d/02-fix-logs-dir
 
 EXPOSE 27017
 
