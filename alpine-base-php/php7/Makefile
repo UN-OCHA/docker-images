@@ -1,6 +1,7 @@
 include ../../Makefile.conf
 include ../Makefile.conf
 
+UPSTREAM=$$(UPSTREAM)
 VERSION=$$(VERSION)
 IMAGE=base-php7
 
