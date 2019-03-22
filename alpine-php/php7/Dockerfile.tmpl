@@ -12,7 +12,7 @@ ARG BUILD_DATE
 
 ENV DRUSH_VERSION=8 \
     DRUSH_RELEASE=8.1.15 \
-    WP_RELEASE=2.0.1 \
+    WP_RELEASE=2.1.0 \
     PAGER=more
 
 LABEL org.label-schema.schema-version="1.0" \
@@ -26,7 +26,7 @@ LABEL org.label-schema.schema-version="1.0" \
       info.humanitarianresponse.php=$VERSION \
       info.humanitarianresponse.php.modules="bcmath bz2 calendar ctype curl dom exif fileinfo fpm ftp gd gettext iconv igbinary imagick imap intl json mcrypt memcached opcache openssl pdo pdo_mysql pdo_pgsql phar posix redis shmop soap sysvmsg sysvsem sysvshm simplexml sockets wddx xml xmlreader xmlwriter xsl zip zlib" \
       info.humanitarianresponse.php.sapi="fpm" \
-      info.humanitarianresponse.composer="1.7.2" \
+      info.humanitarianresponse.composer="1.8.4" \
       info.humanitarianresponse.drush=$DRUSH_RELEASE \
       info.humanitarianresponse.wp=$WP_RELEASE
 
