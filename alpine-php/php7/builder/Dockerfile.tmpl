@@ -27,7 +27,7 @@ LABEL org.label-schema.schema-version="1.0" \
       info.humanitarianresponse.php=$VERSION \
       info.humanitarianresponse.php.modules="bcmath bz2 calendar ctype curl dom exif fileinfo fpm ftp gd gettext iconv igbinary imagick imap intl json mcrypt memcached opcache openssl pdo pdo_mysql pdo_pgsql phar posix redis shmop soap sysvmsg sysvsem sysvshm simplexml sockets wddx xml xmlreader xmlwriter xsl zip zlib" \
       info.humanitarianresponse.php.sapi="cli" \
-      info.humanitarianresponse.composer="1.6.5" \
+      info.humanitarianresponse.composer="1.8.4" \
       info.humanitarianresponse.drush="8.1.18-dev" \
       info.humanitarianresponse.node="8.11.3" \
       info.humanitarianresponse.npm="5.6.0" \
@@ -42,8 +42,6 @@ ENV DRUSH_VERSION=8 \
     DRUSH_RELEASE=8.x-dev
 
 COPY drushrc.php /drushrc.php
-COPY drush8-2282.patch /tmp/drush8-2282.patch
-COPY drush8-2567.patch /tmp/drush8-2567.patch
 
 RUN npm install --global \
       jasmine && \
@@ -116,9 +114,6 @@ RUN npm install --global \
     # Install drush and symlink it somewhere useful.
     COMPOSER_HOME=/usr/local/drush$DRUSH_VERSION \
       composer global require drush/drush:$DRUSH_RELEASE && \
-    cd /usr/local/drush8/vendor/drush/drush && \
-      patch -p1 -i /tmp/drush8-2282.patch && \
-      patch -p1 -i /tmp/drush8-2567.patch && \
     cd / && \
     ln -sf /usr/local/drush$DRUSH_VERSION/vendor/bin/drush /usr/bin/drush && \
     drush status && \
