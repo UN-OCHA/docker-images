@@ -1,0 +1,43 @@
+FROM unocha/nodejs:%%UPSTREAM%%
+
+# Parse arguments for the build command.
+ARG VERSION
+ARG VCS_URL
+ARG VCS_REF
+ARG BUILD_DATE
+
+# A little bit of metadata management.
+# See http://label-schema.org/
+LABEL org.label-schema.schema-version="1.0" \
+      org.label-schema.build-date=$BUILD_DATE \
+      org.label-schema.vendor="UN-OCHA" \
+      org.label-schema.version=$VERSION \
+      org.label-schema.vcs-url=$VCS_URL \
+      org.label-schema.vcs-ref=$VCS_REF \
+      org.label-schema.name="nginx" \
+      org.label-schema.description="This image provides a redis-commander instance." \
+      org.label-schema.architecture="x86_64" \
+      org.label-schema.distribution="Alpine Linux" \
+      org.label-schema.distribution-version="3.9" \
+      info.humanitarianresponse.redis-commander=$VERSION
+
+ENV HOME=/srv/www \
+    NODE_ENV=production \
+    PORT=3000
+
+WORKDIR /srv/www
+
+RUN apk add -U dumb-init && \
+    ln -sf /usr/bin/node /usr/local/bin/node && \
+    chown -R appuser /srv/www
+
+USER appuser
+
+RUN npm install redis-commander@$VERSION && \
+    mv node_modules/redis-commander/* . && \
+    mv docker/entrypoint.sh .
+
+ENTRYPOINT ["/usr/bin/dumb-init", "--"]
+CMD ["/srv/www/entrypoint.sh"]
+
+EXPOSE 3000
