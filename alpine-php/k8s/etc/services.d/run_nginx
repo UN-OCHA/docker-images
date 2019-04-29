@@ -1,4 +1,4 @@
-##!/usr/bin/with-contenv sh
-/usr/bin/sed -i "s/%%HOSTNAME%%/${HOSTNAME}/g" /etc/nginx/sites-enabled/default.conf
+#!/usr/bin/with-contenv sh
+/bin/sed -i "s/%%HOSTNAME%%/${HOSTNAME}/g" /etc/nginx/sites-enabled/default.conf
 
-exec nginx -g "daemon off";
+exec nginx -g "daemon off;"
