@@ -1,2 +1,4 @@
-#!/usr/bin/execlineb -P
-exec nginx -g "daemon off";
+#!/usr/bin/with-contenv sh
+set -e
+
+exec nginx -g "daemon off;"
