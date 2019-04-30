@@ -1,4 +1,4 @@
-FROM unocha/alpine-base-nginx-extras:%%UPSTREAM%%
+FROM unocha/nginx:%%UPSTREAM%%
 
 MAINTAINER UN-OCHA Operations <ops+docker@humanitarianresponse.info>
 
@@ -10,7 +10,7 @@ ARG VCS_URL
 ARG VCS_REF
 ARG BUILD_DATE
 
-ENV HOSTNAME=localhost \
+ENV NGINX_HOSTNAME=localhost \
     DRUSH_VERSION=8 \
     DRUSH_RELEASE=8.1.15 \
     WP_RELEASE=2.1.0 \
