@@ -5,6 +5,7 @@ MAINTAINER UN-OCHA Operations <ops+docker@humanitarianresponse.info>
 # Thanks to orakili <docker@orakili.net>
 
 # Parse arguments for the build command.
+ARG UPSTREAM
 ARG VERSION
 ARG VCS_URL
 ARG VCS_REF
@@ -22,15 +23,28 @@ LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.description="This service provides a base php-fpm platform." \
       org.label-schema.architecture="x86_64" \
       org.label-schema.distribution="Alpine Linux" \
-      org.label-schema.distribution-version="3.8" \
+      org.label-schema.distribution-version="$UPSTREAM" \
       info.humanitarianresponse.php=$VERSION \
       info.humanitarianresponse.php.modules="bcmath bz2 calendar ctype curl dom exif fileinfo fpm gd gettext iconv imagick intl json mcrypt memcached mysqli opcache openssl pdo pdo_mysql pdo_pgsql phar posix redis shmop sysvmsg sysvsem sysvshm simplexml sockets wddx xml xmlreader xmlwriter xsl zip zlib" \
       info.humanitarianresponse.php.sapi="fpm"
 
-COPY php-fpm.conf run_fpm msmtprc /
+# Default PHP configuration variables. These can be overridden via the environment.
+ENV PHP_RUN_USER=appuser \
+    PHP_RUN_GROUP=appuser \
+    PHP_MAX_CHILDREN=16 \
+    PHP_START_SERVERS=2 \
+    PHP_MIN_SPARE_SERVERS=1 \
+    PHP_MAX_SPARE_SERVERS=2 \
+    PHP_MAX_REQUESTS=1000 \
+    PHP_MEMORY_LIMIT=256M \
+    PHP_MAX_EXECUTION_TIME=60s \
+    PHP_POST_MAX_SIZE=100m \
+    PHP_UPLOAD_MAX_FILESIZE=100m
+
+COPY etc/php7 etc/services/run_fpm etc/msmtprc /
 
 RUN \
-    # Install standard packages from 3.8.
+    # Install standard packages from $UPSTREAM.
     apk -U upgrade && \
     apk add --update-cache \
       fcgi \
@@ -80,32 +94,23 @@ RUN \
       php7-zlib && \
     rm -rf /var/cache/apk/* && \
     \
-    # Setup directory structure and configure FPM.
+    # Setup directory structure for FPM.
     mkdir -p /etc/services.d/fpm /srv/www/html && \
     mv /msmtprc /etc/msmtprc && \
     mv /run_fpm /etc/services.d/fpm/run && \
-    mv /php-fpm.conf /etc/php7/php-fpm.conf && \
     \
     # Fixup the sendmail path for msmtp and set it as mailer.
     ln -sf /usr/bin/msmtp /usr/sbin/sendmail && \
     ln -sf /usr/bin/msmtp /usr/bin/sendmail && \
     \
     # Configure php.
-    sed -i \
-        -e "s/^expose_php.*/expose_php = Off/" \
-        -e "s/^;date.timezone.*/date.timezone = UTC/" \
-        -e "s/^memory_limit.*/memory_limit = -1/" \
-        -e "s/^max_execution_time.*/max_execution_time = 300/" \
-        -e "s/^post_max_size.*/post_max_size = 128M/" \
-        -e "s/^upload_max_filesize.*/upload_max_filesize = 128M/" \
-        -e "s/^;sendmail_path =/sendmail_path = \/usr\/sbin\/sendmail -t/" \
-      /etc/php7/php.ini && \
-    echo "error_log = \"/var/log/php/error.log\"" | tee -a /etc/php7/php.ini && \
+    rm -rf /etc/php7 && \
+    mkdir -p /etc/php7 && \
+    mv -f /php.ini /conf.d /php-fpm.conf /php-fpm.d /etc/php7 && \
     \
     # Configure PHP logs.
     rm -rf /var/log/php7 && \
     mkdir /var/log/php && \
-    touch /var/log/php/error.log && \
     touch /var/log/php/www-error.log && \
     touch /var/log/php/www-slow.log
 
@@ -114,10 +119,3 @@ EXPOSE 9000
 # Add a health check for the FPM server on port 9000.
 HEALTHCHECK --interval=60s --timeout=5s \
         CMD REDIRECT_STATUS=true SCRIPT_NAME=/ping SCRIPT_FILENAME=/ping REQUEST_METHOD=GET cgi-fcgi -bind -connect 127.0.0.1:9000
-
-VOLUME ["/etc/php7"]
-
-# Volumes
-# - Conf: /etc/php7/ (php-fpm.conf, php.ini)
-# - Logs: /var/log/php
-# - Data: /srv/www, /var/lib/php/session

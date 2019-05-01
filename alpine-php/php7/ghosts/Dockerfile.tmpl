@@ -67,7 +67,7 @@ RUN \
     rm -rf /var/cache/apk/* && \
     # Install casper.
     curl -L -o /tmp/casperjs.zip https://github.com/n1k0/casperjs/archive/master.zip && \
-    mkdir /opt && \
+    mkdir -p /opt && \
     unzip /tmp/casperjs.zip -d /opt && \
     mv /opt/casperjs-master /opt/casperjs && \
     ln -s /opt/casperjs/bin/casperjs /usr/local/bin/casperjs && \
