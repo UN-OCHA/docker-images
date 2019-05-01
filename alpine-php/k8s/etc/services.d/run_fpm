@@ -1,4 +1,0 @@
-#!/usr/bin/with-contenv sh
-set -e
-
-exec /usr/sbin/php-fpm7 -c /etc/php7/php.ini -y /etc/php7/php-fpm.conf -F
