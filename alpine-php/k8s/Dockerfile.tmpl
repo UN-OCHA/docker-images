@@ -12,7 +12,7 @@ ARG VCS_REF
 ARG BUILD_DATE
 
 ENV NGINX_SERVERNAME=localhost \
-    ENV NR_VERSION php5-8.2.0.221-linux-musl \
+    NR_VERSION=php5-8.2.0.221-linux-musl \
     DRUSH_VERSION=8 \
     DRUSH_RELEASE=8.1.15 \
     WP_RELEASE=2.1.0 \
@@ -133,13 +133,13 @@ RUN \
     tar xvf /tmp/newrelic.tar.gz -C /tmp && \
     mv /tmp/newrelic-$NR_VERSION/daemon/newrelic-daemon.x64 \
        /usr/bin/newrelic-daemon && \
-    mv /tmp/newrelic-$NR_VERSION/agent/x64/newrelic-(php --info | awk '/^PHP API/ {print $NF}').so \
+    mv /tmp/newrelic-$NR_VERSION/agent/x64/newrelic-$(php --info | awk '/^PHP API/ {print $NF}').so \
        /usr/lib/php7/modules/newrelic.so && \
     mv /tmp/newrelic-$NR_VERSION/scripts/newrelic.cfg.template \
        /etc/newrelic/newrelic.cfg && \
     rm -rf /tmp/newrelic-php5-$NR_VERSION /tmp/newrelic.tar.gz && \
     mkdir -p /etc/services.d/newrelic && \
-    mv /run_newrelic /etc/services.d/newrelic/run
+    mv /run_newrelic /etc/services.d/newrelic/run && \
     \
     # Install composer, as suggested by https://getcomposer.org/
     # and https://getcomposer.org/doc/faqs/how-to-install-composer-programmatically.md
