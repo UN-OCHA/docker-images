@@ -1,6 +1,6 @@
 <?php
 // Specify a Drupal url.
-$options['l'] = getenv("DHNGINX_SERVERNAME");
+$options['l'] = getenv("NGINX_SERVERNAME");
 
 // Specify a default drupal root.
 $options['r'] = '/srv/www/html';
