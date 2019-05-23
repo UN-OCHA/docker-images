@@ -30,6 +30,7 @@ LABEL org.label-schema.schema-version="1.0" \
       info.humanitarianresponse.drush=$DRUSH_RELEASE \
       info.humanitarianresponse.wp=$WP_RELEASE
 
+COPY etc/my.cnf.d/client.cnf /client.cnf
 COPY drushrc.php /drushrc.php
 COPY drush8-2282.patch /tmp/drush8-2282.patch
 COPY drush8-2567.patch /tmp/drush8-2567.patch
@@ -40,6 +41,10 @@ RUN apk add --update-cache \
         mysql-client \
         postgresql-client && \
     rm -rf /var/cache/apk/* && \
+    \
+    # Configure the MySQL client library.
+    mv -f /client.cnf /etc/my.cnf.d/client.cnf && \
+    \
     # Install composer, as suggested by https://getcomposer.org/
     # and https://getcomposer.org/doc/faqs/how-to-install-composer-programmatically.md
     COMPOSER_HASH=$(curl -sS https://composer.github.io/installer.sig) && \
