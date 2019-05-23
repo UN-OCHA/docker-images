@@ -41,7 +41,7 @@ ENV PHP_RUN_USER=appuser \
     PHP_POST_MAX_SIZE=100m \
     PHP_UPLOAD_MAX_FILESIZE=100m
 
-COPY etc/php7 etc/services/run_fpm etc/msmtprc etc/my.cnf.d/ocha.cnf /
+COPY etc/php7 etc/services/run_fpm etc/msmtprc /
 
 RUN \
     # Install standard packages from $UPSTREAM.
@@ -112,10 +112,7 @@ RUN \
     rm -rf /var/log/php7 && \
     mkdir /var/log/php && \
     touch /var/log/php/www-error.log && \
-    touch /var/log/php/www-slow.log && \
-    \
-    # Configure the MySQL client library.
-    mv -f /ocha.cnf /etc/my.cnf.d
+    touch /var/log/php/www-slow.log
 
 EXPOSE 9000
 
