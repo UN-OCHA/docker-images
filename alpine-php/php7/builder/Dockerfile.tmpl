@@ -126,25 +126,6 @@ RUN npm install --global \
     # Add our default drushrc.php file.
     mkdir -p /etc/drush && \
     mv /drushrc.php /etc/drush/drushrc.php && \
-    # Build igbinary php extension.
-    apk add --update-cache --virtual .build-dependencies \
-      git \
-      php7-dev \
-      autoconf \
-      g++ \
-      make && \
-    cd /tmp && \
-    git clone https://github.com/igbinary/igbinary && \
-    cd igbinary && \
-    phpize7 && \
-    ./configure CFLAGS="-O2 -g" --enable-igbinary --with-php-config=/usr/bin/php-config7 && \
-    make && \
-    make install && \
-    cd .. && \
-    rm -rf igbinary && \
-    rm -rf /usr/include/php/ && \
-    apk del .build-dependencies && \
-    rm -rf /var/cache/apk/* && \
     # Add dependencies for capsper and phantom.
     apk add --update-cache \
       fontconfig \
