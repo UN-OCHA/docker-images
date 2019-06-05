@@ -41,7 +41,8 @@ ENV PHP_ENVIRONMENT=production \
     PHP_MEMORY_LIMIT=256M \
     PHP_MAX_EXECUTION_TIME=60s \
     PHP_POST_MAX_SIZE=100m \
-    PHP_UPLOAD_MAX_FILESIZE=100m
+    PHP_UPLOAD_MAX_FILESIZE=100m \
+    PHP_MAX_INPUT_VARS=1000
 
 # Copy custom config files into the container.
 COPY etc/php7 etc/services/run_fpm etc/msmtprc /tmp/
