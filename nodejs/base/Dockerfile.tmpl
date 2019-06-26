@@ -48,7 +48,7 @@ RUN  apk add --no-cache \
   && apk add --no-cache \
         nodejs \
         nodejs-npm \
-        yarn \
+  && npm -g install yarn \
   && yarn global add \
         grunt-cli \
         newrelic \
