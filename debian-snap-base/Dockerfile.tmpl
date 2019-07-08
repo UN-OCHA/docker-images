@@ -1,12 +1,11 @@
-FROM unocha/debian-base-s6:8-slim
-
-ENV NODE_VERSION=8
+FROM unocha/debian-base-s6:%%UPSTREAM%%
 
 # Parse arguments for the build command.
 ARG VERSION
 ARG VCS_URL
 ARG VCS_REF
 ARG BUILD_DATE
+ARG NODE_VERSION
 
 # A little bit of metadata management.
 # See http://label-schema.org/
@@ -35,7 +34,7 @@ RUN mkdir -p /var/run/s6 && \
         net-tools \
         libgconf-2-4 \
         imagemagick \
-        ttf-freefont \
+        fonts-freefont-ttf \
         fonts-roboto && \
     mv -f /tmp/Roboto*.ttf /usr/share/fonts/truetype/roboto/ && \
     curl -sL https://deb.nodesource.com/setup_${NODE_VERSION}.x | bash - && \
