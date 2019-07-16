@@ -1,4 +1,4 @@
-FROM unocha/alpine-jdk:8
+FROM unocha/alpine-base-jdk:%%UPSTREAM%%
 
 MAINTAINER Serban Teodorescu <teodorescu.serban@gmail.com>
 
@@ -27,7 +27,7 @@ LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.description="This service provides a stand-alone solr platform." \
       org.label-schema.architecture="x86_64" \
       org.label-schema.distribution="Alpine Linux" \
-      org.label-schema.distribution-version="3.4" \
+      org.label-schema.distribution-version="3.10.1" \
       info.humanitarianresponse.solr=$VERSION
 
 COPY init-demo-core.sh run-solr /
