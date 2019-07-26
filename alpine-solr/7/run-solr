@@ -1,0 +1,40 @@
+#!/usr/bin/with-contenv sh
+
+BASEDIR=/srv/solr
+CONFDIR=/srv/confs
+SOLR_CORE=${SOLR_CORE:-core}
+
+cd $BASEDIR
+
+if [ -d ${BASEDIR}/server/solr/${SOLR_CORE} ]; then
+    echo "SOLR core initialization seems completed. Skipping it."
+else
+    echo "Performing a one time SOLR core initialization."
+    echo "* Starting an empty solr..."
+    bin/solr start -force > /dev/null 2>&1
+    echo "* Waiting 10 seconds for empty solr to come online."
+    sleep 10
+    echo "* Creating a new solr core."
+    bin/solr create_core -c ${SOLR_CORE} -force > /dev/null 2>&1
+    sleep 2
+    echo "* Stopping the empty solr."
+    bin/solr stop -all > /dev/null 2>&1
+    sleep 2
+    if [ -f ${CONFDIR}/solrconfig.xml ]; then
+      echo "* Reconfiguring new solr core and applying schema."
+      cp -a ${CONFDIR}/* server/solr/${SOLR_CORE}/conf/
+      echo "* Core init done."
+    fi
+fi
+
+echo "Starting SOLR service with core: ${CORE:-core}"
+
+EXTRAOPTS="-Dsolr.data.dir=/srv/data \
+           -DMASTER_PROTO=${MASTER_PROTO:-http} \
+           -DMASTER_ADDR=${MASTER_ADDR:-solr}\
+           -DMASTER_PORT=${MASTER_PORT:-8983} \
+           -DSOLR_CORE=${SOLR_CORE:-core} \
+           -Dsolr.replication.master=${IS_MASTER:-true} \
+           -Dsolr.replication.slave=${IS_SLAVE:-false}"
+
+exec bin/solr -force -f -m ${SOLR_HEAP_SIZE:-512m} -a "${EXTRAOPTS}"
