@@ -35,7 +35,7 @@ LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.description="This service provides a base nodejs platform." \
       org.label-schema.architecture="x86_64" \
       org.label-schema.distribution="Alpine Linux" \
-      org.label-schema.distribution-version="3.8" \
+      org.label-schema.distribution-version="%%UPSTREAM%%" \
       info.humanitarianresponse.nodejs="$NODE_VERSION" \
       info.humanitarianresponse.npm="$NPM_VERSION" \
       info.humanitarianresponse.yarn="$YARN_VERSION"
@@ -48,7 +48,7 @@ RUN  apk add --no-cache \
   && apk add --no-cache \
         nodejs \
         nodejs-npm \
-        yarn \
+  && npm -g install yarn \
   && yarn global add \
         grunt-cli \
         newrelic \
