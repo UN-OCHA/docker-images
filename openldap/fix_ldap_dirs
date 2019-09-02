@@ -1,3 +1,4 @@
 /tmp false root 0666 1777
 /run/openldap true ldap:ldap 0644 0755
 /var/lib/openldap/openldap-data true ldap:ldap 0600 0700
+/var/log/openldap true ldap:ldap 0600 0700

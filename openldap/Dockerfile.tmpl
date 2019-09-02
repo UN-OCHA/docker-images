@@ -31,7 +31,7 @@ LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.architecture="x86_64" \
       org.label-schema.distribution="Alpine Linux" \
       org.label-schema.distribution-version="%%UPSTREAM%%" \
-      info.humanitarianresponse.openldap="2.4.46-r0"
+      info.humanitarianresponse.openldap="2.4.47-r2"
 
 COPY base.ldif.tpl bcrypt.tpl fix_ldap_dirs john.ldif.tpl pw-bcrypt.so run_slapd slapd-init.conf slapd.tpl ssl.tpl syncrepl.tpl /tmp/
 
@@ -47,12 +47,13 @@ RUN apk update && \
       openldap-overlay-ppolicy \
       openldap-overlay-syncprov && \
     rm -rf /var/cache/apk/* && \
-    mkdir -p /run/openldap /etc/fix-attrs.d /etc/services.d/slapd /etc/openldap/conf.d && \
+    mkdir -p /run/openldap /etc/fix-attrs.d /etc/services.d/slapd /etc/openldap/conf.d /var/log/openldap && \
     mv /tmp/base.ldif.tpl /etc/openldap/ && \
     mv /tmp/john.ldif.tpl /etc/openldap/ && \
     mv /tmp/slapd-init.conf /etc/openldap/ && \
     chown root:ldap /etc/openldap/slapd-init.conf && \
     chmod 640 /etc/openldap/slapd-init.conf && \
+    chown ldap:ldap /var/log/openldap && \
     mv /tmp/bcrypt.tpl /etc/openldap/ && \
     mv /tmp/slapd.tpl /etc/openldap/ && \
     mv /tmp/ssl.tpl /etc/openldap/ && \
