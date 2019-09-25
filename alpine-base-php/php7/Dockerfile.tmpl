@@ -25,7 +25,7 @@ LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.distribution="Alpine Linux" \
       org.label-schema.distribution-version="$UPSTREAM" \
       info.humanitarianresponse.php=$VERSION \
-      info.humanitarianresponse.php.modules="bcmath bz2 calendar ctype curl dom exif fileinfo fpm gd gettext iconv imagick intl json mcrypt memcached mysqli opcache openssl pdo pdo_mysql pdo_pgsql phar posix redis shmop sysvmsg sysvsem sysvshm simplexml sockets wddx xml xmlreader xmlwriter xsl zip zlib" \
+      info.humanitarianresponse.php.modules="bcmath bz2 calendar ctype curl dom exif fileinfo fpm gd geos gettext iconv imagick intl json mcrypt memcached mysqli opcache openssl pdo pdo_mysql pdo_pgsql phar posix redis shmop sysvmsg sysvsem sysvshm simplexml sockets wddx xml xmlreader xmlwriter xsl zip zlib" \
       info.humanitarianresponse.php.sapi="fpm"
 
 # Default PHP configuration variables. These can be overridden via the environment.
@@ -92,6 +92,34 @@ RUN \
       php7-xsl \
       php7-zip \
       php7-zlib && \
+     # Install build dependencies in order to build the GEOS extension
+     # against the geos library from edge.
+     echo "@edge-testing http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories && \
+     apk add 'geos@edge-testing=~3.7.2' 'geos-dev@edge-testing=~3.7.2' && \
+     apk add --virtual .build-dependencies \
+      autoconf \
+      build-base \
+      file \
+      git \
+      gzip \
+      patch \
+      php7-dev \
+      re2c \
+      tar && \
+    cd /tmp && \
+    # Build and install php-ext-geos.
+    git clone https://git.osgeo.org/gitea/geos/php-geos.git && \
+    cd php-geos && \
+      ./autogen.sh && ./configure &&  make &&  make install && \
+    cd /tmp && rm -rf php-geos && \
+    apk del .build-dependencies geos-dev && \
+    # Downgrade ghostscript for pdf thumbnails.
+    # See https://humanitarian.atlassian.net/browse/OPS-5925
+    echo "@3-4-main http://dl-cdn.alpinelinux.org/alpine/v3.4/main" >> /etc/apk/repositories && \
+    apk add --no-cache \
+      'freetype@3-4-main=~2.6' \
+      'ghostscript@3-4-main=~9.22' \
+      'fontconfig@3-4-main=~2.12.1' && \
     rm -rf /var/cache/apk/* && \
     \
     # Setup directory structure for FPM.
