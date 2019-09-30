@@ -44,7 +44,7 @@ RUN curl -s -o /tmp/newrelic.tar.gz \
        /usr/lib/php7/modules/newrelic.so && \
     mv /tmp/newrelic-$NR_VERSION/scripts/newrelic.cfg.template \
        /etc/newrelic/newrelic.cfg && \
-    rm -rf /tmp/newrelic-php5-$NR_VERSION /tmp/newrelic.tar.gz && \
+    rm -rf /tmp/newrelic-php5* /tmp/newrelic.tar.gz && \
     rm -f /etc/php7/conf.d/newrelic.ini && \
     mkdir -p /etc/services.d/newrelic && \
     mv /run_newrelic /etc/services.d/newrelic/run && \
