@@ -24,11 +24,12 @@ LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.vcs-ref=$VCS_REF \
       info.humanitarianresponse.nginx=$UPSTREAM \
       info.humanitarianresponse.php=$VERSION \
-      info.humanitarianresponse.php.modules="bcmath bz2 calendar ctype curl dom exif fileinfo fpm ftp gd gettext iconv igbinary imagick imap intl json mcrypt memcached opcache openssl pdo pdo_mysql pdo_pgsql phar posix redis shmop soap sysvmsg sysvsem sysvshm simplexml sockets wddx xml xmlreader xmlwriter xsl zip zlib" \
+      info.humanitarianresponse.php.modules="bcmath bz2 calendar ctype curl dom exif fileinfo fpm ftp gd gettext iconv igbinary imagick imap intl json mcrypt memcached opcache openssl pdo pdo_mysql phar posix redis shmop soap sysvmsg sysvsem sysvshm simplexml sockets wddx xml xmlreader xmlwriter xsl zip zlib" \
       info.humanitarianresponse.php.sapi="fpm" \
-      info.humanitarianresponse.composer="1.8.4" \
+      info.humanitarianresponse.composer="1.9.0" \
       info.humanitarianresponse.drush=$DRUSH_RELEASE \
-      info.humanitarianresponse.wp=$WP_RELEASE
+      info.humanitarianresponse.wp=$WP_RELEASE \
+      info.humanitarianresponse.nginx=1.16.1
 
 # Insert all our custom config files.
 COPY etc/drush/drushrc.php \
@@ -38,7 +39,6 @@ COPY etc/drush/drushrc.php \
 
 # Install NGINX for standard operation.
 RUN \
-    apk -U upgrade && \
     apk add -U nginx nginx-mod-http-upload-progress nginx-mod-http-lua && \
     mkdir -p /etc/services.d/nginx && \
     rm -rf /etc/nginx/* && \

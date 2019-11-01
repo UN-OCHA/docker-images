@@ -23,9 +23,9 @@ LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.description="This service provides a builder container for PHP, with node and sass helpers." \
       org.label-schema.architecture="x86_64" \
       org.label-schema.distribution="Alpine Linux" \
-      org.label-schema.distribution-version="3.8" \
+      org.label-schema.distribution-version="3.10.2" \
       info.humanitarianresponse.php=$VERSION \
-      info.humanitarianresponse.php.modules="bcmath bz2 calendar ctype curl dom exif fileinfo fpm ftp gd gettext iconv igbinary imagick imap intl json mcrypt memcached opcache openssl pdo pdo_mysql pdo_pgsql phar posix redis shmop soap sysvmsg sysvsem sysvshm simplexml sockets wddx xml xmlreader xmlwriter xsl zip zlib" \
+      info.humanitarianresponse.php.modules="bcmath bz2 calendar ctype curl dom exif fileinfo fpm ftp gd gettext iconv igbinary imagick imap intl json mcrypt memcached opcache openssl pdo pdo_mysql phar posix redis shmop soap sysvmsg sysvsem sysvshm simplexml sockets wddx xml xmlreader xmlwriter xsl zip zlib" \
       info.humanitarianresponse.php.sapi="cli" \
       info.humanitarianresponse.composer="1.8.4" \
       info.humanitarianresponse.drush="8.1.18-dev" \
@@ -84,7 +84,6 @@ RUN npm install --global \
       php7-openssl \
       php7-pdo \
       php7-pdo_mysql \
-      php7-pdo_pgsql \
       php7-phar \
       php7-posix \
       php7-redis \
@@ -127,8 +126,6 @@ RUN npm install --global \
     # Add our default drushrc.php file.
     mkdir -p /etc/drush && \
     mv /drushrc.php /etc/drush/drushrc.php && \
-    # Cleanup.
-    rm -f /tmp/drush8-2282.patch /tmp/drush8-2567.patch && \
     # Build igbinary php extension.
     apk add --update-cache --virtual .build-dependencies \
       git \
