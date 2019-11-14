@@ -1,6 +1,8 @@
 <?php
-// Specify a Drupal url.
-$options['l'] = getenv("NGINX_SERVERNAME");
+// Specify a Drupal url *only* if the site has a single canonical name.
+if (strpos(getenv("NGINX_SERVERNAME"), ' ') === FALSE) {
+  $options['l'] = getenv("NGINX_SERVERNAME")l
+}
 
 // Specify a default drupal root.
 $options['r'] = '/srv/www/html';
