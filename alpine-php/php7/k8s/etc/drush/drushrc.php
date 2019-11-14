@@ -1,7 +1,7 @@
 <?php
 // Specify a Drupal url *only* if the site has a single canonical name.
 if (strpos(getenv("NGINX_SERVERNAME"), ' ') === FALSE) {
-  $options['l'] = getenv("NGINX_SERVERNAME")l
+  $options['l'] = getenv("NGINX_SERVERNAME");
 }
 
 // Specify a default drupal root.
