@@ -38,11 +38,13 @@ RUN mkdir -p /var/run/s6 && \
         libgconf-2-4 \
         fonts-freefont-ttf \
         fonts-roboto \
+        fonts-noto-core \
+        fonts-noto-ui-core \
         gnupg \
         net-tools \
         psmisc && \
-    # Move any bundled typetype fonts to the correct location.
-    mv -f /tmp/assets/fonts/* /usr/share/fonts/truetype/ && \
+    # Move our bundled Roboto font files to the correct location.
+    mv -f /tmp/assets/fonts/roboto/Roboto*.ttf /usr/share/fonts/truetype/roboto/ && \
     # Configure Chrome repo.
     curl -s https://dl-ssl.google.com/linux/linux_signing_key.pub -o linux_signing_key.pub && \
     apt-key add linux_signing_key.pub && \
