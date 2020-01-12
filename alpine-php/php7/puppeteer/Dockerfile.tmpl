@@ -12,7 +12,7 @@ ARG VCS_REF
 # instance in another container via websockets.
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
 # Puppeteer v0.13.0 works with Chromium 64.
-ENV PUPPETEER_VERSION 1.5.0
+ENV PUPPETEER_VERSION 1.18.1
 
 LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.build-date=$BUILD_DATE \
@@ -24,15 +24,16 @@ LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.description="This service provides a php-fpm platform for the FTS Public and HPC Viewer Drupal sites." \
       org.label-schema.architecture="x86_64" \
       org.label-schema.distribution="Alpine Linux" \
-      org.label-schema.distribution-version="3.8" \
+      org.label-schema.distribution-version="3.10.2" \
       info.humanitarianresponse.php=$VERSION \
-      info.humanitarianresponse.php.modules="bcmath bz2 calendar ctype curl dom exif fileinfo fpm ftp gd gettext iconv igbinary imagick imap intl json mcrypt memcached opcache openssl pdo pdo_mysql pdo_pgsql phar posix redis shmop soap sysvmsg sysvsem sysvshm simplexml sockets wddx xml xmlreader xmlwriter xsl zip zlib" \
+      info.humanitarianresponse.php.modules="bcmath bz2 calendar ctype curl dom exif fileinfo fpm ftp gd geos gettext iconv igbinary imagick imap intl json mcrypt memcached opcache openssl pdo pdo_mysql phar posix redis shmop soap sysvmsg sysvsem sysvshm simplexml sockets wddx xml xmlreader xmlwriter xsl zip zlib" \
       info.humanitarianresponse.php.sapi="fpm" \
       info.humanitarianresponse.puppeteer=$PUPPETEER_VERSION
 
 RUN echo @edge http://dl-cdn.alpinelinux.org/alpine/edge/community >> /etc/apk/repositories && \
     echo @edge http://dl-cdn.alpinelinux.org/alpine/edge/main >> /etc/apk/repositories && \
     apk add --update nodejs nodejs-npm && \
+    cd / && \
     npm install --save puppeteer@$PUPPETEER_VERSION request request-promise-native options-parser util && \
     # Clean up.
     rm -f package-lock.json && \

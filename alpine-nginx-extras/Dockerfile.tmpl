@@ -20,11 +20,11 @@ LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.description="This service provides an nginx platform with uploadprogress module." \
       org.label-schema.architecture="x86_64" \
       org.label-schema.distribution="Alpine Linux" \
-      org.label-schema.distribution-version="3.6" \
+      org.label-schema.distribution-version="3.9" \
       info.humanitarianresponse.nginx=$VERSION \
       info.humanitarianresponse.nginx.modules="ssl realip addition sub sav flv mp4 gunzip gzip_static random_index secure_link stub_status auth_request threads stream ssl slice file-aio http_v2 uploadprogress"
 
-COPY nginx.conf default.conf index.html run_nginx /tmp
+COPY nginx.conf default.conf index.html run_nginx /tmp/
 
 # Install nginx.
 RUN mkdir -p /etc/services.d/nginx /srv/www/html /var/log/nginx /var/cache/nginx /etc/nginx/conf.d && \

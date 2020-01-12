@@ -2,7 +2,7 @@ FROM unocha/php7:%%UPSTREAM%%
 
 MAINTAINER orakili <docker@orakili.net>
 
-ENV PHP_HOEDOWN_VERSION=0.6.7
+ENV PHP_HOEDOWN_VERSION=0.6.8
 
 # A little bit of metadata management.
 ARG BUILD_DATE
@@ -20,12 +20,12 @@ LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.description="This service provides a php-fpm platform for the reliefweb.int Drupal site with MuPDF and Hoedown." \
       org.label-schema.architecture="x86_64" \
       org.label-schema.distribution="Alpine Linux" \
-      org.label-schema.distribution-version="3.8" \
+      org.label-schema.distribution-version="3.10.2" \
       info.humanitarianresponse.php=$VERSION \
-      info.humanitarianresponse.php.modules="bcmath bz2 ctype curl dom fpm gmp imagick json mbstring mcrypt mysql opcache openssl pdo pdo_mysql pdo_pgsql phar posix simplexml sockets xml xmlreader xmlwriter zip zlib memcached redis" \
+      info.humanitarianresponse.php.modules="bcmath bz2 ctype curl dom fpm gmp hoedown imagick json mbstring mcrypt mysql opcache openssl pdo pdo_mysql phar posix simplexml sockets xml xmlreader xmlwriter zip zlib memcached redis" \
       info.humanitarianresponse.php.sapi="fpm" \
       info.humanitarianresponse.hoedown=$PHP_HOEDOWN_VERSION \
-      info.humanitarianresponse.mupdf="1.11-r1"
+      info.humanitarianresponse.mupdf="1.15.0-r0"
 
 COPY run_fpm /
 
