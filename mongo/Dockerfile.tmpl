@@ -1,0 +1,44 @@
+FROM unocha/alpine-base-s6:%%UPSTREAM%%
+
+# Parse arguments for the build command.
+ARG VERSION
+ARG VCS_URL
+ARG VCS_REF
+ARG BUILD_DATE
+
+ENV LANG=en_US.utf8
+
+# A little bit of metadata management.
+# See http://label-schema.org/
+LABEL org.label-schema.schema-version="1.0" \
+      org.label-schema.build-date=$BUILD_DATE \
+      org.label-schema.vendor="UN-OCHA" \
+      org.label-schema.version=$VERSION \
+      org.label-schema.vcs-url=$VCS_URL \
+      org.label-schema.vcs-ref=$VCS_REF \
+      org.label-schema.name="mongodb" \
+      org.label-schema.description="This service provides a mongodb platform." \
+      org.label-schema.architecture="x86_64" \
+      org.label-schema.distribution="Alpine Linux" \
+      org.label-schema.distribution-version="%%UPSTREAM%%" \
+      info.humanitarianresponse.mongodb="4.0.5-r0"
+
+COPY run_mongo fix_* /tmp/
+
+# Install openldap.
+RUN apk update && \
+    apk upgrade && \
+    apk add \
+      gettext \
+      mongodb \
+      mongodb-tools && \
+    rm -rf /var/cache/apk/* && \
+    mkdir -p /etc/services.d/mongo && \
+    mv /tmp/run_mongo /etc/services.d/mongo/run && \
+    mkdir -p /etc/fix-attrs.d && \
+    mv /tmp/fix_data_dir /etc/fix-attrs.d/01-fix-data-dir && \
+    mv /tmp/fix_logs_dir /etc/fix-attrs.d/02-fix-logs-dir
+
+EXPOSE 27017
+
+VOLUME /srv/db /var/log/mongodb
