@@ -93,8 +93,8 @@ RUN \
       php7-zlib && \
      # Install build dependencies in order to build the GEOS extension
      # against the geos library from edge.
-     echo "@edge-testing http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories && \
-     apk add 'geos@edge-testing=~3.7.2' 'geos-dev@edge-testing=~3.7.2' && \
+     echo "@edge-community http://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories && \
+     apk add 'geos@edge-community=~3.8.0' 'geos-dev@edge-community=~3.8.0' && \
      apk add --virtual .build-dependencies \
       autoconf \
       build-base \
