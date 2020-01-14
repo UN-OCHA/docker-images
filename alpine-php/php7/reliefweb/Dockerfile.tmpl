@@ -33,11 +33,12 @@ RUN mv -f /run_fpm /etc/services.d/fpm/run && \
     # Upgrade to have the proper musl library
     # needed for the build dependencies below.
     apk --update-cache upgrade && \
-    # Install mutools.
+    # Install mutools, pngquant and PHP extensions.
     apk add \
       mupdf-tools \
       php7-gmp \
-      php7-simplexml && \
+      php7-simplexml \
+      pngquant && \
     # Install dependencies to build the Hoedown php extension.
     apk add --virtual .build-dependencies \
       autoconf \
