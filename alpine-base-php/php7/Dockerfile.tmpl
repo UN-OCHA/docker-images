@@ -25,11 +25,13 @@ LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.distribution="Alpine Linux" \
       org.label-schema.distribution-version="$UPSTREAM" \
       info.humanitarianresponse.php=$VERSION \
-      info.humanitarianresponse.php.modules="bcmath bz2 calendar ctype curl dom exif fileinfo fpm gd gettext iconv imagick intl json mcrypt memcached mysqli opcache openssl pdo pdo_mysql phar posix redis shmop sysvmsg sysvsem sysvshm simplexml sockets wddx xml xmlreader xmlwriter xsl zip zlib" \
+      info.humanitarianresponse.php.modules="bcmath bz2 calendar ctype curl dom exif fileinfo fpm gd gettext iconv igbinary imagick intl json mcrypt memcached mysqli opcache openssl pdo pdo_mysql phar posix redis shmop sysvmsg sysvsem sysvshm simplexml sockets wddx xml xmlreader xmlwriter xsl zip zlib" \
       info.humanitarianresponse.php.sapi="fpm"
 
 # Default PHP configuration variables. These can be overridden via the environment.
-ENV PHP_RUN_USER=appuser \
+ENV PHP_ENVIRONMENT=production \
+    PHP_ERROR_LOG=syslog \
+    PHP_RUN_USER=appuser \
     PHP_RUN_GROUP=appuser \
     PHP_MAX_CHILDREN=16 \
     PHP_START_SERVERS=2 \
@@ -39,9 +41,11 @@ ENV PHP_RUN_USER=appuser \
     PHP_MEMORY_LIMIT=256M \
     PHP_MAX_EXECUTION_TIME=60s \
     PHP_POST_MAX_SIZE=100m \
-    PHP_UPLOAD_MAX_FILESIZE=100m
+    PHP_UPLOAD_MAX_FILESIZE=100m \
+    PHP_MAX_INPUT_VARS=1000
 
-COPY etc/php7 etc/services/run_fpm etc/msmtprc /
+# Copy custom config files into the container.
+COPY etc/php7 etc/services/run_fpm etc/msmtprc /tmp/
 
 RUN \
     # Install standard packages from $UPSTREAM.
@@ -68,7 +72,7 @@ RUN \
       php7-json \
       php7-mbstring \
       php7-mcrypt \
-      php7-memcached \
+      # php7-memcached \
       php7-mysqli \
       php7-opcache \
       php7-openssl \
@@ -76,7 +80,8 @@ RUN \
       php7-pdo_mysql \
       php7-phar \
       php7-posix \
-      php7-redis \
+      # php7-redis \
+      php7-session \
       php7-shmop \
       php7-sysvmsg \
       php7-sysvsem \
@@ -91,27 +96,45 @@ RUN \
       php7-xsl \
       php7-zip \
       php7-zlib && \
-    # Install build dependencies in order to build the GEOS extension
-    # against the geos library from edge.
-    # echo "@edge-community http://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories && \
-    # apk add 'geos@edge-community=~3.8.0' 'geos-dev@edge-community=~3.8.0' && \
-    # apk add --virtual .build-dependencies \
-    #   autoconf \
-    #   build-base \
-    #   file \
-    #   git \
-    #   gzip \
-    #   patch \
-    #   php7-dev \
-    #   re2c \
-    #   tar && \
-    # cd /tmp && \
-    # Build and install php-ext-geos.
-    # git clone https://git.osgeo.org/gitea/geos/php-geos.git && \
-    # cd php-geos && \
-    #   ./autogen.sh && ./configure &&  make &&  make install && \
-    # cd /tmp && rm -rf php-geos && \
-    # apk del .build-dependencies geos-dev && \
+    # Install build dependencies in order to build the memcache and redis extension
+    apk add --virtual .build-dependencies \
+      autoconf \
+      build-base \
+      file \
+      g++ \
+      git \
+      gzip \
+      make && \
+      libmemcached-dev \
+      patch \
+      php7-dev \
+      re2c \
+      tar \
+      zlib-dev && \
+    cd /tmp && \
+    # Build memcached and redis extensions from source, *without* igbinary.
+    apk add libmemcached-libs && \
+    cd /tmp && \
+      git clone https://github.com/php-memcached-dev/php-memcached && \
+      cd php-memcached && \
+        phpize7 && \
+        ./configure CFLAGS="-O2 -g" --with-php-config=/usr/bin/php-config7 && \
+        make && \
+        make install && \
+        cd .. && \
+      rm -rf php-memcached && \
+      git clone https://github.com/phpredis/phpredis && \
+      cd phpredis && \
+        phpize7 && \
+        ./configure CFLAGS="-O2 -g" --with-php-config=/usr/bin/php-config7 && \
+        make && \
+        make install && \
+        cd .. && \
+      rm -rf phpredis && \
+      rm -rf /usr/include/php/ && \
+    apk del .build-dependencies && \
+    # Install igbinary.
+    apk add php7-pecl-igbinary && \
     # Downgrade ghostscript for pdf thumbnails.
     # See https://humanitarian.atlassian.net/browse/OPS-5925
     echo "@3-4-main http://dl-cdn.alpinelinux.org/alpine/v3.4/main" >> /etc/apk/repositories && \
@@ -119,12 +142,12 @@ RUN \
       'freetype@3-4-main=~2.6' \
       'ghostscript@3-4-main=~9.22' \
       'fontconfig@3-4-main=~2.12.1' && \
+    # Tidy.
     rm -rf /var/cache/apk/* && \
-    \
     # Setup directory structure for FPM.
     mkdir -p /etc/services.d/fpm /srv/www/html && \
-    mv /msmtprc /etc/msmtprc && \
-    mv /run_fpm /etc/services.d/fpm/run && \
+    mv /tmp/msmtprc /etc/msmtprc && \
+    mv /tmp/run_fpm /etc/services.d/fpm/run && \
     \
     # Fixup the sendmail path for msmtp and set it as mailer.
     ln -sf /usr/bin/msmtp /usr/sbin/sendmail && \
@@ -133,13 +156,16 @@ RUN \
     # Configure php.
     rm -rf /etc/php7 && \
     mkdir -p /etc/php7 && \
-    mv -f /php.ini /conf.d /php-fpm.conf /php-fpm.d /etc/php7 && \
+    mv -f /tmp/php.ini /tmp/conf.d /tmp/php-fpm.conf /tmp/php-fpm.d /tmp/environment.d /etc/php7 && \
     \
     # Configure PHP logs.
     rm -rf /var/log/php7 && \
     mkdir /var/log/php && \
-    touch /var/log/php/www-error.log && \
-    touch /var/log/php/www-slow.log
+    # Cleanup tmp dir.
+    rm -rf /tmp/*
+
+# This is where the magic happens.
+WORKDIR /srv/www/html
 
 EXPOSE 9000
 
