@@ -30,10 +30,10 @@ LABEL org.label-schema.schema-version="1.0" \
       info.humanitarianresponse.composer="1.8.4" \
       info.humanitarianresponse.drush="8.1.18-dev" \
       info.humanitarianresponse.node="8.11.3" \
-      info.humanitarianresponse.npm="5.6.0" \
+      info.humanitarianresponse.npm="6.9.0" \
       info.humanitarianresponse.yarn="1.7.0" \
       info.humanitarianresponse.compass="3.2.0" \
-      info.humanitarianresponse.jasmine="2.8.0" \
+      info.humanitarianresponse.jasmine="3.4.0" \
       info.humanitarianresponse.casperjs="1.1.3" \
       info.humanitarianresponse.phantomjs="2.0.0" \
       info.humanitarianresponse.ruby="2.3.1"
@@ -43,7 +43,8 @@ ENV DRUSH_VERSION=8 \
 
 COPY drushrc.php /drushrc.php
 
-RUN npm install --global \
+RUN npm install --global npm@latest && \
+    npm install --global \
       jasmine && \
     rm -rf /tmp/npm-* && \
     \
@@ -126,25 +127,6 @@ RUN npm install --global \
     # Add our default drushrc.php file.
     mkdir -p /etc/drush && \
     mv /drushrc.php /etc/drush/drushrc.php && \
-    # Build igbinary php extension.
-    apk add --update-cache --virtual .build-dependencies \
-      git \
-      php7-dev \
-      autoconf \
-      g++ \
-      make && \
-    cd /tmp && \
-    git clone https://github.com/igbinary/igbinary && \
-    cd igbinary && \
-    phpize7 && \
-    ./configure CFLAGS="-O2 -g" --enable-igbinary --with-php-config=/usr/bin/php-config7 && \
-    make && \
-    make install && \
-    cd .. && \
-    rm -rf igbinary && \
-    rm -rf /usr/include/php/ && \
-    apk del .build-dependencies && \
-    rm -rf /var/cache/apk/* && \
     # Add dependencies for capsper and phantom.
     apk add --update-cache \
       fontconfig \
