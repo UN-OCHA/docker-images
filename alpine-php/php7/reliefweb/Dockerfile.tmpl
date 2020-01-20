@@ -52,7 +52,7 @@ RUN mv -f /run_fpm /etc/services.d/fpm/run && \
       tar && \
     cd /tmp && \
     # Build and install php-ext-hoedown.
-    git clone --recursive --depth=1 --branch=$PHP_HOEDOWN_VERSION https://github.com/reliefweb/php-ext-hoedown.git /tmp/php-ext-hoedown && \
+    git clone --recursive --depth=1 --branch=$PHP_HOEDOWN_VERSION https://github.com/UN-OCHA/rwint-php-ext-hoedown.git /tmp/php-ext-hoedown && \
     cd /tmp/php-ext-hoedown && \
     phpize && ./configure && make && make test && make install && \
     cd /tmp && rm -rf /tmp/php* && \
