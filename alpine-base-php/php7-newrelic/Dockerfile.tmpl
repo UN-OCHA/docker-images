@@ -38,11 +38,11 @@ RUN curl -s -o /tmp/newrelic.tar.gz \
       https://download.newrelic.com/php_agent/archive/$NR_VERSION/newrelic-php5-${NR_VERSION}-linux-musl.tar.gz && \
     mkdir -p /etc/newrelic /var/log/newrelic && \
     tar xvf /tmp/newrelic.tar.gz -C /tmp && \
-    mv /tmp/newrelic-$NR_VERSION/daemon/newrelic-daemon.x64 \
+    mv /tmp/newrelic-php5-${NR_VERSION}-linux-musl/daemon/newrelic-daemon.x64 \
        /usr/bin/newrelic-daemon && \
-    mv /tmp/newrelic-$NR_VERSION/agent/x64/newrelic-$(php --info | awk '/^PHP API/ {print $NF}').so \
+    mv /tmp/newrelic-php5-${NR_VERSION}-linux-musl/agent/x64/newrelic-$(php --info | awk '/^PHP API/ {print $NF}').so \
        /usr/lib/php7/modules/newrelic.so && \
-    mv /tmp/newrelic-$NR_VERSION/scripts/newrelic.cfg.template \
+    mv /tmp/newrelic-php5-${NR_VERSION}-linux-musl/scripts/newrelic.cfg.template \
        /etc/newrelic/newrelic.cfg && \
     rm -rf /tmp/newrelic-php5* /tmp/newrelic.tar.gz && \
     rm -f /etc/php7/conf.d/newrelic.ini && \
