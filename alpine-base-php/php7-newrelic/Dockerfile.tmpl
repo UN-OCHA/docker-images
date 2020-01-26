@@ -24,10 +24,10 @@ LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.distribution="Alpine Linux" \
       org.label-schema.distribution-version="3.10.2" \
       info.humanitarianresponse.php=$VERSION \
-      info.humanitarianresponse.php.modules="bcmath bz2 calendar ctype curl dom exif fileinfo fpm gd geos gettext iconv imagick json mcrypt memcached opcache openssl pdo pdo_mysql phar posix redis shmop sysvmsg sysvsem sysvshm simplexml sockets wddx xml xmlreader xmlwriter xsl zip zlib" \
+      info.humanitarianresponse.php.modules="bcmath bz2 calendar ctype curl dom exif fileinfo fpm gd geos gettext iconv imagick json mcrypt memcached newrelic opcache openssl pdo pdo_mysql phar posix redis shmop sysvmsg sysvsem sysvshm simplexml sockets wddx xml xmlreader xmlwriter xsl zip zlib" \
       info.humanitarianresponse.php.sapi="fpm"
 
-ENV NR_VERSION php5-9.6.0.255-linux-musl
+ENV NR_VERSION 9.6.0.255
 
 ENV PHP_NEWRELIC_LICENSE="" \
     PHP_NEWRELIC_APPNAME=""
@@ -35,7 +35,7 @@ ENV PHP_NEWRELIC_LICENSE="" \
 COPY run_newrelic etc/php7/conf.d/10_newrelic.ini /
 
 RUN curl -s -o /tmp/newrelic.tar.gz \
-      https://download.newrelic.com/php_agent/release/newrelic-$NR_VERSION.tar.gz && \
+      https://download.newrelic.com/php_agent/archive/$NR_VERSION/newrelic-php5-${NR_VERSION}-linux-musl.tar.gz && \
     mkdir -p /etc/newrelic /var/log/newrelic && \
     tar xvf /tmp/newrelic.tar.gz -C /tmp && \
     mv /tmp/newrelic-$NR_VERSION/daemon/newrelic-daemon.x64 \
