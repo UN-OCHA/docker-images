@@ -1,0 +1,40 @@
+#!/usr/bin/with-contenv sh
+
+BASEDIR=/srv/fedora
+FEDORA_REPO=${FEDORA_REPO:-data}
+
+# Create the repo datadir if it does not already exist.
+if [ ! -d ${BASEDIR}/${FEDORA_REPO} ]; then
+  mkdir -p ${BASEDIR}/${FEDORA_REPO}
+fi
+
+# Configure Java (and point the app at its config and data dirs)
+# JAVA_OPTS="$JAVA_OPTS -Dfcrepo.spring.configuration=file:${BASEDIR}/config/fcrepo-config.xml"
+# JAVA_OPTS="$JAVA_OPTS -Dfcrepo.modeshape.configuration=file:${BASEDIR}/config/repository.json"
+# JAVA_OPTS="$JAVA_OPTS -Dfcrepo.activemq.configuration=file:${BASEDIR}/config/activemq.xml"
+# JAVA_OPTS="$JAVA_OPTS -Dfcrepo.auth.webac.authorization=${BASEDIR}/config/root-authentication.ttl"
+# JAVA_OPTS="$JAVA_OPTS -Dfcrepo.spring.audit.configuration=file:${BASEDIR}/config/audit.xml"
+JAVA_OPTS="$JAVA_OPTS -Dlogback.configurationFile=${BASEDIR}/config/logback.xml"
+# JAVA_OPTS="$JAVA_OPTS -Dfcrepo.modeshape.index.directory=modeshape.index"
+# JAVA_OPTS="$JAVA_OPTS -Dfcrepo.binary.directory=binary.store"
+# JAVA_OPTS="$JAVA_OPTS -Dfcrepo.activemq.directory=activemq"
+# JAVA_OPTS="$JAVA_OPTS -Dcom.arjuna.ats.arjuna.common.ObjectStoreEnvironmentBean.default.objectStoreDir=arjuna.common.object.store"
+# JAVA_OPTS="$JAVA_OPTS -Dcom.arjuna.ats.arjuna.objectstore.objectStoreDir=arjuna.object.store"
+# JAVA_OPTS="$JAVA_OPTS -Dnet.sf.ehcache.skipUpdateCheck=true"
+# JAVA_OPTS="$JAVA_OPTS -Dfcrepo.audit.container=/audit"
+# JAVA_OPTS="$JAVA_OPTS -XX:+UseConcMarkSweepGC"
+# JAVA_OPTS="$JAVA_OPTS -XX:+CMSClassUnloadingEnabled"
+# JAVA_OPTS="$JAVA_OPTS -XX:ConcGCThreads=5"
+# JAVA_OPTS="$JAVA_OPTS -XX:MaxGCPauseMillis=200"
+# JAVA_OPTS="$JAVA_OPTS -XX:ParallelGCThreads=20"
+JAVA_OPTS="$JAVA_OPTS -XX:MaxMetaspaceSize=${FEDORA_METASPACE_SIZE:-512m}"
+JAVA_OPTS="$JAVA_OPTS -Xms${FEDORA_MIN_HEAP_SIZE:-1024m}"
+JAVA_OPTS="$JAVA_OPTS -Xmx${FEDORA_MAX_HEAP_SIZE:-2048m}"
+JAVA_OPTS="$JAVA_OPTS -Dfile.encoding=UTF-8"
+JAVA_OPTS="$JAVA_OPTS -Dfcrepo.home=${BASEDIR}/${FEDORA_REPO}"
+
+cd $BASEDIR/${REDORA_REPO}
+
+echo "Starting Fedora service with repository: ${FEDORA_REPO:-fcrepo}"
+
+exec java ${JAVA_OPTS} -jar ${BASEDIR}/fcrepo-webapp-jetty-console.jar --port ${FEDORA_PORT:-8080} ${FEDORA_OPTIONS}

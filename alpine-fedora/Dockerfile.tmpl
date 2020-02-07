@@ -1,0 +1,61 @@
+FROM unocha/alpine-jdk:%%UPSTREAM%%
+
+MAINTAINER UN-OCHA Operations <ops+docker@humanitarianresponse.info>
+
+# Parse arguments for the build command.
+ARG VERSION
+ARG VCS_URL
+ARG VCS_REF
+ARG BUILD_DATE
+
+# Build time env vars.
+ENV FEDORA_VERSION=$VERSION \
+    FEDORA=fcrepo-webapp-${VERSION}-jetty-console
+
+# Run time env vars.
+ENV FEDORA_REPO=data \
+    FEDORA_METASPACE_SIZE=512m \
+    FEDORA_MIN_HEAP_SIZE=1024m \
+    FEDORA_MAX_HEAP_SIZE=2048m
+
+# A little bit of metadata management.
+# See http://label-schema.org/
+LABEL org.label-schema.schema-version="1.0" \
+      org.label-schema.build-date=$BUILD_DATE \
+      org.label-schema.vendor="UN-OCHA" \
+      org.label-schema.version=$VERSION \
+      org.label-schema.vcs-url=$VCS_URL \
+      org.label-schema.vcs-ref=$VCS_REF \
+      org.label-schema.name="alpine-fedora" \
+      org.label-schema.description="This service provides a stand-alone solr platform." \
+      org.label-schema.architecture="x86_64" \
+      org.label-schema.distribution="Alpine Linux" \
+      org.label-schema.distribution-version="3.10.1" \
+      info.humanitarianresponse.fedora=$VERSION
+
+COPY init-demo-core.sh run-fedora /
+
+RUN apk add --update-cache \
+        bash \
+        curl && \
+    cd /tmp && \
+    echo "Getting fedora $VERSION" >&2 && \
+    curl -sSL https://github.com/fcrepo4/fcrepo4/releases/download/fcrepo-${VERSION}/${FEDORA}.jar -o /tmp/${FEDORA}.jar && \
+    curl -sSL https://github.com/fcrepo4/fcrepo4/releases/download/fcrepo-${VERSION}/${FEDORA}.jar.sha1 -o  /tmp/${FEDORA}.jar.sha1 && \
+    echo "Checking fedora $VERSION checksum" >&2 && \
+    sha1sum -c ${FEDORA}.jar.sha1 && \
+    mkdir -p /srv/${FEDORA} && \
+    mv -f /tmp/${FEDORA}.jar /srv/${FEDORA}/fcrepo-webapp-jetty-console.jar && \
+    ln -sf /srv/$FEDORA /srv/fedora && \
+    echo "Cleaning up.." >&2 && \
+    apk del curl || true && \
+    rm -rf /tmp/* /var/cache/apk/* && \
+    mkdir /etc/services.d/fedora && \
+    mv /run-fedora /etc/services.d/fedora/run
+
+EXPOSE 8080
+
+WORKDIR /srv/fedora
+
+# You need to map the repository / data volume from the host.
+# This should be at /srv/fedora/FEDORA_REPO
