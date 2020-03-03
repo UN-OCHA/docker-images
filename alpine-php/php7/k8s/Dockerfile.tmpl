@@ -33,7 +33,6 @@ LABEL org.label-schema.schema-version="1.0" \
 
 # Insert all our custom config files.
 COPY etc/drush/drushrc.php \
-       etc/php7/php-fpm.d/www.conf \
        etc/nginx/ etc/services.d/run_nginx \
      /tmp/
 
@@ -51,8 +50,8 @@ RUN \
     chown appuser:root /var/cache/nginx /var/tmp/nginx && \
     rm -rf /var/cache/apk/* && \
     \
-    # Drop in our fpm pool config that uses a socket.
-    mv /tmp/www.conf /etc/php7/php-fpm.d/www.conf && \
+    # Update the fpm pool config to use a socket.
+    sed -i 's/^listen = .*/listen = \/var\/run\/php-fpm7.sock/' /etc/php7/php-fpm.d/www.conf && \
     \
     # Add our default drushrc.php file.
     mkdir -p /etc/drush && \
