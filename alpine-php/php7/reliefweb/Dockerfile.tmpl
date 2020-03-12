@@ -2,13 +2,14 @@ FROM unocha/php7:%%UPSTREAM%%
 
 MAINTAINER orakili <docker@orakili.net>
 
-ENV PHP_HOEDOWN_VERSION=0.6.8
-
 # A little bit of metadata management.
 ARG BUILD_DATE
 ARG VERSION
 ARG VCS_URL
 ARG VCS_REF
+
+# Set the hoedown version via a build argument.
+ARG PHP_HOEDOWN_VERSION
 
 LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.build-date=$BUILD_DATE \
@@ -58,7 +59,7 @@ RUN mv -f /run_fpm /etc/services.d/fpm/run && \
       tar && \
     cd /tmp && \
     # Build and install php-ext-hoedown.
-    git clone --recursive --depth=1 --branch=$PHP_HOEDOWN_VERSION https://github.com/UN-OCHA/rwint-php-ext-hoedown.git /tmp/php-ext-hoedown && \
+    git clone --recursive --depth=1 --branch=${PHP_HOEDOWN_VERSION} https://github.com/UN-OCHA/rwint-php-ext-hoedown.git /tmp/php-ext-hoedown && \
     cd /tmp/php-ext-hoedown && \
     phpize && ./configure && make && make test && make install && \
     cd /tmp && rm -rf /tmp/php* && \
