@@ -38,7 +38,14 @@ COPY etc/drush/drushrc.php \
 
 # Install NGINX for standard operation.
 RUN \
-    apk add -U nginx nginx-mod-http-upload-progress nginx-mod-http-lua && \
+    # Bump NGINX for OICT software compliance.
+    # See https://humanitarian.atlassian.net/browse/OPS-6286
+    echo "@3-10-main http://dl-cdn.alpinelinux.org/alpine/v3.10/main" >> /etc/apk/repositories && \
+    apk add --no-cache \
+      'nginx@3-10-main=~1.16.1' \
+      'nginx-mod-http-upload-progress@3-10-main=~1.16.1' \
+      'nginx-mod-http-lua@3-10-main=~1.16.1' \
+      'nginx-mod-devel-kit@3-10-main=~1.16.1' && \
     mkdir -p /etc/services.d/nginx && \
     rm -rf /etc/nginx/* && \
     mv /tmp/apps /tmp/fastcgi.conf /tmp/koi-utf /tmp/map_block_http_methods.conf /tmp/mime.types /tmp/upstream_phpcgi_unix.conf \
