@@ -30,6 +30,7 @@ LABEL org.label-schema.schema-version="1.0" \
 
 # Default PHP configuration variables. These can be overridden via the environment.
 ENV PHP_ENVIRONMENT=production \
+    PHP_SYSLOG_FACILITY=LOG_LOCAL4 \
     PHP_ERROR_LOG=syslog \
     PHP_RUN_USER=appuser \
     PHP_RUN_GROUP=appuser \
