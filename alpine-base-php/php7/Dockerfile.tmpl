@@ -46,7 +46,7 @@ ENV PHP_ENVIRONMENT=production \
     PHP_MAX_INPUT_VARS=1000 \
     # Oh, this is hideous, but it does solve the iconv problem.
     # See https://humanitarian.atlassian.net/browse/OPS-6486
-    LD_PRELOAD /usr/lib/preloadable_libiconv.so
+    LD_PRELOAD=/usr/lib/preloadable_libiconv.so
 
 # Copy custom config files into the container.
 COPY etc/php7 etc/services/run_fpm etc/msmtprc /tmp/
