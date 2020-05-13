@@ -20,6 +20,8 @@ LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.distribution="Alpine Linux" \
       org.label-schema.distribution-version=$VERSION
 
-RUN pip3 install --no-cache-dir awscli
+RUN pip3 install --no-cache-dir awscli && \
+    apk add -U groff && \
+    rm -rf /var/cache/apk/*
 
 ENTRYPOINT ["/bin/sh"]
