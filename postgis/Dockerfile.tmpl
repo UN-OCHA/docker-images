@@ -1,8 +1,8 @@
 FROM alpine:%%UPSTREAM%%
 
-ARG S6_VERSION=v1.21.4.0
-ARG POSTGIS_VERSION=2.4.4
-ARG POSTGRES_VERSION=9.6.8-r0
+ARG S6_VERSION=v1.22.1.0
+ARG POSTGIS_VERSION=2.5.2
+ARG POSTGRES_VERSION=11.7-r0
 
 # Parse arguments for the build command.
 ARG VERSION
@@ -48,24 +48,27 @@ RUN apk update && \
     tar xzf /tmp/s6.tgz -C / && \
     rm -f /tmp/s6.tgz && \
     mkdir -p /etc/services.d/postgres /etc/fix-attrs.d /etc/pgsql /run/postgresql && \
-    cp /tmp/fix_pgsql_dirs /etc/fix-attrs.d/ && \
+    mv /tmp/fix_pgsql_dirs /etc/fix-attrs.d/ && \
     mv /tmp/run_postgres /etc/services.d/postgres/run && \
     mv /tmp/pg_hba.conf /etc/pgsql/ && \
     mv /tmp/postgresql.conf /etc/pgsql/ && \
     mv /tmp/recovery /etc/pgsql/ && \
     touch /etc/pgsql/pg_ident.conf && \
-    echo "@testing http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories && \
+    echo "@community http://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories && \
+    echo "@mainedge http://dl-cdn.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories && \
     apk add --update-cache \
         postgresql-dev \
         perl \
         file \
-        geos@testing \
-        geos-dev@testing \
+        json-c@mainedge \
+        poppler@mainedge \
+        geos@community \
+        geos-dev@community \
         libxml2-dev \
-        gdal@testing \
-        gdal-dev@testing \
-        proj4@testing \
-        proj4-dev@testing \
+        gdal@community \
+        gdal-dev@community \
+        proj@community \
+        proj-dev@community \
         gcc \
         make \
         libgcc \
@@ -82,7 +85,7 @@ RUN apk update && \
     cd / && \
     rm -rf /tmp/postgis-${POSTGIS_VERSION} && \
     apk del postgresql-dev perl file geos-dev \
-            libxml2-dev gdal-dev proj4-dev \
+            libxml2-dev gdal-dev proj-dev \
             gcc make libgcc g++ && \
     rm -rf /var/cache/apk/* && \
     echo "removing useless, duplicates postgis sql files" && \
