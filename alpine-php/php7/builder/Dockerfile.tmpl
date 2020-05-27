@@ -1,4 +1,4 @@
-FROM unocha/nodejs-builder:%%UPSTREAM%%
+FROM unocha/alpine-base-php:%%UPSTREAM%%
 
 MAINTAINER UN-OCHA Operations <ops+docker@humanitarianresponse.info>
 
@@ -10,6 +10,12 @@ ARG VERSION
 ARG VCS_URL
 ARG VCS_REF
 ARG BUILD_DATE
+
+ENV NODE_APP_DIR=/srv/www \
+    NODE_PATH=/usr/lib/node_modules \
+    NPM_CONFIG_SPIN=false \
+    NPM_CONFIG_PROGRESS=false \
+    SRC_DIR=/src
 
 # A little bit of metadata management.
 # See http://label-schema.org/
@@ -29,8 +35,8 @@ LABEL org.label-schema.schema-version="1.0" \
       info.humanitarianresponse.php.sapi="cli" \
       info.humanitarianresponse.composer="1.8.4" \
       info.humanitarianresponse.drush="8.1.18-dev" \
-      info.humanitarianresponse.node="8.11.3" \
-      info.humanitarianresponse.npm="6.9.0" \
+      info.humanitarianresponse.node="12.15.0-r1" \
+      info.humanitarianresponse.npm="12.15.0-r1" \
       info.humanitarianresponse.yarn="1.7.0" \
       info.humanitarianresponse.compass="3.2.0" \
       info.humanitarianresponse.jasmine="3.4.0" \
@@ -43,7 +49,26 @@ ENV DRUSH_VERSION=8 \
 
 COPY drushrc.php /drushrc.php
 
-RUN npm install --global npm@latest && \
+# Install nodejs as per the nodejs-base image.
+RUN apk add --update-cache \
+        build-base \
+        git \
+        python \
+        nodejs \
+        npm && \
+    mkdir -p /root/.node-gyp/6.11.4 && \
+    USER=root npm install -g \
+        grunt-cli \
+        bower \
+        webpack \
+        yarn && \
+    npm cache clean && \
+    rm -rf /tmp /root/.node-gyp && \
+    apk del build-base && \
+    rm -rf /var/cache/apk/* && \
+    mkdir -p /tmp && \
+    chmod 1777 /tmp && \
+    # Continue on with what we used to do in the builder.
     npm install --global \
       jasmine && \
     rm -rf /tmp/npm-* && \
@@ -60,49 +85,6 @@ RUN npm install --global npm@latest && \
       rsync \
       tar \
       wget \
-      php7-bcmath \
-      php7-bz2 \
-      php7-calendar \
-      php7-ctype \
-      php7-curl \
-      php7-dom \
-      php7-exif \
-      php7-iconv \
-      php7-fileinfo \
-      php7-ftp \
-      php7-gd \
-      php7-gettext \
-      php7-iconv \
-      php7-imagick \
-      php7-imap \
-      php7-intl \
-      php7-json \
-      php7-mbstring \
-      php7-mcrypt \
-      php7-memcached \
-      php7-mysqli \
-      php7-opcache \
-      php7-openssl \
-      php7-pdo \
-      php7-pdo_mysql \
-      php7-phar \
-      php7-posix \
-      php7-redis \
-      php7-shmop \
-      php7-sysvmsg \
-      php7-sysvsem \
-      php7-sysvshm \
-      php7-simplexml \
-      php7-soap \
-      php7-sockets \
-      php7-tokenizer \
-      php7-wddx \
-      php7-xml \
-      php7-xmlreader \
-      php7-xmlwriter \
-      php7-xsl \
-      php7-zip \
-      php7-zlib && \
     rm -rf /var/cache/apk/* && \
     cd /tmp && \
     ln -sf /usr/bin/php7 /usr/bin/php && \
@@ -144,8 +126,9 @@ RUN npm install --global npm@latest && \
     # It's a year old, but it's newer than the old one (1.9.8) and it works.
     # Mind you, only extract part of the archive, or our crafted passwd and shadow files wil be overwritten.
     curl -Ls https://github.com/fgrehm/docker-phantomjs2/releases/download/v2.0.0-20150722/dockerized-phantomjs.tar.gz \
-      | tar xz -C / bin etc/fonts etc/ssl lib lib64 usr/lib usr/local usr/share
+      | tar xz -C / bin etc/fonts etc/ssl lib lib64 usr/lib usr/local usr/share && \
+    mkdir -p ${SRC_DIR} ${NODE_APP_DIR}
 
-WORKDIR /tmp
+WORKDIR ${SRC_DIR}
 
 CMD ["bash"]
