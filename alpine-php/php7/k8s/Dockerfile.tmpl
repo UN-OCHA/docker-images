@@ -12,7 +12,8 @@ ARG VCS_REF
 ARG BUILD_DATE
 
 ENV NGINX_SERVERNAME=localhost \
-    PAGER=more
+    PAGER=more \
+    LD_PRELOAD=/usr/lib/preloadable_libiconv.so
 
 LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.build-date=$BUILD_DATE \
@@ -38,7 +39,7 @@ COPY etc/drush/drushrc.php \
 
 # Install NGINX for standard operation.
 RUN \
-    apk add -U nginx nginx-mod-http-upload-progress nginx-mod-http-lua && \
+    apk add -U nginx nginx-mod-http-upload-progress nginx-mod-http-lua gnu-libiconv && \
     mkdir -p /etc/services.d/nginx && \
     rm -rf /etc/nginx/* && \
     mv /tmp/apps /tmp/fastcgi.conf /tmp/koi-utf /tmp/map_block_http_methods.conf /tmp/mime.types /tmp/upstream_phpcgi_unix.conf \
