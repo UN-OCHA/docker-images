@@ -48,7 +48,7 @@ RUN \
          /etc/nginx && \
     mv /tmp/run_nginx /etc/services.d/nginx/run && \
     mkdir -p  /var/cache/nginx && \
-    chown appuser:root /var/cache/nginx /var/tmp/nginx && \
+    chown appuser:root /var/cache/nginx && \
     rm -rf /var/cache/apk/* && \
     \
     # Update the fpm pool config to use a socket.
