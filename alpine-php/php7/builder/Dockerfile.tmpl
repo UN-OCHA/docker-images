@@ -1,4 +1,4 @@
-FROM unocha/alpine-base-php:%%UPSTREAM%%
+FROM unocha/base-php7:%%UPSTREAM%%
 
 MAINTAINER UN-OCHA Operations <ops+docker@humanitarianresponse.info>
 
@@ -15,7 +15,8 @@ ENV NODE_APP_DIR=/srv/www \
     NODE_PATH=/usr/lib/node_modules \
     NPM_CONFIG_SPIN=false \
     NPM_CONFIG_PROGRESS=false \
-    SRC_DIR=/src
+    SRC_DIR=/src \
+    PS1="\u@\h:\w\n; "
 
 # A little bit of metadata management.
 # See http://label-schema.org/
@@ -33,13 +34,16 @@ LABEL org.label-schema.schema-version="1.0" \
       info.humanitarianresponse.php=$VERSION \
       info.humanitarianresponse.php.modules="bcmath bz2 calendar ctype curl dom exif fileinfo fpm ftp gd gettext iconv igbinary imagick imap intl json mcrypt memcached opcache openssl pdo pdo_mysql phar posix redis shmop soap sysvmsg sysvsem sysvshm simplexml sockets wddx xml xmlreader xmlwriter xsl zip zlib" \
       info.humanitarianresponse.php.sapi="cli" \
-      info.humanitarianresponse.composer="1.8.4" \
-      info.humanitarianresponse.drush="8.1.18-dev" \
+      info.humanitarianresponse.composer="1.10.6" \
+      info.humanitarianresponse.drush="8.3.4-dev" \
       info.humanitarianresponse.node="12.15.0-r1" \
       info.humanitarianresponse.npm="12.15.0-r1" \
-      info.humanitarianresponse.yarn="1.7.0" \
+      info.humanitarianresponse.yarn="1.22.4" \
+      info.humanitarianresponse.bower="1.8.8" \
       info.humanitarianresponse.compass="3.2.0" \
-      info.humanitarianresponse.jasmine="3.4.0" \
+      info.humanitarianresponse.jasmine="3.5.0" \
+      info.humanitarianresponse.grunt="1.3.2" \
+      info.humanitarianresponse.webpack="4.43.0" \
       info.humanitarianresponse.casperjs="1.1.3" \
       info.humanitarianresponse.phantomjs="2.0.0" \
       info.humanitarianresponse.ruby="2.3.1"
@@ -51,30 +55,8 @@ COPY drushrc.php /drushrc.php
 
 # Install nodejs as per the nodejs-base image.
 RUN apk add --update-cache \
-        build-base \
-        git \
-        python \
-        nodejs \
-        npm && \
-    mkdir -p /root/.node-gyp/6.11.4 && \
-    USER=root npm install -g \
-        grunt-cli \
-        bower \
-        webpack \
-        yarn && \
-    npm cache clean && \
-    rm -rf /tmp /root/.node-gyp && \
-    apk del build-base && \
-    rm -rf /var/cache/apk/* && \
-    mkdir -p /tmp && \
-    chmod 1777 /tmp && \
-    # Continue on with what we used to do in the builder.
-    npm install --global \
-      jasmine && \
-    rm -rf /tmp/npm-* && \
-    \
-    apk add --update-cache \
       bash \
+      build-base \
       ca-certificates \
       curl \
       build-base \
@@ -85,8 +67,24 @@ RUN apk add --update-cache \
       rsync \
       tar \
       wget \
+      git \
+      python \
+      fontconfig \
+      libc6-compat \
+      nodejs \
+      npm && \
+    USER=root npm install -g \
+        grunt-cli \
+        bower \
+        jasmine \
+        webpack \
+        yarn && \
     rm -rf /var/cache/apk/* && \
-    cd /tmp && \
+    npm cache clean --force && \
+    rm -rf /tmp /root/.node-gyp && \
+    mkdir -p /tmp && \
+    chmod 1777 /tmp && \
+    cd / && \
     ln -sf /usr/bin/php7 /usr/bin/php && \
     COMPOSER_HASH=$(curl -sS https://composer.github.io/installer.sig) && \
     php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" && \
@@ -96,7 +94,6 @@ RUN apk add --update-cache \
     # Install drush and symlink it somewhere useful.
     COMPOSER_HOME=/usr/local/drush$DRUSH_VERSION \
       composer global require drush/drush:$DRUSH_RELEASE && \
-    cd / && \
     ln -sf /usr/local/drush$DRUSH_VERSION/vendor/bin/drush /usr/bin/drush && \
     drush status && \
     # Install registry_rebuild to the appuser's homedir.
@@ -109,15 +106,9 @@ RUN apk add --update-cache \
     # Add our default drushrc.php file.
     mkdir -p /etc/drush && \
     mv /drushrc.php /etc/drush/drushrc.php && \
-    # Add dependencies for capsper and phantom.
-    apk add --update-cache \
-      fontconfig \
-      libc6-compat \
-      python && \
-    rm -rf /var/cache/apk/* && \
     # Install casper.
     curl -L -o /tmp/casperjs.zip https://github.com/n1k0/casperjs/archive/master.zip && \
-    mkdir /opt && \
+    mkdir -p /opt && \
     unzip /tmp/casperjs.zip -d /opt && \
     mv /opt/casperjs-master /opt/casperjs && \
     ln -s /opt/casperjs/bin/casperjs /usr/local/bin/casperjs && \
@@ -127,6 +118,8 @@ RUN apk add --update-cache \
     # Mind you, only extract part of the archive, or our crafted passwd and shadow files wil be overwritten.
     curl -Ls https://github.com/fgrehm/docker-phantomjs2/releases/download/v2.0.0-20150722/dockerized-phantomjs.tar.gz \
       | tar xz -C / bin etc/fonts etc/ssl lib lib64 usr/lib usr/local usr/share && \
+    # No need to run fpm, remove the init file.
+    rm -rf /etc/services.d/fpm && \
     mkdir -p ${SRC_DIR} ${NODE_APP_DIR}
 
 WORKDIR ${SRC_DIR}
