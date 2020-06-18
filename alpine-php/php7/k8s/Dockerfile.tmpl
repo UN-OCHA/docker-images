@@ -12,7 +12,9 @@ ARG VCS_REF
 ARG BUILD_DATE
 
 ENV NGINX_SERVERNAME=localhost \
-    PAGER=more
+    PAGER=more \
+    LD_PRELOAD=/usr/lib/preloadable_libiconv.so \
+    PS1="\u@\h:\w\n "
 
 LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.build-date=$BUILD_DATE \
@@ -46,8 +48,8 @@ RUN \
        /tmp/lua /tmp/sites-enabled /tmp/win-utf \
          /etc/nginx && \
     mv /tmp/run_nginx /etc/services.d/nginx/run && \
-    mkdir -p  /var/cache/nginx && \
-    chown appuser:root /var/cache/nginx /var/tmp/nginx && \
+    mkdir -p /var/cache/nginx && \
+    chown -R appuser:root /var/cache/nginx /var/lib/nginx/tmp && \
     rm -rf /var/cache/apk/* && \
     \
     # Update the fpm pool config to use a socket.
