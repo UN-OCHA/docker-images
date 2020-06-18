@@ -20,7 +20,7 @@ LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.description="This service provides a redis platform." \
       org.label-schema.architecture="x86_64" \
       org.label-schema.distribution="Alpine Linux" \
-      org.label-schema.distribution-version="3.6" \
+      org.label-schema.distribution-version="3.11.6" \
       info.humanitarianresponse.redis=$VERSION
 
 
@@ -33,4 +33,4 @@ RUN mkdir -p /etc/redis /etc/services.d/redis && \
 
 EXPOSE 6379
 
-VOLUME ["/var/log/redis", "/var/lib/redis", "/etc/redis"]
+VOLUME ["/var/log/redis", "/var/lib/redis"]

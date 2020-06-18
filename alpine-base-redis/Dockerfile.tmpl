@@ -1,6 +1,6 @@
 FROM unocha/alpine-base-s6:%%UPSTREAM%%
 
-MAINTAINER "Serban TEODORESCU <teodorescu.serban@gmail.com>"
+MAINTAINER UN-OCHA Operations <ops+docker@humanitarianresponse.info>
 
 # Parse arguments for the build command.
 ARG VERSION
@@ -20,7 +20,7 @@ LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.description="This service provides a base redis platform." \
       org.label-schema.architecture="x86_64" \
       org.label-schema.distribution="Alpine Linux" \
-      org.label-schema.distribution-version="3.6" \
+      org.label-schema.distribution-version="3.11.6" \
       info.humanitarianresponse.redis=$VERSION
 
 RUN apk add --update-cache redis && \
