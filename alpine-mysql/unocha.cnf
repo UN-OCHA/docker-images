@@ -1,0 +1,67 @@
+[server]
+# Tweak MySQL for use in local and non-prod docker stacks.
+bind-address                   = 0.0.0.0
+port                           = 3306
+skip-networking                = 0
+
+# Set the time zone to UTC.
+default_time_zone              = '+00:00'
+
+# Yes, slow query log.
+slow_query_log                 = 1
+slow_query_log_file            = /var/log/mysql/mysqld-slow.log
+log_queries_not_using_indexes  = 1
+long_query_time                = 5
+
+# I mean, use volumes.
+symbolic_links                 = 0
+
+# Of course.
+skip_name_resolve
+
+# Cache open tables and active threads.
+table_open_cache               = 256
+thread_cache_size              = 2
+
+# Configure InnoDB to use  smaller amount of memory that we would on prod and
+# be less fussy about syncing data to disk.
+default_storage_engine         = innodb
+innodb                         = FORCE
+innodb_data_file_path          = ibdata1:10M:autoextend
+innodb_log_group_home_dir      = /var/lib/mysql
+innodb_buffer_pool_size        = 512M       # The amount of daata kept in RAM.
+innodb_log_file_size           = 128M       # This *must* be larger than max_allowed_packet.
+innodb_log_buffer_size         = 8M
+innodb_file_per_table          = 1          # Required for UTF8MB4 support.
+innodb_flush_log_at_trx_commit = 2
+innodb_flush_method            = O_DIRECT   # Bypass the Linux file cache, data is in buffer_pool!
+innodb_lock_wait_timeout       = 50
+innodb_use_native_aio          = 0          # Yeah nah, not in docker.
+
+# This makes changing innodb_log_file_size size safe at any time.
+innodb_fast_shutdown           = 0
+
+# For Drupal at least, the query cache is nore helpful than not.
+query_cache_type               = 1
+query_cache_size               = 8M
+query_cache_limit              = 32K
+query_cache_min_res_unit       = 1K
+
+# On local and non-prod this can be fairly low.
+max_connections                = 16
+
+# This should mirror production and existing config, so we can export and import data.
+max_allowed_packet             = 100M
+
+[mysql]
+# This should mirror production and existing config, so we can export and import data.
+max_allowed_packet             = 100M
+
+[mysqldump]
+# This should mirror production and existing config, so we can export and import data.
+max_allowed_packet             = 100M
+
+# Set some dump defaults.
+routines
+events
+single_transaction
