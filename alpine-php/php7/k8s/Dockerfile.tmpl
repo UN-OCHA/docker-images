@@ -14,7 +14,7 @@ ARG BUILD_DATE
 ENV NGINX_SERVERNAME=localhost \
     PAGER=more \
     LD_PRELOAD=/usr/lib/preloadable_libiconv.so \
-    PS1="\u@\h:\w\n "
+    PS1="\u@\h:\w\n\$ "
 
 LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.build-date=$BUILD_DATE \
