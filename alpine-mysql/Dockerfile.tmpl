@@ -1,7 +1,5 @@
 FROM unocha/alpine-base-mysql:%%UPSTREAM%%
 
-MAINTAINER Serban Teodorescu <teodorescu.serban@gmail.com>
-
 # Parse arguments for the build command.
 ARG VERSION
 ARG VCS_URL
@@ -20,7 +18,7 @@ LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.description="This service provides a mysql service using MariaDB" \
       org.label-schema.architecture="x86_64" \
       org.label-schema.distribution="Alpine Linux" \
-      org.label-schema.distribution-version="3.6" \
+      org.label-schema.distribution-version="3.11.6" \
       info.humanitarianresponse.mysql=$VERSION
 
 ENV LANG=en_US.utf8 \
@@ -28,12 +26,14 @@ ENV LANG=en_US.utf8 \
     MYSQL_ROOT_PASS=rootpass \
     MYSQL_DB=test_db \
     MYSQL_USER=test_user \
-    MYSQL_PASS=test_pass
+    MYSQL_PASS=test_pass \
+    PS1="\u@\h:\w\n\$ "
 
-COPY run_mysql fix_* /
+COPY run_mysql fix_* unocha.cnf /
 
 RUN mkdir -p /etc/services.d/mysql && \
     mv /run_mysql /etc/services.d/mysql/run && \
+    mv /unocha.cnf /etc/my.cnf.d/unocha.cnf && \
     mkdir -p /etc/fix-attrs.d && \
     cp /fix_data_dir /etc/fix-attrs.d/01-fix-data-dir && \
     cp /fix_logs_dir /etc/fix-attrs.d/02-fix-logs-dir && \
@@ -41,4 +41,4 @@ RUN mkdir -p /etc/services.d/mysql && \
 
 EXPOSE 3306
 
-VOLUME /var/lib/mysql /var/log/mysql /var/tmp/mysql
+VOLUME /var/lib/mysql /var/log/mysql
