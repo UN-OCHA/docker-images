@@ -57,11 +57,12 @@ ENV PS1="\u@\h:\w\n\$ " \
 COPY etc/php7 etc/services/run_fpm etc/msmtprc /tmp/
 
 RUN \
+    echo "@edgecommunity http://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories && \
     # Install standard packages from $UPSTREAM.
     apk -U upgrade && \
     apk add --update-cache \
       fcgi \
-      gnu-libiconv \
+      gnu-libiconv@edgecommunity \
       imagemagick \
       msmtp \
       php7-bcmath \
