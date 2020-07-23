@@ -13,7 +13,6 @@ ARG BUILD_DATE
 ENV DRUSH_VERSION=8 \
     DRUSH_RELEASE=8.1.15 \
     WP_RELEASE=2.1.0 \
-    MUPDF_VERSION=1.17.0 \
     PAGER=more
 
 LABEL org.label-schema.schema-version="1.0" \
@@ -72,15 +71,5 @@ RUN apk add --update-cache \
       composer global require wp-cli/wp-cli:$WP_RELEASE && \
     ln -sf /usr/local/wp$WP_RELEASE/vendor/wp-cli/wp-cli/bin/wp /usr/bin/wp && \
     wp --info && \
-    # Install dependencies to build mupdf tools.
-    apk add --virtual .build-dependencies build-base && \
-    cd /tmp && \
-    # Build and install mupdf tools.
-    git clone --branch=$MUPDF_VERSION --recursive git://git.ghostscript.com/mupdf.git && \
-    cd mupdf && git submodule update --init && \
-    make HAVE_X11=no HAVE_GLUT=no USE_SYSTEM_LIBS=no prefix=/usr/local install && \
-    cd /tmp && rm -rf /tmp/mupdf* && \
-    # Remove build dependencies.
-    apk del .build-dependencies && \
     # Clear the cache to reduce the layer size.
     rm -rf /var/cache/apk/*
