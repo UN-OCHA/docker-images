@@ -5,6 +5,7 @@
   "author": "Peter Droogmans <peter@attiks.com>",
   "description": "A simple helpful robot for your Company",
   "dependencies": {
+    "cron": "^1.8.2",
     "hubot": "^2.19.0",
     "hubot-auth": "^2.0.0",
     "hubot-brain-inspect": "0.0.1",
