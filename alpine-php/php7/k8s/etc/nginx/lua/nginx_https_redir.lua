@@ -8,10 +8,11 @@ if os.getenv("NGINX_OVERRIDE_PROTOCOL") == nil then
 end
 -- Check the current hostname against the list of redirect exceptions.
 -- If the hostname is listed or there is a global override, no redirect is needed.
+-- Do not lowercase all listed exceptions, or the uppercase HTTP override will fail.
 http_host = ngx.var.http_host:lower()
 for name in os.getenv("NGINX_OVERRIDE_PROTOCOL"):gmatch("[^,]+") do
-  name = name:gsub("\"", ""):gsub("%s+", ""):lower()
-  if name == http_host or name == "HTTP" then
+  name = name:gsub("\"", ""):gsub("%s+", "")
+  if name:lower() == http_host or name == "HTTP" then
     return 0
   end
 end

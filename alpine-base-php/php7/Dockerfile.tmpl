@@ -29,7 +29,8 @@ LABEL org.label-schema.schema-version="1.0" \
       info.humanitarianresponse.php.sapi="fpm"
 
 # Default PHP configuration variables. These can be overridden via the environment.
-ENV PHP_ENVIRONMENT=production \
+ENV PS1="\u@\h:\w\n\$ " \
+    PHP_ENVIRONMENT=production \
     PHP_SYSLOG_FACILITY=LOG_LOCAL4 \
     PHP_ERROR_LOG=syslog \
     PHP_RUN_USER=appuser \
@@ -46,17 +47,22 @@ ENV PHP_ENVIRONMENT=production \
     PHP_MAX_INPUT_VARS=1000 \
     # Oh, this is hideous, but it does solve the iconv problem.
     # See https://humanitarian.atlassian.net/browse/OPS-6486
-    LD_PRELOAD=/usr/lib/preloadable_libiconv.so
+    LD_PRELOAD=/usr/lib/preloadable_libiconv.so \
+    # Specify a mupdf version for ReliefWeb.
+    # This needs to be built from source, as the Alpine edge version has library depend issues on the "old" PHP7.2 :-)
+    # See https://humanitarian.atlassian.net/browse/OPS-6833
+    MUPDF_VERSION=1.17.0
 
 # Copy custom config files into the container.
 COPY etc/php7 etc/services/run_fpm etc/msmtprc /tmp/
 
 RUN \
+    echo "@edgecommunity http://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories && \
     # Install standard packages from $UPSTREAM.
     apk -U upgrade && \
     apk add --update-cache \
       fcgi \
-      gnu-libiconv \
+      gnu-libiconv@edgecommunity \
       imagemagick \
       msmtp \
       php7-bcmath \
@@ -138,6 +144,12 @@ RUN \
         cd .. && \
       rm -rf phpredis && \
       rm -rf /usr/include/php/ && \
+    # Build and install mupdf tools.
+    cd /tmp && \
+      git clone --branch=$MUPDF_VERSION --recursive git://git.ghostscript.com/mupdf.git && \
+      cd mupdf && git submodule update --init && \
+        make HAVE_X11=no HAVE_GLUT=no USE_SYSTEM_LIBS=no prefix=/usr/local install && \
+      cd /tmp && rm -rf /tmp/mupdf* && \
     apk del .build-dependencies && \
     # Install igbinary.
     apk add php7-pecl-igbinary && \

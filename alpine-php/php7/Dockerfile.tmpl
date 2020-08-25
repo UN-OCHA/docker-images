@@ -70,4 +70,6 @@ RUN apk add --update-cache \
     COMPOSER_HOME=/usr/local/wp$WP_RELEASE  \
       composer global require wp-cli/wp-cli:$WP_RELEASE && \
     ln -sf /usr/local/wp$WP_RELEASE/vendor/wp-cli/wp-cli/bin/wp /usr/bin/wp && \
-    wp --info
+    wp --info && \
+    # Clear the cache to reduce the layer size.
+    rm -rf /var/cache/apk/*

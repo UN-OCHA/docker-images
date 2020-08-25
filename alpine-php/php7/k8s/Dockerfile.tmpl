@@ -48,9 +48,9 @@ RUN \
        /tmp/lua /tmp/sites-enabled /tmp/win-utf \
          /etc/nginx && \
     mv /tmp/run_nginx /etc/services.d/nginx/run && \
-    mkdir -p /var/cache/nginx && \
+    mkdir -p /var/cache/nginx /var/lib/nginx/tmp /var/tmp/nginx && \
     chgrp appuser /var/lib/nginx && \
-    chown -R appuser /var/cache/nginx /var/lib/nginx/tmp && \
+    chown -R appuser /var/cache/nginx /var/lib/nginx/tmp /var/tmp/nginx && \
     rm -rf /var/cache/apk/* && \
     \
     # Update the fpm pool config to use a socket.
