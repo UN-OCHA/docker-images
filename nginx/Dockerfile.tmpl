@@ -30,6 +30,7 @@ RUN apk update && \
       nginx \
       nginx-mod-http-upload-progress \
       nginx-mod-http-lua \
+      nginx-mod-http-echo \
       nginx-mod-http-cache-purge && \
     rm -rf /var/cache/apk/* && \
     mkdir -p  /run/nginx /srv/www/html /var/log/nginx /var/cache/nginx && \
