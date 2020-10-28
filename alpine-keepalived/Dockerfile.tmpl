@@ -18,8 +18,8 @@ LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.description="This service provides keepalived." \
       org.label-schema.architecture="x86_64" \
       org.label-schema.distribution="Alpine Linux" \
-      org.label-schema.distribution-version="3.6" \
-      info.humanitarianresponse.ipvsadm="1.29-r0" \
+      org.label-schema.distribution-version="3.11.2" \
+      info.humanitarianresponse.ipvsadm="1.30-r0" \
       info.humanitarianresponse.keepalived=$VERSION
 
 RUN apk update && \
@@ -34,16 +34,22 @@ RUN apk update && \
         postgresql-client \
         python3 \
         redis \
+        ipvsadm \
+        docker \
         && \
-    apk add --update-cache --repository http://dl-cdn.alpinelinux.org/alpine/edge/main \
-      ipvsadm \
-        && \
-    apk add --update-cache --repository http://dl-cdn.alpinelinux.org/alpine/edge/community \
-      docker \
-        && \
-    pip3 install --no-cache-dir docker-compose && \
+    curl -L "https://github.com/docker/compose/releases/download/1.25.5/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose && \
+    chmod +x /usr/local/bin/docker-compose && \
     rm -rf /var/cache/apk/*
 
 ENTRYPOINT ["/usr/sbin/keepalived", "-D", "-n"]
 
 # Wants /etc/keepalived mounted as well as /dev/log and /var/run/docker.sock
+
+#    pip3 install --no-cache-dir docker-compose && \
+
+#    apk add --update-cache --repository http://dl-cdn.alpinelinux.org/alpine/edge/main \
+#      ipvsadm \
+#        && \
+#    apk add --update-cache --repository http://dl-cdn.alpinelinux.org/alpine/edge/community \
+#      docker \
+#        && \
