@@ -1,0 +1,27 @@
+#!/usr/bin/with-contenv sh
+
+mkdir -p $PGDATA
+
+# if data folder is empty
+if [ "$(find $PGDATA -maxdepth 1 ! -path $PGDATA | wc -l)" == "0" ]; then
+
+    # initialize db
+    s6-setuidgid postgres pg_ctl initdb -w -D $PGDATA
+
+    # add a user, pass and a postgis-enabled database owned by that user
+    # get rid of IPv6 error by forcing it to listen only on localhost
+    s6-setuidgid postgres pg_ctl start -w -o "-h '127.0.0.1'"
+
+    # add a user, pass and a postgis-enabled database owned by that user
+    s6-setuidgid postgres psql -a << EOF
+CREATE USER $PGSQL_USER WITH SUPERUSER;
+ALTER USER $PGSQL_USER WITH PASSWORD '$PGSQL_PASS';
+CREATE DATABASE $PGSQL_DB OWNER $PGSQL_USER;
+EOF
+
+    sleep 2
+    s6-setuidgid postgres pg_ctl -w stop
+
+fi
+
+exec s6-setuidgid postgres /usr/bin/postgres -h 0.0.0.0 -D ${PGDATA} --config-file=${PG_CONFIG_FILE}

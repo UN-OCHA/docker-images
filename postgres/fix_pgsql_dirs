@@ -1,0 +1,3 @@
+/tmp false root 0666 1777
+/run/postgresql true postgres 0600 0700
+/var/lib/pgsql true postgres 0600 0700
