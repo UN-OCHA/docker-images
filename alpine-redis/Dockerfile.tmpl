@@ -34,3 +34,7 @@ RUN mkdir -p /etc/redis /etc/services.d/redis && \
 EXPOSE 6379
 
 VOLUME ["/var/log/redis", "/var/lib/redis"]
+
+# Let's do an internal health check, eh?
+HEALTHCHECK --interval=60s --timeout=5s \
+      CMD redis-cli PING

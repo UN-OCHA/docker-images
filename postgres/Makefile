@@ -1,7 +1,6 @@
 include ../Makefile.conf
 
-IMAGE=alpine-keepalived
-
+IMAGE=postgres
 VERSION=$$(VERSION)
 
 all: build tag

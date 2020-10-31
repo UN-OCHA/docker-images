@@ -1,0 +1,3 @@
+standby_mode = 'on'
+primary_conninfo = 'user=replicator password=replicatorpassword host=mymaster port=5432 sslmode=prefer sslcompression=1'
+trigger_file = '/tmp/postgresql.trigger'
