@@ -1,5 +1,5 @@
-include ../../../Makefile.conf
 include ../../Makefile.conf
+include ../Makefile.conf
 
 UPSTREAM="8.11.3"
 VERSION=$$(VERSION)
