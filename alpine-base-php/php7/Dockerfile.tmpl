@@ -25,7 +25,7 @@ LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.distribution="Alpine Linux" \
       org.label-schema.distribution-version="$UPSTREAM" \
       info.humanitarianresponse.php=$VERSION \
-      info.humanitarianresponse.php.modules="bcmath bz2 calendar ctype curl dom exif fileinfo fpm gd gettext iconv igbinary imagick intl json mcrypt memcached mysqli opcache openssl pdo pdo_mysql phar posix redis shmop sysvmsg sysvsem sysvshm simplexml sockets wddx xml xmlreader xmlwriter xsl zip zlib" \
+      info.humanitarianresponse.php.modules="bcmath bz2 calendar ctype curl dom exif fileinfo fpm gd gettext iconv igbinary imagick intl json mcrypt memcached mysqli mysqlnd opcache openssl pdo pdo_mysql phar posix redis session shmop sysvmsg sysvsem sysvshm simplexml sockets ml xmlreader xmlwriter xsl zip zlib" \
       info.humanitarianresponse.php.sapi="fpm"
 
 # Default PHP configuration variables. These can be overridden via the environment.
@@ -66,6 +66,7 @@ RUN \
       imagemagick \
       msmtp \
       mupdf@edgecommunity \
+      php7@edgecommunity \
       php7-bcmath@edgecommunity \
       php7-bz2@edgecommunity \
       php7-calendar@edgecommunity \
@@ -86,6 +87,7 @@ RUN \
       php7-mcrypt@edgecommunity \
       php7-memcached@edgecommunity \
       php7-mysqli@edgecommunity \
+      php7-mysqlnd@edgecommunity \
       php7-opcache@edgecommunity \
       php7-openssl@edgecommunity \
       php7-pdo@edgecommunity \
@@ -101,7 +103,7 @@ RUN \
       php7-simplexml@edgecommunity \
       php7-sockets@edgecommunity \
       php7-tokenizer@edgecommunity \
-      php7-wddx@edgecommunity \
+      # php7-wddx@edgecommunity \
       php7-xml@edgecommunity \
       php7-xmlreader@edgecommunity \
       php7-xmlwriter@edgecommunity \
