@@ -1,9 +1,10 @@
-include ../../../Makefile.conf
 include ../../Makefile.conf
+include ../Makefile.conf
 
-UPSTREAM=$$(UPSTREAM))
-VERSION=$$(VERSION))
-IMAGE=php7-wordpress
+UPSTREAM="8.11.3"
+VERSION=$$(VERSION)
+IMAGE=unified-builder
+
 
 all: template build tag clean_images
 
