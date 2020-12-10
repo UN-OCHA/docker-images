@@ -1,4 +1,8 @@
 #!/usr/bin/with-contenv sh
 set -e
 
-exec /usr/sbin/php-fpm7 -c /etc/php7/php.ini -y /etc/php7/php-fpm.conf -F
+if [ "${PHP_XDEBUG}" = "true" ]; then
+  exec /usr/sbin/php-fpm7 -c /etc/php7/php.ini -d zend_extension=xdebug.so -y /etc/php7/php-fpm.conf -F
+else
+  exec /usr/sbin/php-fpm7 -c /etc/php7/php.ini -y /etc/php7/php-fpm.conf -F
+fi
