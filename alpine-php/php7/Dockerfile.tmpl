@@ -12,7 +12,7 @@ ARG BUILD_DATE
 
 ENV DRUSH_VERSION=8 \
     DRUSH_RELEASE=8.1.15 \
-    WP_RELEASE=2.1.0 \
+    WP_RELEASE=2.4.0 \
     PAGER=more
 
 LABEL org.label-schema.schema-version="1.0" \
@@ -68,7 +68,13 @@ RUN apk add --update-cache \
     mv /drushrc.php /etc/drush/drushrc.php && \
     # Install wp-cli and symlink it somewhere useful.
     COMPOSER_HOME=/usr/local/wp$WP_RELEASE  \
-      composer global require wp-cli/wp-cli:$WP_RELEASE && \
+      composer global require \
+        wp-cli/wp-cli:$WP_RELEASE \
+        wp-cli/extension-command \
+	      wp-cli/maintenance-mode-command \
+	      wp-cli/core-command \
+	      wp-cli/db-command \
+	      wp-cli/search-replace-command && \
     ln -sf /usr/local/wp$WP_RELEASE/vendor/wp-cli/wp-cli/bin/wp /usr/bin/wp && \
     wp --info && \
     # Clear the cache to reduce the layer size.
