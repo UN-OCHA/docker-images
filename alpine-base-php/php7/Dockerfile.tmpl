@@ -25,7 +25,7 @@ LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.distribution="Alpine Linux" \
       org.label-schema.distribution-version="$UPSTREAM" \
       info.humanitarianresponse.php=$VERSION \
-      info.humanitarianresponse.php.modules="bcmath bz2 calendar ctype curl dom exif fileinfo fpm gd gettext gmp iconv igbinary imagick intl json mcrypt memcached mysqli opcache openssl pdo pdo_mysql phar posix redis shmop sysvmsg sysvsem sysvshm simplexml sockets wddx xml xmlreader xmlwriter xsl zip zlib" \
+      info.humanitarianresponse.php.modules="bcmath bz2 calendar ctype curl dom exif fileinfo fpm gd gettext gmp iconv igbinary imagick intl json mcrypt memcached mysqli opcache openssl pdo pdo_mysql phar posix redis shmop sysvmsg sysvsem sysvshm simplexml sockets xml xmlreader xmlwriter xsl zip zlib" \
       info.humanitarianresponse.php.sapi="fpm"
 
 # Default PHP configuration variables. These can be overridden via the environment.
@@ -47,11 +47,7 @@ ENV PS1="\u@\h:\w\n\$ " \
     PHP_MAX_INPUT_VARS=1000 \
     # Oh, this is hideous, but it does solve the iconv problem.
     # See https://humanitarian.atlassian.net/browse/OPS-6486
-    LD_PRELOAD=/usr/lib/preloadable_libiconv.so \
-    # Specify a mupdf version for ReliefWeb.
-    # This needs to be built from source, as the Alpine edge version has library depend issues on the "old" PHP7.2 :-)
-    # See https://humanitarian.atlassian.net/browse/OPS-6833
-    MUPDF_VERSION=1.17.0
+    LD_PRELOAD=/usr/lib/preloadable_libiconv.so
 
 # Copy custom config files into the container.
 COPY etc/php7 etc/services/run_fpm etc/msmtprc /tmp/
@@ -101,7 +97,6 @@ RUN \
       php7-simplexml \
       php7-sockets \
       php7-tokenizer \
-      php7-wddx \
       php7-xml \
       php7-xmlreader \
       php7-xmlwriter \
