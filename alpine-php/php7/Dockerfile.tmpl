@@ -11,7 +11,7 @@ ARG VCS_REF
 ARG BUILD_DATE
 
 ENV DRUSH_VERSION=8 \
-    DRUSH_RELEASE=8.1.15 \
+    DRUSH_RELEASE=8.x-dev \
     WP_RELEASE=2.4.0 \
     PAGER=more
 
@@ -26,7 +26,7 @@ LABEL org.label-schema.schema-version="1.0" \
       info.humanitarianresponse.php=$VERSION \
       info.humanitarianresponse.php.modules="bcmath bz2 calendar ctype curl dom exif fileinfo fpm ftp gd geos gettext iconv igbinary imagick imap intl json mcrypt memcached opcache openssl pdo pdo_mysql phar posix redis shmop soap sysvmsg sysvsem sysvshm simplexml sockets wddx xml xmlreader xmlwriter xsl zip zlib" \
       info.humanitarianresponse.php.sapi="fpm" \
-      info.humanitarianresponse.composer="1.9.0" \
+      info.humanitarianresponse.composer="1.10.19" \
       info.humanitarianresponse.drush=$DRUSH_RELEASE \
       info.humanitarianresponse.wp=$WP_RELEASE
 
@@ -50,6 +50,8 @@ RUN apk add --update-cache \
     php -r "if (hash_file('SHA384', 'composer-setup.php') === '$COMPOSER_HASH') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;" && \
     php composer-setup.php --install-dir=/usr/bin --filename=composer && \
     php -r "unlink('composer-setup.php');" && \
+    # Downgrade to the latest version 1, as v2 breaks Drupal patching.
+    composer self-update --1 && \
     # Install drush and symlink it somewhere useful.
     COMPOSER_HOME=/usr/local/drush$DRUSH_VERSION \
       composer global require drush/drush:$DRUSH_RELEASE && \
@@ -71,10 +73,10 @@ RUN apk add --update-cache \
       composer global require \
         wp-cli/wp-cli:$WP_RELEASE \
         wp-cli/extension-command \
-	      wp-cli/maintenance-mode-command \
-	      wp-cli/core-command \
-	      wp-cli/db-command \
-	      wp-cli/search-replace-command && \
+        wp-cli/maintenance-mode-command \
+        wp-cli/core-command \
+        wp-cli/db-command \
+        wp-cli/search-replace-command && \
     ln -sf /usr/local/wp$WP_RELEASE/vendor/wp-cli/wp-cli/bin/wp /usr/bin/wp && \
     wp --info && \
     # Clear the cache to reduce the layer size.
