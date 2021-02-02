@@ -36,6 +36,7 @@ COPY drushrc.php /drushrc.php
 RUN apk add --update-cache \
         bash \
         git \
+        patch \
         php7 \
         mysql-client && \
     rm -rf /var/cache/apk/* && \
