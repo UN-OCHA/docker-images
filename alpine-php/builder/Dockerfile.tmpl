@@ -25,17 +25,15 @@ LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.distribution="Alpine Linux" \
       org.label-schema.distribution-version="3.12" \
       info.humanitarianresponse.php=$VERSION \
-      info.humanitarianresponse.php.modules="bcmath bz2 calendar ctype curl dom exif fileinfo fpm ftp gd gettext iconv igbinary imagick imap intl json mcrypt memcached opcache openssl pdo pdo_mysql phar posix redis shmop soap sysvmsg sysvsem sysvshm simplexml sockets wddx xml xmlreader xmlwriter xsl zip zlib" \
+      info.humanitarianresponse.php.modules="bcmath bz2 calendar ctype curl dom exif fileinfo fpm ftp gd gettext gmp iconv igbinary imagick imap intl json mcrypt memcached opcache openssl pdo pdo_mysql phar posix redis shmop soap sysvmsg sysvsem sysvshm simplexml sockets wddx xml xmlreader xmlwriter xsl zip zlib" \
       info.humanitarianresponse.php.sapi="cli" \
-      info.humanitarianresponse.composer="1.8.4" \
-      info.humanitarianresponse.drush="8.1.18-dev" \
+      info.humanitarianresponse.composer="1.10.19" \
+      info.humanitarianresponse.drush="8.4.6" \
       info.humanitarianresponse.node="12.18" \
       info.humanitarianresponse.npm="12.18" \
       info.humanitarianresponse.yarn="1.7.0" \
       info.humanitarianresponse.compass="3.2.0" \
       info.humanitarianresponse.jasmine="3.4.0" \
-      info.humanitarianresponse.casperjs="1.1.3" \
-      info.humanitarianresponse.phantomjs="2.0.0" \
       info.humanitarianresponse.python="3.8.5" \
       info.humanitarianresponse.ruby="2.3.7"
 
@@ -73,6 +71,7 @@ RUN npm install --global npm@latest && \
       php7-ftp \
       php7-gd \
       php7-gettext \
+      php7-gmp \
       php7-iconv \
       php7-imagick \
       php7-imap \
@@ -112,6 +111,8 @@ RUN npm install --global npm@latest && \
     php -r "if (hash_file('SHA384', 'composer-setup.php') === '$COMPOSER_HASH') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;" && \
     php composer-setup.php --install-dir=/usr/bin --filename=composer && \
     php -r "unlink('composer-setup.php');" && \
+    # Downgrade composer to v1.
+    composer self-update --1 && \
     # Install drush and symlink it somewhere useful.
     COMPOSER_HOME=/usr/local/drush$DRUSH_VERSION \
       composer global require drush/drush:$DRUSH_RELEASE && \
@@ -128,23 +129,11 @@ RUN npm install --global npm@latest && \
     # Add our default drushrc.php file.
     mkdir -p /etc/drush && \
     mv /drushrc.php /etc/drush/drushrc.php && \
-    # Add dependencies for capsper and phantom.
+    # Add dependencies for capsper and phantom, but do NOT install them. npm will fetch a newer one anyway.
     apk add --update-cache \
       fontconfig \
       libc6-compat && \
-    rm -rf /var/cache/apk/* && \
-    # Install casper.
-    curl -L -o /tmp/casperjs.zip https://github.com/n1k0/casperjs/archive/master.zip && \
-    mkdir -p /opt && \
-    unzip /tmp/casperjs.zip -d /opt && \
-    mv /opt/casperjs-master /opt/casperjs && \
-    ln -s /opt/casperjs/bin/casperjs /usr/local/bin/casperjs && \
-    rm -f /tmp/casperjs.zip && \
-    # Found an actual working PhantomJS at http://fabiorehm.com/blog/2015/07/22/building-a-minimum-viable-phantomjs-2-docker-image
-    # It's a year old, but it's newer than the old one (1.9.8) and it works.
-    # Mind you, only extract part of the archive, or our crafted passwd and shadow files wil be overwritten.
-    curl -Ls https://github.com/fgrehm/docker-phantomjs2/releases/download/v2.0.0-20150722/dockerized-phantomjs.tar.gz \
-      | tar xz -C / bin etc/fonts etc/ssl lib lib64 usr/lib usr/local usr/share
+    rm -rf /var/cache/apk/*
 
 WORKDIR /tmp
 

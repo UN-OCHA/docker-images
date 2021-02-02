@@ -25,7 +25,7 @@ LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.distribution="Alpine Linux" \
       org.label-schema.distribution-version="$UPSTREAM" \
       info.humanitarianresponse.php=$VERSION \
-      info.humanitarianresponse.php.modules="bcmath bz2 calendar ctype curl dom exif fileinfo fpm gd gettext iconv igbinary imagick intl json mcrypt memcached mysqli opcache openssl pdo pdo_mysql phar posix redis shmop sysvmsg sysvsem sysvshm simplexml sockets wddx xml xmlreader xmlwriter xsl zip zlib" \
+      info.humanitarianresponse.php.modules="bcmath bz2 calendar ctype curl dom exif fileinfo fpm gd gettext gmp iconv igbinary imagick intl json mcrypt memcached mysqli opcache openssl pdo pdo_mysql phar posix redis shmop sysvmsg sysvsem sysvshm simplexml sockets wddx xml xmlreader xmlwriter xsl zip zlib" \
       info.humanitarianresponse.php.sapi="fpm"
 
 # Default PHP configuration variables. These can be overridden via the environment.
@@ -57,14 +57,14 @@ ENV PS1="\u@\h:\w\n\$ " \
 COPY etc/php7 etc/services/run_fpm etc/msmtprc /tmp/
 
 RUN \
-    echo "@edgecommunity http://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories && \
     # Install standard packages from $UPSTREAM.
     apk -U upgrade && \
     apk add --update-cache \
       fcgi \
-      gnu-libiconv@edgecommunity \
+      gnu-libiconv \
       imagemagick \
       msmtp \
+      mupdf \
       php7-bcmath \
       php7-bz2 \
       php7-calendar \
@@ -77,13 +77,14 @@ RUN \
       php7-fpm \
       php7-gd \
       php7-gettext \
+      php7-gmp \
       php7-iconv \
       php7-imagick \
       php7-intl \
       php7-json \
       php7-mbstring \
       php7-mcrypt \
-      # php7-memcached \
+      php7-memcached \
       php7-mysqli \
       php7-opcache \
       php7-openssl \
@@ -91,7 +92,7 @@ RUN \
       php7-pdo_mysql \
       php7-phar \
       php7-posix \
-      # php7-redis \
+      php7-redis \
       php7-session \
       php7-shmop \
       php7-sysvmsg \
@@ -108,58 +109,6 @@ RUN \
       php7-zip \
       php7-zlib \
       pngquant && \
-    # Install build dependencies in order to build the memcache and redis extension
-    apk add --virtual .build-dependencies \
-      autoconf \
-      build-base \
-      file \
-      g++ \
-      git \
-      gzip \
-      make \
-      libmemcached-dev \
-      patch \
-      php7-dev \
-      re2c \
-      tar \
-      zlib-dev && \
-    cd /tmp && \
-    # Build memcached and redis extensions from source, *without* igbinary.
-    apk add libmemcached-libs && \
-    cd /tmp && \
-      git clone https://github.com/php-memcached-dev/php-memcached && \
-      cd php-memcached && \
-        phpize7 && \
-        ./configure CFLAGS="-O2 -g" --with-php-config=/usr/bin/php-config7 && \
-        make && \
-        make install && \
-        cd .. && \
-      rm -rf php-memcached && \
-      git clone https://github.com/phpredis/phpredis && \
-      cd phpredis && \
-        phpize7 && \
-        ./configure CFLAGS="-O2 -g" --with-php-config=/usr/bin/php-config7 && \
-        make && \
-        make install && \
-        cd .. && \
-      rm -rf phpredis && \
-      rm -rf /usr/include/php/ && \
-    # Build and install mupdf tools.
-    cd /tmp && \
-      git clone --branch=$MUPDF_VERSION --recursive git://git.ghostscript.com/mupdf.git && \
-      cd mupdf && git submodule update --init && \
-        make HAVE_X11=no HAVE_GLUT=no USE_SYSTEM_LIBS=no prefix=/usr/local install && \
-      cd /tmp && rm -rf /tmp/mupdf* && \
-    apk del .build-dependencies && \
-    # Install igbinary.
-    apk add php7-pecl-igbinary && \
-    # Downgrade ghostscript for pdf thumbnails.
-    # See https://humanitarian.atlassian.net/browse/OPS-5925
-    echo "@3-4-main http://dl-cdn.alpinelinux.org/alpine/v3.4/main" >> /etc/apk/repositories && \
-    apk add --no-cache \
-      'freetype@3-4-main=~2.6' \
-      'ghostscript@3-4-main=~9.22' \
-      'fontconfig@3-4-main=~2.12.1' && \
     # Tidy.
     rm -rf /var/cache/apk/* && \
     # Setup directory structure for FPM.
