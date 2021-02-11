@@ -40,8 +40,6 @@ LABEL org.label-schema.schema-version="1.0" \
 ENV DRUSH_VERSION=10 \
     DRUSH_RELEASE=10.x-dev
 
-COPY drushrc.php /drushrc.php
-
 RUN npm install --global npm@latest && \
     npm install --global \
       jasmine && \
@@ -116,17 +114,7 @@ RUN npm install --global npm@latest && \
     cd / && \
     ln -sf /usr/local/drush$DRUSH_VERSION/vendor/bin/drush /usr/bin/drush && \
     drush status && \
-    # Install registry_rebuild to the appuser's homedir.
-    drush -y @none dl --destination=/home/appuser/.drush/commands registry_rebuild-7.x && \
-    # Ensure the appuser's drush directory is writable.
-    chown -R appuser:appuser /home/appuser/.drush && \
-    # Symlink the appuser's drush module to root's.
-    mkdir -p /root/.drush && \
-    ln -s /home/appuser/.drush/commands /root/.drush/commands && \
-    # Add our default drushrc.php file.
-    mkdir -p /etc/drush && \
-    mv /drushrc.php /etc/drush/drushrc.php && \
-    # Add dependencies for capsper and phantom, but do NOT install them. npm will fetch a newer one anyway.
+    # Add dependencies for casper and phantom, but do NOT install them. npm will fetch a newer one anyway.
     apk add --update-cache \
       fontconfig \
       libc6-compat && \
