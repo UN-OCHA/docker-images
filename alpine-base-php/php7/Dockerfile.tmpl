@@ -45,6 +45,18 @@ ENV PS1="\u@\h:\w\n\$ " \
     PHP_POST_MAX_SIZE=100m \
     PHP_UPLOAD_MAX_FILESIZE=100m \
     PHP_MAX_INPUT_VARS=1000 \
+    # Allow developers to disable opcache, so local changes show up immediately.
+    # See https://humanitarian.atlassian.net/browse/OPS-7156
+    PHP_OPCACHE_ENABLE=1 \
+    PHP_OPCACHE_REVALIDATE_FREQ=300 \
+    # Allow developers to use and configure xdebug.
+    PHP_XDEBUG=false \
+    PHP_XDEBUG_REMOTE_HOST=127.0.0.1 \
+    PHP_XDEBUG_REMOTE_AUTOSTART=0 \
+    PHP_XDEBUG_REMOTE_ENABLE=0 \
+    PHP_XDEBUG_REMOTE_PORT=9001 \
+    PHP_XDEBUG_DEFAULT_ENABLE=0 \
+    PHP_XDEBUG_REMOTE_CONNECT_BACK=0 \
     # Oh, this is hideous, but it does solve the iconv problem.
     # See https://humanitarian.atlassian.net/browse/OPS-6486
     LD_PRELOAD=/usr/lib/preloadable_libiconv.so \
@@ -108,6 +120,7 @@ RUN \
       php7-xsl \
       php7-zip \
       php7-zlib \
+      php7-pecl-xdebug \
       pngquant && \
     # Tidy.
     rm -rf /var/cache/apk/* && \
