@@ -106,6 +106,7 @@ RUN npm install --global npm@latest && \
       php7-zip \
       php7-zlib && \
     rm -rf /var/cache/apk/* && \
+    ln -sf /usr/bin/python3 /usr/bin/python && \
     cd /tmp && \
     mv /tmp/php.ini /etc/php7/php.ini && \
     ln -sf /usr/bin/php7 /usr/bin/php && \
