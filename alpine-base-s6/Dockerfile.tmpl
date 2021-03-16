@@ -20,7 +20,7 @@ LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.description="This service provides a base Alpine Linux container." \
       org.label-schema.architecture="x86_64" \
       org.label-schema.distribution="Alpine Linux" \
-      org.label-schema.distribution-version=$VERSION \
+      org.label-schema.distribution-version=%%UPSTREAM%% \
       org.label-schema.s6-version=$S6_VERSION
 
 RUN curl -sL https://github.com/just-containers/s6-overlay/releases/download/${S6_VERSION}/s6-overlay-amd64.tar.gz -o /tmp/s6.tgz && \
