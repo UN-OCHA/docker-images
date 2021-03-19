@@ -41,6 +41,7 @@ ENV DRUSH_VERSION=8 \
     DRUSH_RELEASE=8.x-dev
 
 COPY drushrc.php /drushrc.php
+COPY etc/php7/php.ini /tmp/php.ini
 
 RUN npm install --global npm@latest && \
     npm install --global \
@@ -56,6 +57,7 @@ RUN npm install --global npm@latest && \
       gzip \
       openssh-client \
       patch \
+      python3 \
       rsync \
       tar \
       wget \
@@ -104,7 +106,9 @@ RUN npm install --global npm@latest && \
       php7-zip \
       php7-zlib && \
     rm -rf /var/cache/apk/* && \
+    ln -sf /usr/bin/python3 /usr/bin/python && \
     cd /tmp && \
+    mv /tmp/php.ini /etc/php7/php.ini && \
     ln -sf /usr/bin/php7 /usr/bin/php && \
     COMPOSER_HASH=$(curl -sS https://composer.github.io/installer.sig) && \
     php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" && \
