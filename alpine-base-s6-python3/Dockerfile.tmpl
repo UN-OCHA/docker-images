@@ -8,17 +8,12 @@ ARG BUILD_DATE
 
 # A little bit of metadata management.
 # See http://label-schema.org/
-LABEL org.label-schema.schema-version="1.0" \
-      org.label-schema.build-date=$BUILD_DATE \
-      org.label-schema.vendor="UN-OCHA" \
+LABEL org.label-schema.build-date=$BUILD_DATE \
       org.label-schema.version=$VERSION \
       org.label-schema.vcs-url=$VCS_URL \
       org.label-schema.vcs-ref=$VCS_REF \
-      org.label-schema.name="base-s6" \
       org.label-schema.description="This service provides a base Python3 Alpine Linux container." \
-      org.label-schema.architecture="x86_64" \
-      org.label-schema.distribution="Alpine Linux" \
-      org.label-schema.distribution-version=$VERSION
+      info.humanitarianresponse.python="$VERSION"
 
 RUN apk add --update-cache \
         python3 && \

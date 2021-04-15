@@ -9,7 +9,6 @@ ARG VERSION
 ARG VCS_URL
 ARG VCS_REF
 ARG BUILD_DATE
-
 ENV WP_RELEASE=2.1.0 \
     PAGER=more
 
@@ -32,6 +31,7 @@ COPY etc/my.cnf.d/client.cnf /client.cnf
 RUN apk add --update-cache \
         bash \
         git \
+        patch \
         php7@edgecommunity \
         mysql-client && \
     rm -rf /var/cache/apk/* && \
@@ -48,7 +48,13 @@ RUN apk add --update-cache \
     php -r "unlink('composer-setup.php');" && \
     # Install wp-cli and symlink it somewhere useful.
     COMPOSER_HOME=/usr/local/wp$WP_RELEASE  \
-      composer global require wp-cli/wp-cli:$WP_RELEASE && \
+      composer global require \
+        wp-cli/wp-cli:$WP_RELEASE \
+        wp-cli/extension-command \
+        wp-cli/maintenance-mode-command \
+        wp-cli/core-command \
+        wp-cli/db-command \
+        wp-cli/search-replace-command && \
     ln -sf /usr/local/wp$WP_RELEASE/vendor/wp-cli/wp-cli/bin/wp /usr/bin/wp && \
     wp --info && \
     # Clear the cache to reduce the layer size.

@@ -25,7 +25,7 @@ LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.distribution="Alpine Linux" \
       org.label-schema.distribution-version="$UPSTREAM" \
       info.humanitarianresponse.php=$VERSION \
-      info.humanitarianresponse.php.modules="bcmath bz2 calendar ctype curl dom exif fileinfo fpm gd gettext iconv igbinary imagick intl json mcrypt memcached mysqli mysqlnd opcache openssl pdo pdo_mysql phar posix redis session shmop sysvmsg sysvsem sysvshm simplexml sockets ml xmlreader xmlwriter xsl zip zlib" \
+      info.humanitarianresponse.php.modules="apcu bcmath bz2 calendar ctype curl dom exif fileinfo fpm gd gettext iconv igbinary imagick intl json mcrypt memcached mysqli mysqlnd opcache openssl pdo pdo_mysql phar posix redis session shmop sysvmsg sysvsem sysvshm simplexml sockets yalm xml xmlreader xmlwriter xsl zip zlib" \
       info.humanitarianresponse.php.sapi="fpm"
 
 # Default PHP configuration variables. These can be overridden via the environment.
@@ -45,6 +45,18 @@ ENV PS1="\u@\h:\w\n\$ " \
     PHP_POST_MAX_SIZE=100m \
     PHP_UPLOAD_MAX_FILESIZE=100m \
     PHP_MAX_INPUT_VARS=1000 \
+    # Allow developers to disable opcache, so local changes show up immediately.
+    # See https://humanitarian.atlassian.net/browse/OPS-7156
+    PHP_OPCACHE_ENABLE=1 \
+    PHP_OPCACHE_REVALIDATE_FREQ=300 \
+    # Allow developers to use and configure xdebug.
+    PHP_XDEBUG=false \
+    PHP_XDEBUG_REMOTE_HOST=127.0.0.1 \
+    PHP_XDEBUG_REMOTE_AUTOSTART=0 \
+    PHP_XDEBUG_REMOTE_ENABLE=0 \
+    PHP_XDEBUG_REMOTE_PORT=9001 \
+    PHP_XDEBUG_DEFAULT_ENABLE=0 \
+    PHP_XDEBUG_REMOTE_CONNECT_BACK=0 \
     # Oh, this is hideous, but it does solve the iconv problem.
     # See https://humanitarian.atlassian.net/browse/OPS-6486
     LD_PRELOAD=/usr/lib/preloadable_libiconv.so
@@ -62,7 +74,7 @@ RUN \
     apk -U upgrade && \
     apk add --update-cache \
       fcgi \
-      gnu-libiconv@edgecommunity \
+      gnu-libiconv \
       imagemagick \
       msmtp \
       mupdf@edgecommunity \
@@ -111,6 +123,9 @@ RUN \
       php7-zip@edgecommunity \
       php7-zlib@edgecommunity \
       php7-pecl-igbinary@edgecommunity \
+      php7-pecl-apcu@edgecommunity \
+      php7-pecl-xdebug@edgecommunity \
+      php7-pecl-yaml@edgecommunity \
       pngquant && \
     # Tidy.
     rm -rf /var/cache/apk/* && \
