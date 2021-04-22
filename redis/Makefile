@@ -1,6 +1,6 @@
 include ../Makefile.conf
 
-IMAGE=alpine-base-redis
+IMAGE=redis
 VERSION=$$(VERSION)
 
 all: build tag
