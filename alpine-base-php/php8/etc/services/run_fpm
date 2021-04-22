@@ -1,0 +1,8 @@
+#!/usr/bin/with-contenv sh
+set -e
+
+if [ "${PHP_XDEBUG}" = "true" ]; then
+  exec /usr/sbin/php-fpm8 -c /etc/php8/php.ini -d zend_extension=xdebug.so -y /etc/php8/php-fpm.conf -F
+else
+  exec /usr/sbin/php-fpm8 -c /etc/php8/php.ini -y /etc/php8/php-fpm.conf -F
+fi
