@@ -13,6 +13,7 @@ ARG BUILD_DATE
 
 ENV NGINX_SERVERNAME=localhost \
     PAGER=more \
+    PATH=/srv/www/vendor/bin:$PATH \
     LD_PRELOAD=/usr/lib/preloadable_libiconv.so \
     PS1="\u@\h:\w\n\$ "
 
@@ -28,8 +29,7 @@ LABEL org.label-schema.schema-version="1.0" \
       info.humanitarianresponse.nginx=1.18.0-r1
 
 # Insert all our custom config files.
-COPY etc/drush/drushrc.php \
-       etc/nginx/ etc/services.d/run_nginx \
+COPY etc/nginx/ etc/services.d/run_nginx \
      /tmp/
 
 # Install NGINX for standard operation.
