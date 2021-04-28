@@ -32,6 +32,7 @@ COPY assets/ /tmp/assets
 
 RUN mkdir -p /var/run/s6 && \
     apt-get -qy update && \
+    apt-get -qy dist-upgrade && \
     apt-get -qy install \
         build-essential \
         imagemagick \
@@ -50,8 +51,6 @@ RUN mkdir -p /var/run/s6 && \
     # Configure NodeJS repo.
     curl -sL https://deb.nodesource.com/setup_$NODE_VERSION.x | bash - && \
     apt-get -qy update && \
-    # Install Chrome.
-    apt-get -qy install --no-install-recommends google-chrome-unstable && \
     # Install NodeJS.
     apt-get -qy install --no-install-recommends nodejs && \
     apt-get clean && \
