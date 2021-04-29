@@ -3,7 +3,7 @@ include ../Makefile.conf
 
 UPSTREAM=$$(UPSTREAM)
 VERSION=$$(VERSION)
-IMAGE=php8
+IMAGE=php
 
 all: template build tag clean_images
 
