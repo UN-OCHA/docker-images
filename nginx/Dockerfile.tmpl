@@ -31,7 +31,8 @@ RUN apk update && \
       nginx-mod-http-upload-progress \
       nginx-mod-http-lua \
       nginx-mod-http-echo \
-      nginx-mod-http-cache-purge && \
+      nginx-mod-http-cache-purge \
+      nginx-mod-http-fancyindex && \
     rm -rf /var/cache/apk/* && \
     mkdir -p  /etc/nginx/env /run/nginx /srv/www/html /var/log/nginx /var/cache/nginx && \
     sed -i 's/access_log.*/access_log off;/' /etc/nginx/nginx.conf && \
