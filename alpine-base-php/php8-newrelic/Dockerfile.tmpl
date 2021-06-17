@@ -1,4 +1,4 @@
-FROM unocha/base-php7:%%UPSTREAM%%
+FROM unocha/base-php:%%UPSTREAM%%
 
 MAINTAINER UN-OCHA Operations <ops+docker@humanitarianresponse.info>
 
@@ -24,7 +24,7 @@ LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.distribution="Alpine Linux" \
       org.label-schema.distribution-version="3.10.2" \
       info.humanitarianresponse.php=$VERSION \
-      info.humanitarianresponse.php.modules="bcmath bz2 calendar ctype curl dom exif fileinfo fpm gd gettext gmp iconv imagick json mcrypt memcached newrelic opcache openssl pdo pdo_mysql phar posix redis shmop sysvmsg sysvsem sysvshm simplexml sockets wddx xml xmlreader xmlwriter xsl zip zlib" \
+      info.humanitarianresponse.php.modules="bcmath bz2 calendar ctype curl dom exif fileinfo fpm gd gettext gmp iconv imagick json mcrypt memcached newrelic opcache openssl pdo pdo_mysql phar posix redis shmop sysvmsg sysvsem sysvshm simplexml sockets xml xmlreader xmlwriter xsl zip zlib" \
       info.humanitarianresponse.php.sapi="fpm"
 
 ENV NR_VERSION 9.17.0.300
@@ -32,7 +32,7 @@ ENV NR_VERSION 9.17.0.300
 ENV PHP_NEWRELIC_LICENSE="" \
     PHP_NEWRELIC_APPNAME=""
 
-COPY run_newrelic etc/php7/conf.d/10_newrelic.ini /
+COPY run_newrelic etc/php8/conf.d/10_newrelic.ini /
 
 RUN curl -s -o /tmp/newrelic.tar.gz \
       https://download.newrelic.com/php_agent/archive/$NR_VERSION/newrelic-php5-${NR_VERSION}-linux-musl.tar.gz && \
@@ -41,11 +41,11 @@ RUN curl -s -o /tmp/newrelic.tar.gz \
     mv /tmp/newrelic-php5-${NR_VERSION}-linux-musl/daemon/newrelic-daemon.x64 \
        /usr/bin/newrelic-daemon && \
     mv /tmp/newrelic-php5-${NR_VERSION}-linux-musl/agent/x64/newrelic-$(php --info | awk '/^PHP API/ {print $NF}').so \
-       /usr/lib/php7/modules/newrelic.so && \
+       /usr/lib/php8/modules/newrelic.so && \
     mv /tmp/newrelic-php5-${NR_VERSION}-linux-musl/scripts/newrelic.cfg.template \
        /etc/newrelic/newrelic.cfg && \
     rm -rf /tmp/newrelic-php5* /tmp/newrelic.tar.gz && \
-    rm -f /etc/php7/conf.d/newrelic.ini && \
+    rm -f /etc/php8/conf.d/newrelic.ini && \
     mkdir -p /etc/services.d/newrelic && \
     mv /run_newrelic /etc/services.d/newrelic/run && \
-    mv /10_newrelic.ini /etc/php7/conf.d/10_newrelic.ini
+    mv /10_newrelic.ini /etc/php8/conf.d/10_newrelic.ini
