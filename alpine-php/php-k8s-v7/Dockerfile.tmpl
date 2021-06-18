@@ -13,6 +13,7 @@ ARG BUILD_DATE
 
 ENV NGINX_SERVERNAME=localhost \
     PAGER=more \
+    PATH=/srv/www/vendor/bin:$PATH \
     LD_PRELOAD=/usr/lib/preloadable_libiconv.so \
     PS1="\u@\h:\w\n\$ "
 
@@ -20,7 +21,7 @@ LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.build-date=$BUILD_DATE \
       org.label-schema.vendor="UN-OCHA" \
       org.label-schema.version=$VERSION \
-      org.label-schema.name="php7-k8s" \
+      org.label-schema.name="php-k8s" \
       org.label-schema.description="This service provides an nginx / php-fpm platform with composer and wp-cli." \
       org.label-schema.vcs-url=$VCS_URL \
       org.label-schema.vcs-ref=$VCS_REF \

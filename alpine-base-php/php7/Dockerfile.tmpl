@@ -65,16 +65,11 @@ ENV PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/srv/www/
     # Oh, this is hideous, but it does solve the iconv problem.
     # See https://humanitarian.atlassian.net/browse/OPS-6486
     LD_PRELOAD=/usr/lib/preloadable_libiconv.so
-    # Specify a mupdf version for ReliefWeb.
-    # This needs to be built from source, as the Alpine edge version has library depend issues on the "old" PHP7.2 :-)
-    # See https://humanitarian.atlassian.net/browse/OPS-6833
-    # MUPDF_VERSION=1.17.0
 
 # Copy custom config files into the container.
 COPY etc/php7 etc/services/run_fpm etc/msmtprc /tmp/
 
 RUN \
-    echo "@edgecommunity http://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories && \
     # Install standard packages from $UPSTREAM and edge.
     apk -U upgrade && \
     apk add --update-cache \
@@ -83,6 +78,7 @@ RUN \
       imagemagick \
       msmtp \
       mupdf \
+      mupdf-tools \
       php7-bcmath \
       php7-bz2 \
       php7-calendar \

@@ -63,11 +63,7 @@ ENV PS1="\u@\h:\w\n\$ " \
     PHP_XDEBUG_REMOTE_CONNECT_BACK=0 \
     # Oh, this is hideous, but it does solve the iconv problem.
     # See https://humanitarian.atlassian.net/browse/OPS-6486
-    LD_PRELOAD=/usr/lib/preloadable_libiconv.so \
-    # Specify a mupdf version for ReliefWeb.
-    # This needs to be built from source, as the Alpine edge version has library depend issues on the "old" PHP7.2 :-)
-    # See https://humanitarian.atlassian.net/browse/OPS-6833
-    MUPDF_VERSION=1.18.0
+    LD_PRELOAD=/usr/lib/preloadable_libiconv.so
 
 # Copy custom config files into the container.
 COPY etc/php8 etc/services/run_fpm etc/msmtprc /tmp/
@@ -81,6 +77,7 @@ RUN \
       imagemagick \
       msmtp \
       mupdf \
+      mupdf-tools \
       php8-bcmath \
       php8-bz2 \
       php8-calendar \
