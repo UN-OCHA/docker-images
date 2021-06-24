@@ -22,7 +22,7 @@ LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.description="This service provides a base nginx platform." \
       org.label-schema.architecture="x86_64" \
       org.label-schema.distribution="Alpine Linux" \
-      org.label-schema.distribution-version="3.9" \
+      org.label-schema.distribution-version="3.14" \
       info.humanitarianresponse.nginx=$VERSION
 
 COPY nginx.conf default.conf index.html run_nginx /tmp/
@@ -31,7 +31,7 @@ COPY nginx.conf default.conf index.html run_nginx /tmp/
 RUN apk add --update-cache \
       nginx && \
     rm -rf /var/cache/apk/* && \
-    mkdir -p /etc/services.d/nginx /srv/www/html /var/log/nginx /var/cache/nginx && \
+    mkdir -p /etc/services.d/nginx /etc/nginx/conf.d /srv/www/html /var/log/nginx /var/cache/nginx && \
     mv /tmp/run_nginx /etc/services.d/nginx/run && \
     mv /tmp/nginx.conf /etc/nginx/nginx.conf && \
     mv /tmp/default.conf /etc/nginx/conf.d/default.conf && \

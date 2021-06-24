@@ -34,7 +34,7 @@ RUN apk update && \
       nginx-mod-http-cache-purge \
       nginx-mod-http-fancyindex && \
     rm -rf /var/cache/apk/* && \
-    mkdir -p  /etc/nginx/env /run/nginx /srv/www/html /var/log/nginx /var/cache/nginx && \
+    mkdir -p  /etc/nginx/env /etc/nginx/conf.d /run/nginx /srv/www/html /var/log/nginx /var/cache/nginx && \
     sed -i 's/access_log.*/access_log off;/' /etc/nginx/nginx.conf && \
     mv /tmp/default.conf /etc/nginx/conf.d/default.conf && \
     mv /tmp/env.conf /etc/nginx/env/env.conf && \
