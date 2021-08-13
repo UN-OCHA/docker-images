@@ -42,6 +42,7 @@ RUN apk update && \
     mv /tmp/index.html /srv/www/html/index.html && \
     sed -i "s/^http {/http {\n\tmore_set_headers 'X-Content-Type-Options: nosniff';\n/" /etc/nginx/nginx.conf && \
     sed -i "s/^http {/http {\n\tmore_set_headers 'X-XSS-Protection: 1; mode=block';/" /etc/nginx/nginx.conf && \
+    sed -i "s/^http {/http {\n\tmore_set_headers 'X-Frame-Options: SAMEORIGIN';/" /etc/nginx/nginx.conf && \
     sed -i "s/^http {/http {\n\tmore_set_headers \"Content-Security-Policy: default-src 'self'\";/" /etc/nginx/nginx.conf && \
     sed -i "s/^http {/http {\n\tmore_set_headers 'Referrer-Policy: strict-origin-when-cross-origin';/" /etc/nginx/nginx.conf && \
     sed -i "s/^http {/http {\n\tmore_set_headers 'Strict-Transport-Security: max-age=31536000; includeSubDomains; preload; always;';/" /etc/nginx/nginx.conf && \
