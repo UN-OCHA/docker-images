@@ -25,7 +25,7 @@ LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.distribution="Alpine Linux" \
       org.label-schema.distribution-version="$UPSTREAM" \
       info.humanitarianresponse.php=$VERSION \
-      info.humanitarianresponse.php.modules="apcu bcmath bz2 calendar ctype curl dom exif fileinfo fpm gd gettext gmp iconv igbinary imagick intl json mcrypt memcached mysqli opcache openssl pdo pdo_mysql phar posix redis shmop sysvmsg sysvsem sysvshm simplexml sockets yaml xml xmlreader xmlwriter xsl zip zlib" \
+      info.humanitarianresponse.php.modules="apcu bcmath bz2 calendar ctype curl dom exif fileinfo fpm gd gettext gmp iconv igbinary imagick intl json mcrypt memcached mysqli opcache openssl pdo pdo_mysql phar posix redis shmop sysvmsg sysvsem sysvshm simplexml sockets uploadprogress yaml xml xmlreader xmlwriter xsl zip zlib" \
       info.humanitarianresponse.php.sapi="fpm"
 
 # Default PHP configuration variables. These can be overridden via the environment.
@@ -45,6 +45,10 @@ ENV PS1="\u@\h:\w\n\$ " \
     PHP_POST_MAX_SIZE=100m \
     PHP_UPLOAD_MAX_FILESIZE=100m \
     PHP_MAX_INPUT_VARS=1000 \
+    # Allow developers to disable apc.
+    PHP_APC_ENABLE=1 \
+    PHP_APC_ENABLE_CLI=0 \
+    PHP_APC_SHM_SIZE=32M \
     # Allow developers to disable opcache, so local changes show up immediately.
     # See https://humanitarian.atlassian.net/browse/OPS-7156
     PHP_OPCACHE_ENABLE=1 \
@@ -59,11 +63,7 @@ ENV PS1="\u@\h:\w\n\$ " \
     PHP_XDEBUG_REMOTE_CONNECT_BACK=0 \
     # Oh, this is hideous, but it does solve the iconv problem.
     # See https://humanitarian.atlassian.net/browse/OPS-6486
-    LD_PRELOAD=/usr/lib/preloadable_libiconv.so \
-    # Specify a mupdf version for ReliefWeb.
-    # This needs to be built from source, as the Alpine edge version has library depend issues on the "old" PHP7.2 :-)
-    # See https://humanitarian.atlassian.net/browse/OPS-6833
-    MUPDF_VERSION=1.18.0
+    LD_PRELOAD=/usr/lib/preloadable_libiconv.so
 
 # Copy custom config files into the container.
 COPY etc/php8 etc/services/run_fpm etc/msmtprc /tmp/
@@ -77,6 +77,7 @@ RUN \
       imagemagick \
       msmtp \
       mupdf \
+      mupdf-tools \
       php8-bcmath \
       php8-bz2 \
       php8-calendar \
@@ -120,6 +121,7 @@ RUN \
       php8-pecl-imagick \
       php8-pecl-memcached \
       php8-pecl-mcrypt \
+      php8-pecl-uploadprogress \
       php8-pecl-xdebug \
       php8-pecl-yaml \
       pngquant && \

@@ -3,7 +3,7 @@ include ../Makefile.conf
 
 UPSTREAM=$$(UPSTREAM)
 VERSION=$$(VERSION)
-IMAGE=base-php7
+IMAGE=base-php
 
 all: build tag
 

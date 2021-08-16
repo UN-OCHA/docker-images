@@ -20,12 +20,12 @@ LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.description="This service provides a base nodejs platform." \
       org.label-schema.architecture="x86_64" \
       org.label-schema.distribution="Alpine Linux" \
-      org.label-schema.distribution-version="3.12" \
-      info.humanitarianresponse.nodejs="12.18.2" \
-      info.humanitarianresponse.python="3.8.5-r0"
+      org.label-schema.distribution-version="3.14" \
+      info.humanitarianresponse.nodejs="14.17.1-r0" \
+      info.humanitarianresponse.python="3.9.5-r1"
 
 ENV NODE_APP_DIR=/srv/www \
-    NODE_PATH=/usr/lib/node_modules \
+    NODE_PATH=/usr/local/lib/node_modules:/usr/lib/node_modules \
     NPM_CONFIG_SPIN=false \
     NPM_CONFIG_PROGRESS=false \
     SRC_DIR=/src \
@@ -39,9 +39,9 @@ RUN apk add --update-cache \
         build-base \
         git \
         python3 && \
-    apk add --update-cache --repository http://dl-cdn.alpinelinux.org/alpine/edge/main \
+    apk add --repository http://dl-cdn.alpinelinux.org/alpine/edge/main \
         nodejs \
-        nodejs-npm && \
+        npm && \
     mkdir -p /root/.cache/node-gyp/12.18.2 && \
     USER=root npm --force --cache /tmp/empty-cache install -g \
         grunt-cli \
@@ -56,7 +56,7 @@ RUN apk add --update-cache \
     mkdir -p /tmp && \
     chmod 1777 /tmp && \
     mkdir -p ${SRC_DIR} ${NODE_APP_DIR} && \
-    cp -a /usr/lib/node_modules/newrelic/newrelic.js /srv
+    cp -a /usr/local/lib/node_modules/newrelic/newrelic.js /srv
 
 #define the volumes at run time - far better
 #VOLUME ["${SRC_DIR}", "${NODE_APP_DIR}"]
