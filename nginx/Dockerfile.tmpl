@@ -43,13 +43,7 @@ RUN apk update && \
     sed -i "s|^\tmap \$http_upgrade|\t# map \$http_upgrade|" /etc/nginx/nginx.conf && \
     sed -i "s|^\t\tdefault upgrade;|\t#\tdefault upgrade;|" /etc/nginx/nginx.conf && \
     sed -i "s|^\t\t'' close;|\t#\t'' close;|" /etc/nginx/nginx.conf && \
-    sed -i "s|^\t}|\t# }|" /etc/nginx/nginx.conf && \
-    sed -i "s|http.d/\*\.conf;|http.d/\*\.conf;\n\t}|" /etc/nginx/nginx.conf && \
-    sed -i "s|http.d/\*\.conf;|http.d/\*\.conf;\n\t\t'' close;|" /etc/nginx/nginx.conf && \
-    sed -i "s|http.d/\*\.conf;|http.d/\*\.conf;\n\t\tdefault upgrade;|" /etc/nginx/nginx.conf && \
-    sed -i "s|http.d/\*\.conf;|http.d/\*\.conf;\n\tmap \$http_upgrade \$connection_upgrade {|" /etc/nginx/nginx.conf && \
-    sed -i "s|http.d/\*\.conf;|http.d/\*\.conf;\n\n\t# Helper variable for proxying websockets.|" /etc/nginx/nginx.conf
-
+    sed -i "s|^\t}|\t# }|" /etc/nginx/nginx.conf
 
 EXPOSE 80
 
