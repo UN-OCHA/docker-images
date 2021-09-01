@@ -93,9 +93,9 @@ pushd alpine-php/php8 && \
 # Build the k8s php 8 image.
 pushd alpine-php/php-k8s-v8 && \
   make VERSION=${VERSION8} EXTRAVERSION=${EXTRAVERSION} UPSTREAM=${VERSION8}${EXTRAVERSION} build && \
-  docker tag unocha/base-php:${VERSION8}${EXTRAVERSION} unocha/php-k8s:8.0-${STABILITY} && \
-  docker tag unocha/base-php:${VERSION8}${EXTRAVERSION} public.ecr.aws/unocha/php-k8s:${VERSION8}${EXTRAVERSION} && \
-  docker tag unocha/base-php:${VERSION8}${EXTRAVERSION} public.ecr.aws/unocha/php-k8s:8.0-${STABILITY} && \
+  docker tag unocha/php-k8s:${VERSION8}${EXTRAVERSION} unocha/php-k8s:8.0-${STABILITY} && \
+  docker tag unocha/php-k8s:${VERSION8}${EXTRAVERSION} public.ecr.aws/unocha/php-k8s:${VERSION8}${EXTRAVERSION} && \
+  docker tag unocha/php-k8s:${VERSION8}${EXTRAVERSION} public.ecr.aws/unocha/php-k8s:8.0-${STABILITY} && \
   popd
 
 # Build the k8s php 8 image with New Relic.
