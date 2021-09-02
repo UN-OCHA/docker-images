@@ -27,16 +27,15 @@ LABEL org.label-schema.schema-version="1.0" \
       info.humanitarianresponse.php=$VERSION \
       info.humanitarianresponse.php.modules="bcmath bz2 calendar ctype curl dom exif fileinfo fpm ftp gd gettext gmp iconv igbinary imagick imap intl json mcrypt memcached opcache openssl pdo pdo_mysql phar posix redis shmop soap sysvmsg sysvsem sysvshm simplexml sockets wddx xml xmlreader xmlwriter xsl zip zlib" \
       info.humanitarianresponse.php.sapi="cli" \
-      info.humanitarianresponse.composer="1.10.19" \
-      info.humanitarianresponse.drush="10.4.3" \
+      info.humanitarianresponse.composer="2.10.19" \
       info.humanitarianresponse.node="12.18" \
       info.humanitarianresponse.npm="12.18" \
       info.humanitarianresponse.yarn="1.7.0" \
       info.humanitarianresponse.compass="3.2.0" \
       info.humanitarianresponse.jasmine="3.4.0" \
       info.humanitarianresponse.python="3.8.5" \
-      info.humanitarianresponse.ruby="2.3.7
-  
+      info.humanitarianresponse.ruby="2.3.7"
+
 ENV DRUSH_VERSION=10 \
     DRUSH_RELEASE=10.x-dev
 
@@ -45,7 +44,6 @@ COPY etc/php7/php.ini /tmp/php.ini
 COPY drushrc.php /drushrc.php
 
 RUN \
-    echo "@edgecommunity http://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories && \
     apk -U upgrade && \
     npm install --global npm@latest && \
     npm install --global \
@@ -65,54 +63,53 @@ RUN \
       rsync \
       tar \
       wget \
-      php7@edgecommunity \
-      php7-cli@edgecommunity \
-      php7-bcmath@edgecommunity \
-      php7-bz2@edgecommunity \
-      php7-calendar@edgecommunity \
-      php7-ctype@edgecommunity \
-      php7-curl@edgecommunity \
-      php7-dom@edgecommunity \
-      php7-exif@edgecommunity \
-      php7-iconv@edgecommunity \
-      php7-fileinfo@edgecommunity \
-      php7-ftp@edgecommunity \
-      php7-gd@edgecommunity \
-      php7-gettext@edgecommunity \
-      php7-iconv@edgecommunity \
-      php7-igbinary@edgecommunity \
-      php7-imagick@edgecommunity \
-      php7-imap@edgecommunity \
-      php7-intl@edgecommunity \
-      php7-json@edgecommunity \
-      php7-mbstring@edgecommunity \
-      php7-mcrypt@edgecommunity \
-      php7-memcached@edgecommunity \
-      php7-mysqli@edgecommunity \
-      php7-mysqlnd@edgecommunity \
-      php7-opcache@edgecommunity \
-      php7-openssl@edgecommunity \
-      php7-pdo@edgecommunity \
-      php7-pdo_mysql@edgecommunity \
-      php7-phar@edgecommunity \
-      php7-posix@edgecommunity \
-      php7-redis@edgecommunity \
-      php7-session@edgecommunity \
-      php7-shmop@edgecommunity \
-      php7-sysvmsg@edgecommunity \
-      php7-sysvsem@edgecommunity \
-      php7-sysvshm@edgecommunity \
-      php7-simplexml@edgecommunity \
-      php7-soap@edgecommunity \
-      php7-sockets@edgecommunity \
-      php7-tokenizer@edgecommunity \
-      # php7-wddx@edgecommunity \
-      php7-xml@edgecommunity \
-      php7-xmlreader@edgecommunity \
-      php7-xmlwriter@edgecommunity \
-      php7-xsl@edgecommunity \
-      php7-zip@edgecommunity \
-      php7-zlib@edgecommunity && \
+      php7 \
+      php7-cli \
+      php7-bcmath \
+      php7-bz2 \
+      php7-calendar \
+      php7-ctype \
+      php7-curl \
+      php7-dom \
+      php7-exif \
+      php7-iconv \
+      php7-fileinfo \
+      php7-ftp \
+      php7-gd \
+      php7-gettext \
+      php7-iconv \
+      php7-igbinary \
+      php7-imagick \
+      php7-imap \
+      php7-intl \
+      php7-json \
+      php7-mbstring \
+      php7-mcrypt \
+      php7-memcached \
+      php7-mysqli \
+      php7-mysqlnd \
+      php7-opcache \
+      php7-openssl \
+      php7-pdo \
+      php7-pdo_mysql \
+      php7-phar \
+      php7-posix \
+      php7-redis \
+      php7-session \
+      php7-shmop \
+      php7-sysvmsg \
+      php7-sysvsem \
+      php7-sysvshm \
+      php7-simplexml \
+      php7-soap \
+      php7-sockets \
+      php7-tokenizer \
+      php7-xml \
+      php7-xmlreader \
+      php7-xmlwriter \
+      php7-xsl \
+      php7-zip \
+      php7-zlib && \
     cd /tmp && \
     mv /tmp/php.ini /etc/php7/php.ini && \
     ln -sf /usr/bin/php7 /usr/bin/php && \
@@ -122,18 +119,7 @@ RUN \
     php -r "if (hash_file('SHA384', 'composer-setup.php') === '$COMPOSER_HASH') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;" && \
     php composer-setup.php --install-dir=/usr/bin --filename=composer && \
     php -r "unlink('composer-setup.php');" && \
-    # Install drush and symlink it somewhere useful.
-    COMPOSER_HOME=/usr/local/drush$DRUSH_VERSION \
-      composer global require drush/drush:$DRUSH_RELEASE && \
-    cd / && \
-    ln -sf /usr/local/drush$DRUSH_VERSION/vendor/bin/drush /usr/bin/drush && \
-    drush status && \
-    # Ensure the appuser's drush directory is writable.
-    chown -R appuser:appuser /home/appuser/.drush && \
-    # Add our default drushrc.php file.
-    mkdir -p /etc/drush && \
-    mv /drushrc.php /etc/drush/drushrc.php && \
-    # Add dependencies for capsper and phantom, but do NOT install them. npm will fetch a newer one anyway.
+    # Add dependencies for casper and phantom, but do NOT install them. npm will fetch a newer one anyway.
     apk add --update-cache \
       fontconfig \
       libc6-compat && \
