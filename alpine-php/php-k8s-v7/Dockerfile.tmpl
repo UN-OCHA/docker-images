@@ -12,6 +12,10 @@ ARG VCS_REF
 ARG BUILD_DATE
 
 ENV NGINX_SERVERNAME=localhost \
+    NGINX_LIMIT_BOTS=2r/m \
+    NGINX_BURST_BOTS=2 \
+    NGINX_LIMIT_HUMANS=16r/s \
+    NGINX_BURST_HUMANS=16 \
     PAGER=more \
     PATH=/srv/www/vendor/bin:$PATH \
     LD_PRELOAD=/usr/lib/preloadable_libiconv.so \
@@ -41,7 +45,7 @@ RUN \
     mkdir -p /etc/services.d/nginx && \
     rm -rf /etc/nginx/* && \
     mv /tmp/apps /tmp/fastcgi.conf /tmp/koi-utf /tmp/map_block_http_methods.conf /tmp/mime.types /tmp/upstream_phpcgi_unix.conf \
-       /tmp/blacklist.conf /tmp/fastcgi_params /tmp/koi-win /tmp/map_https_fcgi.conf /tmp/nginx.conf \
+       /tmp/blacklist.conf /tmp/ratelimit.conf /tmp/fastcgi_params /tmp/koi-win /tmp/map_https_fcgi.conf /tmp/nginx.conf \
        /tmp/lua /tmp/sites-enabled /tmp/win-utf \
          /etc/nginx && \
     mv /tmp/run_nginx /etc/services.d/nginx/run && \
