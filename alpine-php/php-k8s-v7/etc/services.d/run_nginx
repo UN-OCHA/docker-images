@@ -1,4 +1,4 @@
 #!/usr/bin/with-contenv sh
 set -e
 
-exec nginx -g "daemon off;"
+envsubst '$NGINX_LIMIT_BOTS $NGINX_BURST_BOTS $NGINX_LIMIT_HUMANS $NGINX_BURST_HUMANS' < /etc/nginx/ratelimit.conf.template > /etc/nginx/ratelimit.conf && exec nginx -g "daemon off;"

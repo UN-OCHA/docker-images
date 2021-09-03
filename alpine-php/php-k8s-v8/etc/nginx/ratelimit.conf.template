@@ -1,3 +1,5 @@
+## Apply settings from the environment at boot time via envsubst.
+
 ## A rate limit request returns status 429.
 limit_req_status 429;
 
@@ -14,9 +16,9 @@ map $isbot_ua $limit_bot {
 }
 
 ## Apply the rate limits.
-limit_req_zone $limit_bot zone=bots:10m rate=2r/m;
-limit_req_zone $binary_remote_addr zone=humans:10m rate=16r/s;
+limit_req_zone $limit_bot zone=bots:10m rate=${NGINX_LIMIT_BOTS};
+limit_req_zone $binary_remote_addr zone=humans:10m rate=${NGINX_LIMIT_HUMANS};
 
 ## Apply the burst limits.
-limit_req zone=bots burst=2 nodelay;
-limit_req zone=humans burst=16 nodelay;
+limit_req zone=bots burst=${NGINX_BURST_BOTS} nodelay;
+limit_req zone=humans burst=${NGINX_BURST_HUMANS} nodelay;
