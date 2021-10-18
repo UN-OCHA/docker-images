@@ -74,6 +74,7 @@ RUN \
     apk -U upgrade && \
     apk add --update-cache \
       fcgi \
+      gettext \
       gnu-libiconv \
       imagemagick \
       msmtp \
@@ -141,7 +142,7 @@ RUN \
     # Configure php.
     rm -rf /etc/php7 && \
     mkdir -p /etc/php7 && \
-    mv -f /tmp/php.ini /tmp/conf.d /tmp/php-fpm.conf /tmp/php-fpm.d /tmp/environment.d /etc/php7 && \
+    mv -f /tmp/php.ini /tmp/conf.d /tmp/php-fpm.conf /tmp/php-fpm.d /tmp/environment.d /tmp/xdebug.template /etc/php7 && \
     \
     # Configure PHP logs.
     rm -rf /var/log/php7 && \
