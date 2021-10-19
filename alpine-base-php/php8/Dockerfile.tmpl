@@ -73,6 +73,7 @@ RUN \
     apk -U upgrade && \
     apk add --update-cache \
       fcgi \
+      gettext \
       gnu-libiconv \
       imagemagick \
       msmtp \
@@ -139,7 +140,7 @@ RUN \
     # Configure php.
     rm -rf /etc/php8 && \
     mkdir -p /etc/php8 && \
-    mv -f /tmp/php.ini /tmp/conf.d /tmp/php-fpm.conf /tmp/php-fpm.d /tmp/environment.d /etc/php8 && \
+    mv -f /tmp/php.ini /tmp/conf.d /tmp/php-fpm.conf /tmp/php-fpm.d /tmp/environment.d /tmp/xdebug.template /etc/php8 && \
     ln -sf /usr/bin/php8 /usr/bin/php && \
     \
     # Configure PHP logs.
