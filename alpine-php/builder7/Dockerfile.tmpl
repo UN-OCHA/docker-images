@@ -27,8 +27,7 @@ LABEL org.label-schema.schema-version="1.0" \
       info.humanitarianresponse.php=$VERSION \
       info.humanitarianresponse.php.modules="bcmath bz2 calendar ctype curl dom exif fileinfo fpm ftp gd gettext gmp iconv igbinary imagick imap intl json mcrypt memcached opcache openssl pdo pdo_mysql phar posix redis shmop soap sysvmsg sysvsem sysvshm simplexml sockets wddx xml xmlreader xmlwriter xsl zip zlib" \
       info.humanitarianresponse.php.sapi="cli" \
-      info.humanitarianresponse.composer="1.10.19" \
-      info.humanitarianresponse.drush="8.4.6" \
+      info.humanitarianresponse.composer="2.10.19" \
       info.humanitarianresponse.node="12.18" \
       info.humanitarianresponse.npm="12.18" \
       info.humanitarianresponse.yarn="1.7.0" \
@@ -37,13 +36,16 @@ LABEL org.label-schema.schema-version="1.0" \
       info.humanitarianresponse.python="3.8.5" \
       info.humanitarianresponse.ruby="2.3.7"
 
-ENV DRUSH_VERSION=8 \
-    DRUSH_RELEASE=8.x-dev
+ENV DRUSH_VERSION=10 \
+    DRUSH_RELEASE=10.x-dev
 
 COPY drushrc.php /drushrc.php
 COPY etc/php7/php.ini /tmp/php.ini
+COPY drushrc.php /drushrc.php
 
-RUN npm install --global npm@latest && \
+RUN \
+    apk -U upgrade && \
+    npm install --global npm@latest && \
     npm install --global \
       jasmine && \
     rm -rf /tmp/npm-* && \
@@ -61,6 +63,8 @@ RUN npm install --global npm@latest && \
       rsync \
       tar \
       wget \
+      php7 \
+      php7-cli \
       php7-bcmath \
       php7-bz2 \
       php7-calendar \
@@ -73,8 +77,8 @@ RUN npm install --global npm@latest && \
       php7-ftp \
       php7-gd \
       php7-gettext \
-      php7-gmp \
       php7-iconv \
+      php7-igbinary \
       php7-imagick \
       php7-imap \
       php7-intl \
@@ -83,6 +87,7 @@ RUN npm install --global npm@latest && \
       php7-mcrypt \
       php7-memcached \
       php7-mysqli \
+      php7-mysqlnd \
       php7-opcache \
       php7-openssl \
       php7-pdo \
@@ -90,6 +95,7 @@ RUN npm install --global npm@latest && \
       php7-phar \
       php7-posix \
       php7-redis \
+      php7-session \
       php7-shmop \
       php7-sysvmsg \
       php7-sysvsem \
@@ -98,42 +104,22 @@ RUN npm install --global npm@latest && \
       php7-soap \
       php7-sockets \
       php7-tokenizer \
-      php7-wddx \
       php7-xml \
       php7-xmlreader \
       php7-xmlwriter \
       php7-xsl \
       php7-zip \
       php7-zlib && \
-    rm -rf /var/cache/apk/* && \
-    ln -sf /usr/bin/python3 /usr/bin/python && \
     cd /tmp && \
     mv /tmp/php.ini /etc/php7/php.ini && \
     ln -sf /usr/bin/php7 /usr/bin/php && \
+    ln -sf /usr/bin/python3 /usr/bin/python && \
     COMPOSER_HASH=$(curl -sS https://composer.github.io/installer.sig) && \
     php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" && \
     php -r "if (hash_file('SHA384', 'composer-setup.php') === '$COMPOSER_HASH') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;" && \
     php composer-setup.php --install-dir=/usr/bin --filename=composer && \
     php -r "unlink('composer-setup.php');" && \
-    # Downgrade composer to v1.
-    composer self-update --1 && \
-    # Install drush and symlink it somewhere useful.
-    COMPOSER_HOME=/usr/local/drush$DRUSH_VERSION \
-      composer global require drush/drush:$DRUSH_RELEASE && \
-    cd / && \
-    ln -sf /usr/local/drush$DRUSH_VERSION/vendor/bin/drush /usr/bin/drush && \
-    drush status && \
-    # Install registry_rebuild to the appuser's homedir.
-    drush -y @none dl --destination=/home/appuser/.drush/commands registry_rebuild-7.x && \
-    # Ensure the appuser's drush directory is writable.
-    chown -R appuser:appuser /home/appuser/.drush && \
-    # Symlink the appuser's drush module to root's.
-    mkdir -p /root/.drush && \
-    ln -s /home/appuser/.drush/commands /root/.drush/commands && \
-    # Add our default drushrc.php file.
-    mkdir -p /etc/drush && \
-    mv /drushrc.php /etc/drush/drushrc.php && \
-    # Add dependencies for capsper and phantom, but do NOT install them. npm will fetch a newer one anyway.
+    # Add dependencies for casper and phantom, but do NOT install them. npm will fetch a newer one anyway.
     apk add --update-cache \
       fontconfig \
       libc6-compat && \

@@ -1,4 +1,4 @@
-FROM unocha/base-php7:%%UPSTREAM%%
+FROM unocha/base-php:%%UPSTREAM%%
 
 MAINTAINER UN-OCHA Operations <ops+docker@humanitarianresponse.info>
 
@@ -22,12 +22,11 @@ LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.description="This service provides a base php-fpm platform with NewRelic." \
       org.label-schema.architecture="x86_64" \
       org.label-schema.distribution="Alpine Linux" \
-      org.label-schema.distribution-version="3.10.2" \
       info.humanitarianresponse.php=$VERSION \
-      info.humanitarianresponse.php.modules="bcmath bz2 calendar ctype curl dom exif fileinfo fpm gd gettext gmp iconv imagick json mcrypt memcached newrelic opcache openssl pdo pdo_mysql phar posix redis shmop sysvmsg sysvsem sysvshm simplexml sockets wddx xml xmlreader xmlwriter xsl zip zlib" \
+      info.humanitarianresponse.php.modules="apcu bcmath bz2 calendar ctype curl dom exif fileinfo fpm gd gettext gmp iconv igbinary imagick json mcrypt memcached newrelic opcache openssl pdo pdo_mysql phar posix redis shmop sysvmsg sysvsem sysvshm simplexml sockets xml xmlreader xmlwriter xsl yaml zip zlib" \
       info.humanitarianresponse.php.sapi="fpm"
 
-ENV NR_VERSION 9.17.0.300
+ENV NR_VERSION 9.18.1.303
 
 ENV PHP_NEWRELIC_LICENSE="" \
     PHP_NEWRELIC_APPNAME=""

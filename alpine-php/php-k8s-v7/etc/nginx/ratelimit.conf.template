@@ -1,0 +1,24 @@
+## Apply settings from the environment at boot time via envsubst.
+
+## A rate limit request returns status 429.
+limit_req_status 429;
+
+## Determine if this is a bot request via the user-agent string.
+map $http_user_agent $isbot_ua {
+        default                0;
+        ~*(bot|crawler|spider) 1;
+}
+
+## Set a limit zone based on the bot status.
+map $isbot_ua $limit_bot {
+        0       "";
+        1       $binary_remote_addr;
+}
+
+## Apply the rate limits.
+limit_req_zone $limit_bot zone=bots:10m rate=${NGINX_LIMIT_BOTS};
+limit_req_zone $binary_remote_addr zone=humans:10m rate=${NGINX_LIMIT_HUMANS};
+
+## Apply the burst limits.
+limit_req zone=bots burst=${NGINX_BURST_BOTS} nodelay;
+limit_req zone=humans burst=${NGINX_BURST_HUMANS};
