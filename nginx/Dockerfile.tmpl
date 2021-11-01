@@ -52,6 +52,10 @@ RUN apk update && \
     sed -i "s|^http {|http {\n\tmore_set_headers 'Strict-Transport-Security: max-age=31536000; includeSubDomains; preload; always;';|" /etc/nginx/nginx.conf && \
     sed -i "s|^http {|http {\n\tmore_set_headers 'Server: \$http_host';|" /etc/nginx/nginx.conf && \
     sed -i "s|^http {|http {\n\n\t# add global headers|"  /etc/nginx/nginx.conf && \
+    sed -i "s|^\tmap \$http_upgrade|\t# map \$http_upgrade|" /etc/nginx/nginx.conf && \
+    sed -i "s|^\t\tdefault upgrade;|\t#\tdefault upgrade;|" /etc/nginx/nginx.conf && \
+    sed -i "s|^\t\t'' close;|\t#\t'' close;|" /etc/nginx/nginx.conf && \
+    sed -i "s|^\t}|\t# }|" /etc/nginx/nginx.conf && \
     echo "include /etc/nginx/env/*.conf;" >> /etc/nginx/nginx.conf
 
 EXPOSE 80
