@@ -40,6 +40,7 @@ RUN apk update && \
     mv /tmp/default.conf /etc/nginx/http.d/default.conf && \
     mv /tmp/env.conf /etc/nginx/env/env.conf && \
     mv /tmp/index.html /srv/www/html/index.html && \
+    echo "include /etc/nginx/env/*.conf;" >> /etc/nginx/nginx.conf && \
     # sed -i "s|^http {|http {\n\t#proxy_cookie_path off;\n|" /etc/nginx/nginx.conf && \
     # sed -i "s|^http {|http {\n\t# disable it by adding the following line to the desired server or location block|" /etc/nginx/nginx.conf && \
     # sed -i "s|^http {|http {\n\tproxy_cookie_path ~^/(.*)$ \"/\$1; SameSite=Lax\";|" /etc/nginx/nginx.conf && \
@@ -55,8 +56,7 @@ RUN apk update && \
     sed -i "s|^\tmap \$http_upgrade|\t# map \$http_upgrade|" /etc/nginx/nginx.conf && \
     sed -i "s|^\t\tdefault upgrade;|\t#\tdefault upgrade;|" /etc/nginx/nginx.conf && \
     sed -i "s|^\t\t'' close;|\t#\t'' close;|" /etc/nginx/nginx.conf && \
-    sed -i "s|^\t}|\t# }|" /etc/nginx/nginx.conf && \
-    echo "include /etc/nginx/env/*.conf;" >> /etc/nginx/nginx.conf
+    sed -i "s|^\t}|\t# }|" /etc/nginx/nginx.conf
 
 EXPOSE 80
 
