@@ -1,4 +1,4 @@
-FROM unocha/nodejs-base:12
+FROM public.ecr.aws/unocha/nodejs-base:12-alpine
 
 # Parse arguments for the build command.
 ARG VERSION
@@ -16,11 +16,8 @@ LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.version=$VERSION \
       org.label-schema.vcs-url=$VCS_URL \
       org.label-schema.vcs-ref=$VCS_REF \
-      org.label-schema.name="alpine-hubot" \
+      org.label-schema.name="hubot" \
       org.label-schema.description="This service provides a hubot platform." \
-      org.label-schema.architecture="x86_64" \
-      org.label-schema.distribution="Alpine Linux" \
-      org.label-schema.distribution-version="3.6" \
       info.humanitarianresponse.hubot=$VERSION \
       info.humanitarianresponse.hubot.plugins="hubot-auth hubot-brain-inspect hubot-diagnostics hubot-factoids hubot-flowdock hubot-giphy-gifme hubot-google-translate hubot-help hubot-karma hubot-maps hubot-pugme hubot-redis-brain hubot-rules hubot-scripts hubot-shipit" \
       info.humanitarianresponse.hubot.depends="twilio modern-syslog"
@@ -30,7 +27,6 @@ COPY ahconu-elk-ca.crt package.json /
 
 RUN apk add --update-cache \
         git \
-        nodejs-lts \
         python3 \
         curl \
         make \
