@@ -1,12 +1,10 @@
-FROM unocha/alpine-base:%%UPSTREAM%%
+FROM public.ecr.aws/unocha/alpine-base:%%UPSTREAM%%
 
 # Parse arguments for the build command.
 ARG VERSION
 ARG VCS_URL
 ARG VCS_REF
 ARG BUILD_DATE
-
-ARG S6_VERSION=v2.2.0.3
 
 # A little bit of metadata management.
 # See http://label-schema.org/
@@ -20,8 +18,7 @@ LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.description="This service provides a base Alpine Linux container." \
       org.label-schema.architecture="x86_64" \
       org.label-schema.distribution="Alpine Linux" \
-      org.label-schema.distribution-version=$UPSTREAM \
-      org.label-schema.s6-version=$S6_VERSION
+      org.label-schema.distribution-version=$UPSTREAM
 
 RUN apk add s6-overlay
 
