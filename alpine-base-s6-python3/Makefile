@@ -1,6 +1,7 @@
 include ../Makefile.conf
 
-IMAGE=alpine-base-s6-python3
+ORGANISATION=public.ecr.aws/unocha
+IMAGE=python3-base-s6
 
 VERSION=$$(VERSION)
 
