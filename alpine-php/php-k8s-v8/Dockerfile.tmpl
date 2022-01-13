@@ -42,7 +42,7 @@ RUN \
     mkdir -p /etc/services.d/nginx && \
     rm -rf /etc/nginx/* && \
     mv /tmp/apps /tmp/fastcgi.conf /tmp/koi-utf /tmp/map_block_http_methods.conf /tmp/mime.types /tmp/upstream_phpcgi_unix.conf \
-       /tmp/blacklist.conf /tmp/ratelimit.conf /tmp/ratelimit.conf.template /tmp/fastcgi_params /tmp/koi-win /tmp/map_https_fcgi.conf /tmp/nginx.conf \
+       /tmp/blocklist.conf /tmp/ratelimit.conf /tmp/ratelimit.conf.template /tmp/fastcgi_params /tmp/koi-win /tmp/map_https_fcgi.conf /tmp/nginx.conf \
        /tmp/lua /tmp/sites-enabled /tmp/win-utf \
          /etc/nginx && \
     mv /tmp/run_nginx /etc/services.d/nginx/run && \
