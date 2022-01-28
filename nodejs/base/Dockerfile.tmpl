@@ -4,7 +4,6 @@ FROM node:%%UPSTREAM%%
 ARG NODE_VERSION=10.24.0
 ARG NPM_VERSION=6.14.11
 ARG YARN_VERSION=1.22.10
-ARG S6_VERSION=v2.2.0.3
 ARG VERSION
 ARG VCS_URL
 ARG VCS_REF
@@ -45,24 +44,31 @@ LABEL org.label-schema.schema-version="1.0" \
       info.humanitarianresponse.yarn="$YARN_VERSION"
 
 RUN set +x && apk update && \
-   apk upgrade && \
-   apk add --no-cache \
-        libstdc++ && \
-   apk add --no-cache \
-        shadow \
-        curl \
-        git \
-        s6-overlay && \
-   yarn global add \
-        grunt-cli \
-        newrelic && \
-   yarn cache clean && \
-   rm -rf \
-        /usr/lib/node_modules/npm/man \
-        /usr/lib/node_modules/npm/doc \
-        /usr/lib/node_modules/npm/html \
-        /usr/lib/node_modules/npm/scripts \
-        /tmp && \
+    apk upgrade && \
+    apk add --no-cache \
+      libstdc++ && \
+    apk add --no-cache \
+      shadow \
+      curl \
+      git && \
+    yarn global add \
+      grunt-cli \
+      newrelic && \
+    yarn cache clean && \
+    S6VERSION=$(curl -sL https://api.github.com/repos/just-containers/s6-overlay/releases/latest | awk '/tag_name/{print $4;exit}' FS='[""]' | sed -e 's_v__') && \
+    S6ARCH=$(uname -m) && \
+    echo "Installing s6 version: $S6VERSION for $S6ARCH" && \
+    curl -o /tmp/s6-overlay-noarch.tar.xz -jkSL  https://github.com/just-containers/s6-overlay/releases/download/v${S6VERSION}/s6-overlay-noarch-${S6VERSION}.tar.xz && \
+    tar -C / -Jxpf /tmp/s6-overlay-noarch.tar.xz && \
+    curl -o /tmp/s6-overlay.tar.xz -jkSL  https://github.com/just-containers/s6-overlay/releases/download/v${S6VERSION}/s6-overlay-x86_64-${S6VERSION}.tar.xz && \
+    tar -C / -Jxpf /tmp/s6-overlay.tar.xz && \
+    rm -rf /var/cache/apk/* /tmp/* && \
+    rm -rf \
+      /usr/lib/node_modules/npm/man \
+      /usr/lib/node_modules/npm/doc \
+      /usr/lib/node_modules/npm/html \
+      /usr/lib/node_modules/npm/scripts \
+      /tmp && \
     rm -rf /var/cache/apk/* && \
     mkdir -p /tmp && \
     chmod 1777 /tmp && \
