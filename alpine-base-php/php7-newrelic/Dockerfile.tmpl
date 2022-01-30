@@ -47,4 +47,5 @@ RUN curl -s -o /tmp/newrelic.tar.gz \
     rm -f /etc/php7/conf.d/newrelic.ini && \
     mkdir -p /etc/services.d/newrelic && \
     mv /run_newrelic /etc/services.d/newrelic/run && \
+    chmod 751 /etc/services.d/newrelic/run && \
     mv /10_newrelic.ini /etc/php7/conf.d/10_newrelic.ini
