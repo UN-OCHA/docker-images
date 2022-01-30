@@ -132,6 +132,7 @@ RUN \
     mkdir -p /etc/services.d/fpm /srv/www/html && \
     mv /tmp/msmtprc /etc/msmtprc && \
     mv /tmp/run_fpm /etc/services.d/fpm/run && \
+    chmod 751 /etc/services.d/fpm/run && \
     \
     # Fixup the sendmail path for msmtp and set it as mailer.
     ln -sf /usr/bin/msmtp /usr/sbin/sendmail && \
