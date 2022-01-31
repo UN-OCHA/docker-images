@@ -20,15 +20,22 @@ LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.distribution="Alpine Linux" \
       org.label-schema.distribution-version=$UPSTREAM
 
-RUN apk add --no-cache --purge -uU xz curl && \
-    S6VERSION=$(curl -sSL https://api.github.com/repos/just-containers/s6-overlay/releases/latest | awk '/tag_name/{print $4;exit}' FS='[""]' | sed -e 's_v__') && \
-    S6ARCH=$(uname -m) && \
-    echo "Installing s6 version: $S6VERSION for $S6ARCH" && \
-    curl -o /tmp/s6-overlay-noarch.tar.xz -jkSL https://github.com/just-containers/s6-overlay/releases/download/v${S6VERSION}/s6-overlay-noarch-${S6VERSION}.tar.xz && \
-    tar xJf /tmp/s6-overlay-noarch.tar.xz -C / && \
-    curl -o /tmp/s6-overlay.tar.xz -jkSL https://github.com/just-containers/s6-overlay/releases/download/v${S6VERSION}/s6-overlay-${S6ARCH}-${S6VERSION}.tar.xz && \
-    tar xJf /tmp/s6-overlay.tar.xz -C / && \
+RUN apk add --no-cache --purge -uU xz curl xz && \
+    S6_OVERLAY_VERSION=$(curl -sSL https://api.github.com/repos/just-containers/s6-overlay/releases/latest | awk '/tag_name/{print $4;exit}' FS='[""]' | sed -e 's_v__') && \
+    S6_OVERLAY_ARCH=$(uname -m) && \
+    echo "Installing s6 version: $S6_OVERLAY_VERSION for $S6_OVERLAY_ARCH" && \
+    curl -o /tmp/s6-overlay-noarch-${S6_OVERLAY_VERSION}.tar.xz -jkSL https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VERSION}/s6-overlay-noarch-${S6_OVERLAY_VERSION}.tar.xz && \
+    curl -o /tmp/s6-overlay-noarch-${S6_OVERLAY_VERSION}.tar.xz.sha256 -jkSL https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VERSION}/s6-overlay-noarch-${S6_OVERLAY_VERSION}.tar.xz.sha256 && \
+    curl -o /tmp/s6-overlay-${S6_OVERLAY_ARCH}-${S6_OVERLAY_VERSION}.tar.xz -jkSL https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VERSION}/s6-overlay-${S6_OVERLAY_ARCH}-${S6_OVERLAY_VERSION}.tar.xz && \
+    curl -o /tmp/s6-overlay-${S6_OVERLAY_ARCH}-${S6_OVERLAY_VERSION}.tar.xz.sha256 -jkSL https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VERSION}/s6-overlay-${S6_OVERLAY_ARCH}-${S6_OVERLAY_VERSION}.tar.xz.sha256 && \
+    cd /tmp && \
+    sha256sum -c *.sha256 && \
+    tar xJf /tmp/s6-overlay-noarch-${S6_OVERLAY_VERSION}.tar.xz -C / && \
+    tar xJf /tmp/s6-overlay-${S6_OVERLAY_ARCH}-${S6_OVERLAY_VERSION}.tar.xz -C / && \
     rm -rf /var/cache/apk/* /tmp/*
+
+# Unfortunately the maintainer has decided to break settting PATH via an env var. This undoes that breakage.
+COPY init /
 
 ENTRYPOINT ["/init"]
 
