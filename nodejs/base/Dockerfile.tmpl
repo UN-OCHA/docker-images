@@ -57,13 +57,13 @@ RUN set +x && apk update && \
       newrelic && \
     yarn cache clean && \
     # S6VERSION=$(curl -sL https://api.github.com/repos/just-containers/s6-overlay/releases/latest | awk '/tag_name/{print $4;exit}' FS='[""]' | sed -e 's_v__') && \
-    # S6ARCH=$(uname -m) && \
+    S6ARCH=$(uname -m | sed 's/x86_64/amd64/') && \
     echo "Installing s6 version: $S6VERSION for $S6ARCH" && \
     # curl -o /tmp/s6-overlay-noarch.tar.xz -jkSL  https://github.com/just-containers/s6-overlay/releases/download/v${S6VERSION}/s6-overlay-noarch-${S6VERSION}.tar.xz && \
     # tar -C / -Jxpf /tmp/s6-overlay-noarch.tar.xz && \
     # curl -o /tmp/s6-overlay.tar.xz -jkSL  https://github.com/just-containers/s6-overlay/releases/download/v${S6VERSION}/s6-overlay-x86_64-${S6VERSION}.tar.xz && \
     # tar -C / -Jxpf /tmp/s6-overlay.tar.xz && \
-    curl -o /tmp/s6-overlay.tar.gz -jkSL  https://github.com/just-containers/s6-overlay/releases/download/v${S6VERSION}/s6-overlay-amd64.tar.gz && \
+    curl -o /tmp/s6-overlay.tar.gz -jkSL https://github.com/just-containers/s6-overlay/releases/download/v${S6VERSION}/s6-overlay-${S6ARCH}.tar.gz && \
     tar -C / -xzf /tmp/s6-overlay.tar.gz && \
     rm -rf /var/cache/apk/* /tmp/* && \
     rm -rf \
