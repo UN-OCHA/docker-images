@@ -1,6 +1,6 @@
 include ../Makefile.conf
 
-IMAGE=alpine-varnish
+IMAGE=varnish
 VERSION=$$(VERSION)
 
 all: build tag
