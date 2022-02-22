@@ -99,8 +99,8 @@ pushd php/php-k8s-v8 && \
 
 # Build the php 8 builder image.
 pushd php/builder8 && \
-  make VERSION=${VERSION} EXTRAVERSION=${EXTRAVERSION} UPSTREAM=16-alpine build && \
-  docker tag ${REGISTRY}/unified-builder:${VERSION}${EXTRAVERSION} ${REGISTRY}/unified-builder:8.0-${STABILITY} && \
+  make VERSION=${VERSION8} EXTRAVERSION=${EXTRAVERSION} UPSTREAM=16-alpine build && \
+  docker tag ${REGISTRY}/unified-builder:${VERSION8}${EXTRAVERSION} ${REGISTRY}/unified-builder:8.0-${STABILITY} && \
   popd
 
 # Login, so we can push.
