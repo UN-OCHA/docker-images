@@ -55,6 +55,12 @@ pushd php/php-k8s-v7 && \
   docker tag ${REGISTRY}/php-k8s:${VERSION}-NR${EXTRAVERSION} ${REGISTRY}/php-k8s:7.4-NR-${STABILITY} && \
   popd
 
+# Build the php 7 builder image.
+pushd php/builder7 && \
+  make VERSION=${VERSION} EXTRAVERSION=${EXTRAVERSION} UPSTREAM=14-alpine build && \
+  docker tag ${REGISTRY}/unified-builder:${VERSION}${EXTRAVERSION} ${REGISTRY}/unified-builder:7.4-${STABILITY} && \
+  popd
+
 # First off, we build the base php 8 image.
 pushd php/base/php8 && \
   make VERSION=${VERSION8} EXTRAVERSION=${EXTRAVERSION} UPSTREAM=${BASE} build && \
@@ -91,4 +97,11 @@ pushd php/php-k8s-v8 && \
   docker tag ${REGISTRY}/php-k8s:${VERSION8}-NR${EXTRAVERSION} ${REGISTRY}/php-k8s:8.0-NR-${STABILITY} && \
   popd
 
+# Build the php 8 builder image.
+pushd php/builder8 && \
+  make VERSION=${VERSION} EXTRAVERSION=${EXTRAVERSION} UPSTREAM=16-alpine build && \
+  docker tag ${REGISTRY}/unified-builder:${VERSION}${EXTRAVERSION} ${REGISTRY}/unified-builder:8.0-${STABILITY} && \
+  popd
+
+# Login, so we can push.
 aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/unocha
