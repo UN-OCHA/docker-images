@@ -1,6 +1,7 @@
 include ../Makefile.conf
 
-IMAGE=alpine-hubot
+ORGANISATION=public.ecr.aws/unocha
+IMAGE=hubot
 
 VERSION=$$(VERSION)
 
