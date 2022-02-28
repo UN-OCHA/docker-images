@@ -6,6 +6,8 @@ ARG VCS_URL
 ARG VCS_REF
 ARG BUILD_DATE
 
+ENV S6VERSION=2.2.0.3
+
 # A little bit of metadata management.
 # See http://label-schema.org/
 LABEL org.label-schema.schema-version="1.0" \
@@ -18,15 +20,13 @@ LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.description="This service provides a base Alpine Linux container." \
       org.label-schema.architecture="x86_64" \
       org.label-schema.distribution="Alpine Linux" \
-      org.label-schema.distribution-version=$UPSTREAM
+      org.label-schema.distribution-version=$UPSTREAM \
+      org.label-schema.s6-version=$S6VERSION
 
-RUN apk add --no-cache --purge -uU curl && \
-    S6VERSION=$(curl -sSL https://api.github.com/repos/just-containers/s6-overlay/releases/latest | awk '/tag_name/{print $4;exit}' FS='[""]' | sed -e 's_v__') && \
-    S6ARCH=$(uname -m | sed 's/x86_64/amd64/') && \
+RUN S6ARCH=$(uname -m | sed 's/x86_64/amd64/') && \
     echo "Installing s6 version: $S6VERSION for $S6ARCH" && \
     curl -o /tmp/s6-overlay.tar.gz -jkSL https://github.com/just-containers/s6-overlay/releases/download/v${S6VERSION}/s6-overlay-${S6ARCH}.tar.gz && \
-    tar xzf /tmp/s6-overlay.tar.gz -C / && \
-    rm -rf /var/cache/apk/* /tmp/*
+    tar xzf /tmp/s6-overlay.tar.gz -C /
 
 ENTRYPOINT ["/init"]
 

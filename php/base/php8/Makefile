@@ -1,4 +1,4 @@
-include ../../Makefile.conf
+include ../../../Makefile.conf
 include ../Makefile.conf
 
 UPSTREAM=$$(UPSTREAM)
