@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/command/with-contenv sh
 set -e
 
 exec /usr/bin/newrelic-daemon -c /etc/newrelic/newrelic.cfg -f

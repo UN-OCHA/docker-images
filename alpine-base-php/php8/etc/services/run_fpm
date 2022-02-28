@@ -1,4 +1,4 @@
-#!/usr/bin/with-contenv sh
+#!/command/with-contenv sh
 set -e
 
 # If the PHP_XDEBUG env var is "true", then drop a config snippet to load the xdebug module before starting.
