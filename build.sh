@@ -1,9 +1,12 @@
 #!/bin/bash -e
 
+SEVEN=0
+EIGHT=1
+
 BASE=3.15-202203-01
 VERSION=7.4.28-r0
-VERSION8=8.0.16-r0
-EXTRAVERSION=-202203-01
+VERSION8=8.0.17-r0
+EXTRAVERSION=-202204-01
 STABILITY=stable
 REGISTRY=public.ecr.aws/unocha
 
@@ -18,6 +21,11 @@ if [ -z "${EXTRAVERSION}" ]; then
   echo "The scripts require a non-empty extraversion string."
   exit 1
 fi
+
+# Login, so we can pull.
+aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/unocha
+
+if [ ${SEVEN} -eq 1 ]; then
 
 # First off, we build the base php 7 image.
 pushd php/base/php7 && \
@@ -61,6 +69,12 @@ pushd php/builder7 && \
   docker tag ${REGISTRY}/unified-builder:${VERSION}${EXTRAVERSION} ${REGISTRY}/unified-builder:7.4-${STABILITY} && \
   popd
 
+else
+  echo "Skipping PHP7 buils."
+fi
+
+if [ ${EIGHT} -eq 1 ]; then
+
 # First off, we build the base php 8 image.
 pushd php/base/php8 && \
   make VERSION=${VERSION8} EXTRAVERSION=${EXTRAVERSION} UPSTREAM=${BASE} build && \
@@ -102,6 +116,10 @@ pushd php/builder8 && \
   make VERSION=${VERSION8} EXTRAVERSION=${EXTRAVERSION} UPSTREAM=16-alpine build && \
   docker tag ${REGISTRY}/unified-builder:${VERSION8}${EXTRAVERSION} ${REGISTRY}/unified-builder:8.0-${STABILITY} && \
   popd
+
+else
+  echo "Skipping PHP8 builds."
+fi
 
 # Login, so we can push.
 aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/unocha
