@@ -1,7 +1,7 @@
 include ../Makefile.conf
 
 IMAGE=debian-base
-
+ORGANISATION=public.ecr.aws/unocha
 VERSION=$$(VERSION)
 
 all: build tag

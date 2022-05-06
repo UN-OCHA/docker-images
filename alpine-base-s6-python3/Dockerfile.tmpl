@@ -18,6 +18,8 @@ LABEL org.label-schema.build-date=$BUILD_DATE \
 RUN apk add --update-cache \
         python3 && \
     python3 -m ensurepip && \
+    ln -sf /usr/bin/python3 /usr/bin/python && \
+    ln -sf /usr/bin/pip3 /usr/bin/pip && \
     rm -r /usr/lib/python*/ensurepip && \
     pip3 install --upgrade pip setuptools && \
     rm -r /root/.cache && \
