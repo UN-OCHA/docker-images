@@ -1,4 +1,3 @@
-#
 # This is an example VCL file for Varnish.
 #
 # It does not do anything by default, delegating control to the
