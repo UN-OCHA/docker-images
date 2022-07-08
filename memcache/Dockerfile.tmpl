@@ -1,4 +1,4 @@
-FROM unocha/alpine-base-s6:%%UPSTREAM%%
+FROM public.ecr.aws/unocha/alpine-base-s6:%%UPSTREAM%%
 
 MAINTAINER UN-OCHA OPS <ops@reliefweb.int>
 
@@ -20,7 +20,7 @@ LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.description="This service provides a memcached platform." \
       org.label-schema.architecture="x86_64" \
       org.label-schema.distribution="Alpine Linux" \
-      org.label-schema.distribution-version="3.12" \
+      org.label-schema.distribution-version="3.16" \
       info.humanitarianresponse.memcached=$VERSION
 
 ENV LANG=en_US.utf8 \
