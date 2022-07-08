@@ -1,12 +1,13 @@
 #!/bin/bash -e
 
-SEVEN=0
-EIGHT=1
+SEVEN=1
+EIGHT=0
 
-BASE=3.16-202206-01
-VERSION=7.4.29-r0
-VERSION8=8.0.19-r1
-EXTRAVERSION=-202206-01
+BASE=3.15-202203-01
+# BASE=3.16-202206-01
+VERSION=7.4.30-r0
+VERSION8=8.0.21-r0
+EXTRAVERSION=-202207-01
 STABILITY=stable
 REGISTRY=public.ecr.aws/unocha
 
@@ -70,7 +71,7 @@ pushd php/builder7 && \
   popd
 
 else
-  echo "Skipping PHP7 buils."
+  echo "Skipping PHP7 builds."
 fi
 
 if [ ${EIGHT} -eq 1 ]; then
