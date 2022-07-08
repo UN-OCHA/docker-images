@@ -1,6 +1,6 @@
 include ../Makefile.conf
 
-IMAGE=alpine-memcache
+IMAGE=memcache
 VERSION=$$(VERSION)
 
 all: build tag

@@ -29,7 +29,8 @@ LABEL org.label-schema.schema-version="1.0" \
 ENV NR_VERSION 9.21.0.311
 
 ENV PHP_NEWRELIC_LICENSE="" \
-    PHP_NEWRELIC_APPNAME=""
+    PHP_NEWRELIC_APPNAME="" \
+    PHP_NEWRELIC_LABELS=""
 
 COPY run_newrelic etc/php8/conf.d/10_newrelic.ini /
 
