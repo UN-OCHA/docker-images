@@ -1,4 +1,9 @@
-#!/bin/sh
+#!/usr/bin/with-contenv sh
 set -e
 
-exec /usr/bin/newrelic-daemon -c /etc/newrelic/newrelic.cfg -f
+if [ "${PHP_NEWRELIC_ENABLED}" == "0"  -a -z "${PHP_NEWRELIC_LICENSE}" ]; then
+  echo "Not starting New Relic daemon."
+  exec /bin/sleep infinity '(not newrelic)'
+else
+  exec /usr/bin/newrelic-daemon -c /etc/newrelic/newrelic.cfg -f
+fi
