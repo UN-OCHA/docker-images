@@ -78,6 +78,7 @@ RUN \
     # Install standard packages from $UPSTREAM.
     apk -U upgrade && \
     apk add --update-cache \
+      bash \
       fcgi \
       gettext \
       gnu-libiconv \
