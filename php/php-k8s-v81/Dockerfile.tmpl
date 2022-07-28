@@ -10,7 +10,6 @@ ARG UPSTREAM
 ARG VCS_URL
 ARG VCS_REF
 ARG BUILD_DATE
-ARG PHP
 
 ENV NGINX_SERVERNAME=localhost \
     NGINX_LIMIT_BOTS=2r/m \
@@ -53,13 +52,13 @@ RUN \
     rm -rf /var/cache/apk/* && \
     \
     # Update the fpm pool config to use a socket.
-    sed -i 's/^listen = .*/listen = \/var\/run\/php-fpm${PHP}.sock/' /etc/php${PHP}/php-fpm.d/www.conf && \
+    sed -i 's/^listen = .*/listen = \/var\/run\/php-fpm81.sock/' /etc/php81/php-fpm.d/www.conf && \
     \
     # Cleanup.
     rm -rf /tmp/*
 
 # Add a health check for the FPM server on port 9000.
 HEALTHCHECK --interval=60s --timeout=5s \
-        CMD REDIRECT_STATUS=true SCRIPT_NAME=/ping SCRIPT_FILENAME=/ping REQUEST_METHOD=GET cgi-fcgi -bind -connect /var/run/php-fpm${PHP}.sock
+        CMD REDIRECT_STATUS=true SCRIPT_NAME=/ping SCRIPT_FILENAME=/ping REQUEST_METHOD=GET cgi-fcgi -bind -connect /var/run/php-fpm81.sock
 
 EXPOSE 80
