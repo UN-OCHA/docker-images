@@ -1,0 +1,15 @@
+#!/usr/bin/with-contenv sh
+set -e
+
+# If the PHP_XDEBUG env var is "true", then drop a config snippet to load the xdebug module before starting.
+if [ "${PHP_XDEBUG}" = "true" ]; then
+  case "${PHP_ENVIRONMENT}" in
+    prod|production)
+      # No xdebug.
+      ;;
+    *)
+      envsubst '$PHP_XDEBUG_REMOTE_HOST $PHP_XDEBUG_REMOTE_AUTOSTART $PHP_XDEBUG_REMOTE_ENABLE $PHP_XDEBUG_REMOTE_PORT $PHP_XDEBUG_DEFAULT_ENABLE $PHP_XDEBUG_REMOTE_CONNECT_BACK' < /etc/php81/xdebug.template > /etc/php81/conf.d/90_xdebug.ini
+      ;;
+  esac
+fi
+exec /usr/sbin/php-fpm81 -c /etc/php8/php.ini -y /etc/php81/php-fpm.conf -F
