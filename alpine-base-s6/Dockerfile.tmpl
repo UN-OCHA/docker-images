@@ -26,7 +26,8 @@ LABEL org.label-schema.schema-version="1.0" \
 RUN S6ARCH=$(uname -m | sed 's/x86_64/amd64/') && \
     echo "Installing s6 version: $S6VERSION for $S6ARCH" && \
     curl -o /tmp/s6-overlay.tar.gz -jkSL https://github.com/just-containers/s6-overlay/releases/download/v${S6VERSION}/s6-overlay-${S6ARCH}.tar.gz && \
-    tar xzf /tmp/s6-overlay.tar.gz -C /
+    tar xzf /tmp/s6-overlay.tar.gz -C / && \
+    rm -f tar xzf /tmp/s6-overlay.tar.gz
 
 ENTRYPOINT ["/init"]
 
