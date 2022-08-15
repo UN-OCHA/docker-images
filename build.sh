@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 SEVEN=0
-EIGHT=1
+EIGHT=0
 EIGHTONE=1
 
 # BASE=3.15-202203-01
@@ -9,7 +9,7 @@ BASE=3.16-202208-01
 VERSION=7.4.30-r0
 VERSION8=8.0.22-r0
 VERSION81=8.1.9-r0
-EXTRAVERSION=-202207-03
+EXTRAVERSION=-202208-01
 STABILITY=stable
 REGISTRY=public.ecr.aws/unocha
 
@@ -111,7 +111,7 @@ pushd php/base/php81 && \
   popd
 
 # Build the standard php 8.1 image.
-pushd php/php8 && \
+pushd php/php81 && \
   make VERSION=${VERSION81} EXTRAVERSION=${EXTRAVERSION} UPSTREAM=${VERSION81}${EXTRAVERSION} build && \
   docker tag ${REGISTRY}/php:${VERSION81}${EXTRAVERSION} ${REGISTRY}/php:8.1-${STABILITY} && \
   popd
