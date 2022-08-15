@@ -10,7 +10,6 @@ ARG VERSION
 ARG VCS_URL
 ARG VCS_REF
 ARG BUILD_DATE
-ARG PHP
 
 # A little bit of metadata management.
 # See http://label-schema.org/
@@ -38,7 +37,7 @@ LABEL org.label-schema.schema-version="1.0" \
       info.humanitarianresponse.ruby="2.3.7"
 
 COPY drushrc.php /drushrc.php
-COPY etc/php${PHP}/php.ini /tmp/php.ini
+COPY etc/php8/php.ini /tmp/php.ini
 
 RUN npm install --global npm@latest && \
     npm install --global \
@@ -58,54 +57,54 @@ RUN npm install --global npm@latest && \
       rsync \
       tar \
       wget \
-      php${PHP}-bcmath \
-      php${PHP}-bz2 \
-      php${PHP}-calendar \
-      php${PHP}-ctype \
-      php${PHP}-curl \
-      php${PHP}-dom \
-      php${PHP}-exif \
-      php${PHP}-iconv \
-      php${PHP}-fileinfo \
-      php${PHP}-ftp \
-      php${PHP}-gd \
-      php${PHP}-gettext \
-      php${PHP}-gmp \
-      php${PHP}-iconv \
-      php${PHP}-imap \
-      php${PHP}-intl \
-      php${PHP}-json \
-      php${PHP}-mbstring \
-      php${PHP}-mysqli \
-      php${PHP}-opcache \
-      php${PHP}-openssl \
-      php${PHP}-pdo \
-      php${PHP}-pdo_mysql \
-      php${PHP}-phar \
-      php${PHP}-posix \
-      php${PHP}-redis \
-      php${PHP}-shmop \
-      php${PHP}-sysvmsg \
-      php${PHP}-sysvsem \
-      php${PHP}-sysvshm \
-      php${PHP}-simplexml \
-      php${PHP}-soap \
-      php${PHP}-sockets \
-      php${PHP}-tokenizer \
-      php${PHP}-xml \
-      php${PHP}-xmlreader \
-      php${PHP}-xmlwriter \
-      php${PHP}-xsl \
-      php${PHP}-zip \
-      php${PHP}-zlib \
-      php${PHP}-pecl-imagick \
-      php${PHP}-pecl-mcrypt \
-      php${PHP}-pecl-memcached && \
+      php8-bcmath \
+      php8-bz2 \
+      php8-calendar \
+      php8-ctype \
+      php8-curl \
+      php8-dom \
+      php8-exif \
+      php8-iconv \
+      php8-fileinfo \
+      php8-ftp \
+      php8-gd \
+      php8-gettext \
+      php8-gmp \
+      php8-iconv \
+      php8-imap \
+      php8-intl \
+      php8-json \
+      php8-mbstring \
+      php8-mysqli \
+      php8-opcache \
+      php8-openssl \
+      php8-pdo \
+      php8-pdo_mysql \
+      php8-phar \
+      php8-posix \
+      php8-redis \
+      php8-shmop \
+      php8-sysvmsg \
+      php8-sysvsem \
+      php8-sysvshm \
+      php8-simplexml \
+      php8-soap \
+      php8-sockets \
+      php8-tokenizer \
+      php8-xml \
+      php8-xmlreader \
+      php8-xmlwriter \
+      php8-xsl \
+      php8-zip \
+      php8-zlib \
+      php8-pecl-imagick \
+      php8-pecl-mcrypt \
+      php8-pecl-memcached && \
     rm -rf /var/cache/apk/* && \
     ln -sf /usr/bin/python3 /usr/bin/python && \
     cd /tmp && \
-    mv /tmp/php.ini /etc/php${PHP}/php.ini && \
-    ln -sf /usr/bin/php${PHP} /usr/bin/php && \
+    mv /tmp/php.ini /etc/php8/php.ini && \
+    ln -sf /usr/bin/php8 /usr/bin/php && \
     COMPOSER_HASH=$(curl -sS https://composer.github.io/installer.sig) && \
     php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" && \
     php -r "if (hash_file('SHA384', 'composer-setup.php') === '$COMPOSER_HASH') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;" && \

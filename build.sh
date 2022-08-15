@@ -1,16 +1,16 @@
 #!/bin/bash -e
 
 SEVEN=0
-EIGHT=0
+EIGHT=1
 EIGHTONE=1
 
 # BASE=3.15-202203-01
-BASE=3.16-202206-01
+BASE=3.16-202208-01
 VERSION=7.4.30-r0
-VERSION8=8.0.21-r0
-VERSION81=8.1.8-r0
-EXTRAVERSION=-202207-02
-STABILITY=develop
+VERSION8=8.0.22-r0
+VERSION81=8.1.9-r0
+EXTRAVERSION=-202207-03
+STABILITY=stable
 REGISTRY=public.ecr.aws/unocha
 
 # Is there a version?
@@ -66,35 +66,34 @@ else
 fi
 
 if [ ${EIGHT} -eq 1 ]; then
-PHP=8
 
 # First off, we build the base php 8 image.
 pushd php/base/php8 && \
-  make VERSION=${VERSION8} EXTRAVERSION=${EXTRAVERSION} UPSTREAM=${BASE} PHP=${PHP} build && \
+  make VERSION=${VERSION8} EXTRAVERSION=${EXTRAVERSION} UPSTREAM=${BASE} build && \
   docker tag ${REGISTRY}/base-php:${VERSION8}${EXTRAVERSION} ${REGISTRY}/base-php:8.0-${STABILITY} && \
   popd
 
 # Build the standard php 8 image.
 pushd php/php8 && \
-  make VERSION=${VERSION8} EXTRAVERSION=${EXTRAVERSION} UPSTREAM=${VERSION8}${EXTRAVERSION} PHP=${PHP} build && \
+  make VERSION=${VERSION8} EXTRAVERSION=${EXTRAVERSION} UPSTREAM=${VERSION8}${EXTRAVERSION} build && \
   docker tag ${REGISTRY}/php:${VERSION8}${EXTRAVERSION} ${REGISTRY}/php:8.0-${STABILITY} && \
   popd
 
 # Build the k8s php 8 image.
 pushd php/php-k8s-v8 && \
-  make VERSION=${VERSION8} EXTRAVERSION=${EXTRAVERSION} UPSTREAM=${VERSION8}${EXTRAVERSION} PHP=${PHP} build && \
+  make VERSION=${VERSION8} EXTRAVERSION=${EXTRAVERSION} UPSTREAM=${VERSION8}${EXTRAVERSION} build && \
   docker tag ${REGISTRY}/php-k8s:${VERSION8}${EXTRAVERSION} ${REGISTRY}/php-k8s:8.0-${STABILITY} && \
   popd
 
 # Build the k8s php 8 image with New Relic.
 pushd php/php-k8s-v8-NR && \
-  make VERSION=${VERSION8} EXTRAVERSION=-NR${EXTRAVERSION} UPSTREAM=${VERSION8}${EXTRAVERSION} PHP=${PHP} build && \
+  make VERSION=${VERSION8} EXTRAVERSION=-NR${EXTRAVERSION} UPSTREAM=${VERSION8}${EXTRAVERSION} build && \
   docker tag ${REGISTRY}/php-k8s:${VERSION8}-NR${EXTRAVERSION} ${REGISTRY}/php-k8s:8.0-NR-${STABILITY} && \
   popd
 
 # Build the php 8 builder image.
 pushd php/builder8 && \
-  make VERSION=${VERSION8} EXTRAVERSION=${EXTRAVERSION} UPSTREAM=16-alpine PHP=${PHP} build && \
+  make VERSION=${VERSION8} EXTRAVERSION=${EXTRAVERSION} UPSTREAM=16-alpine build && \
   docker tag ${REGISTRY}/unified-builder:${VERSION8}${EXTRAVERSION} ${REGISTRY}/unified-builder:8.0-${STABILITY} && \
   popd
 
@@ -104,10 +103,8 @@ fi
 
 
 if [ ${EIGHTONE} -eq 1 ]; then
-PHP=81
 
 # First off, we build the base php 8.1 image.
-if [ true = false ]; then
 pushd php/base/php81 && \
   make VERSION=${VERSION81} EXTRAVERSION=${EXTRAVERSION} UPSTREAM=${BASE} build && \
   docker tag ${REGISTRY}/base-php:${VERSION81}${EXTRAVERSION} ${REGISTRY}/base-php:8.1-${STABILITY} && \
@@ -118,7 +115,6 @@ pushd php/php8 && \
   make VERSION=${VERSION81} EXTRAVERSION=${EXTRAVERSION} UPSTREAM=${VERSION81}${EXTRAVERSION} build && \
   docker tag ${REGISTRY}/php:${VERSION81}${EXTRAVERSION} ${REGISTRY}/php:8.1-${STABILITY} && \
   popd
-fi
 
 # Build the k8s php 81 image.
 pushd php/php-k8s-v81 && \
