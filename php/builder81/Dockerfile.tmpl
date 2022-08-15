@@ -39,8 +39,8 @@ LABEL org.label-schema.schema-version="1.0" \
 COPY drushrc.php /drushrc.php
 COPY etc/php81/php.ini /tmp/php.ini
 
-RUN npm install --global npm@latest && \
-    npm install --global \
+RUN npm install --location=global npm@latest && \
+    npm install --location=global \
       jasmine && \
     rm -rf /tmp/npm-* && \
     \

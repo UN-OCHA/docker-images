@@ -9,7 +9,6 @@ ARG VERSION
 ARG VCS_URL
 ARG VCS_REF
 ARG BUILD_DATE
-ARG PHP
 
 ENV PAGER=more
 
@@ -28,7 +27,7 @@ COPY etc/my.cnf.d/client.cnf /client.cnf
 RUN apk add --update-cache \
         git \
         patch \
-        php${PHP} \
+        php81 \
         mysql-client && \
     rm -rf /var/cache/apk/* && \
     \
