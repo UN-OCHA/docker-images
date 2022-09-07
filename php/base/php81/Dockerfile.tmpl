@@ -71,7 +71,8 @@ ENV NR_VERSION=10.0.0.312 \
     PHP_NEWRELIC_APPNAME="" \
     PHP_NEWRELIC_LABELS="" \
     PHP_NEWRELIC_DISTRIBUTED_TRACING_ENABLED=1 \
-    PHP_NEWRELIC_TRANSACTION_TRACER_DETAIL=0
+    PHP_NEWRELIC_TRANSACTION_TRACER_DETAIL=0 \
+    PHP_NEWRELIC_TRANSACTION_TRACER_CUSTOM=""
 
 # Copy custom config files into the container.
 COPY etc/php81 etc/services/run_fpm etc/services/run_newrelic etc/msmtprc /tmp/
