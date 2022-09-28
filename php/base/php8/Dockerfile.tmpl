@@ -1,0 +1,186 @@
+FROM public.ecr.aws/unocha/alpine-base-s6:%%UPSTREAM%%
+
+MAINTAINER UN-OCHA Operations <ops+docker@humanitarianresponse.info>
+
+# Thanks to orakili <docker@orakili.net>
+
+# Parse arguments for the build command.
+ARG UPSTREAM
+ARG VERSION
+ARG VCS_URL
+ARG VCS_REF
+ARG BUILD_DATE
+
+# A little bit of metadata management.
+# See http://label-schema.org/
+LABEL org.label-schema.schema-version="1.0" \
+      org.label-schema.build-date=$BUILD_DATE \
+      org.label-schema.vendor="UN-OCHA" \
+      org.label-schema.version=$VERSION \
+      org.label-schema.vcs-url=$VCS_URL \
+      org.label-schema.vcs-ref=$VCS_REF \
+      org.label-schema.name="base-php" \
+      org.label-schema.description="This service provides a base php-fpm platform." \
+      org.label-schema.architecture="x86_64" \
+      org.label-schema.distribution="Alpine Linux" \
+      org.label-schema.distribution-version="$UPSTREAM" \
+      info.humanitarianresponse.php=$VERSION \
+      info.humanitarianresponse.php.modules="apcu bcmath bz2 calendar ctype curl dom exif fileinfo fpm gd gettext gmp iconv igbinary imagick intl json mcrypt memcached mysqli opcache openssl pdo pdo_mysql phar posix redis shmop sysvmsg sysvsem sysvshm simplexml sockets uploadprogress yaml xml xmlreader xmlwriter xsl zip zlib" \
+      info.humanitarianresponse.php.sapi="fpm"
+
+# Default PHP configuration variables. These can be overridden via the environment.
+ENV NR_VERSION=10.0.0.312 \
+    PS1="\u@\h:\w\n\$ " \
+    PHP_ENVIRONMENT=production \
+    PHP_SYSLOG_FACILITY=LOG_LOCAL4 \
+    PHP_ERROR_LOG=syslog \
+    PHP_RUN_USER=appuser \
+    PHP_RUN_GROUP=appuser \
+    PHP_MAX_CHILDREN=16 \
+    PHP_START_SERVERS=2 \
+    PHP_MIN_SPARE_SERVERS=1 \
+    PHP_MAX_SPARE_SERVERS=2 \
+    PHP_MAX_REQUESTS=1000 \
+    PHP_MEMORY_LIMIT=256M \
+    PHP_MAX_EXECUTION_TIME=60s \
+    PHP_POST_MAX_SIZE=100m \
+    PHP_UPLOAD_MAX_FILESIZE=100m \
+    PHP_MAX_INPUT_VARS=1000 \
+    # Allow developers to disable apc.
+    PHP_APC_ENABLE=1 \
+    PHP_APC_ENABLE_CLI=0 \
+    PHP_APC_SHM_SIZE=32M \
+    # Allow developers to disable opcache, so local changes show up immediately.
+    # See https://humanitarian.atlassian.net/browse/OPS-7156
+    PHP_OPCACHE_ENABLE=1 \
+    PHP_OPCACHE_REVALIDATE_FREQ=300 \
+    # Allow developers to use and configure xdebug.
+    PHP_XDEBUG=false \
+    PHP_XDEBUG_REMOTE_HOST=127.0.0.1 \
+    PHP_XDEBUG_REMOTE_AUTOSTART=0 \
+    PHP_XDEBUG_REMOTE_ENABLE=0 \
+    PHP_XDEBUG_REMOTE_PORT=9001 \
+    PHP_XDEBUG_DEFAULT_ENABLE=0 \
+    PHP_XDEBUG_REMOTE_CONNECT_BACK=0 \
+    # Oh, this is hideous, but it does solve the iconv problem.
+    # See https://humanitarian.atlassian.net/browse/OPS-6486
+    LD_PRELOAD=/usr/lib/preloadable_libiconv.so \
+    # And configure New Relic (default to off)
+    PHP_NEWRELIC_ENABLED=0 \
+    PHP_NEWRELIC_LICENSE="" \
+    PHP_NEWRELIC_APPNAME="" \
+    PHP_NEWRELIC_LABELS="" \
+    PHP_NEWRELIC_DISTRIBUTED_TRACING_ENABLED=1 \
+    PHP_NEWRELIC_TRANSACTION_TRACER_DETAIL=0 \
+    PHP_NEWRELIC_TRANSACTION_TRACER_CUSTOM=""
+
+# Copy custom config files into the container.
+COPY etc/php8 etc/services/run_fpm etc/services/run_newrelic etc/msmtprc /tmp/
+
+RUN \
+    # Install standard packages from $UPSTREAM.
+    apk -U upgrade && \
+    apk add --update-cache \
+      bash \
+      fcgi \
+      gettext \
+      gnu-libiconv \
+      icu-data-full \
+      imagemagick \
+      msmtp \
+      mupdf \
+      mupdf-tools \
+      php8-bcmath \
+      php8-bz2 \
+      php8-calendar \
+      php8-ctype \
+      php8-curl \
+      php8-dom \
+      php8-exif \
+      php8-iconv \
+      php8-fileinfo \
+      php8-fpm \
+      php8-gd \
+      php8-gettext \
+      php8-gmp \
+      php8-iconv \
+      php8-intl \
+      php8-json \
+      php8-mbstring \
+      php8-mysqli \
+      php8-opcache \
+      php8-openssl \
+      php8-pdo \
+      php8-pdo_mysql \
+      php8-phar \
+      php8-posix \
+      php8-redis \
+      php8-session \
+      php8-shmop \
+      php8-sysvmsg \
+      php8-sysvsem \
+      php8-sysvshm \
+      php8-simplexml \
+      php8-sockets \
+      php8-tokenizer \
+      php8-xml \
+      php8-xmlreader \
+      php8-xmlwriter \
+      php8-xsl \
+      php8-zip \
+      php8-zlib \
+      php8-pecl-apcu \
+      php8-pecl-imagick \
+      php8-pecl-memcached \
+      php8-pecl-mcrypt \
+      php8-pecl-uploadprogress \
+      php8-pecl-xdebug \
+      php8-pecl-yaml \
+      pngquant && \
+    # Tidy.
+    rm -rf /var/cache/apk/* && \
+    # Setup directory structure for FPM.
+    mkdir -p /etc/services.d/fpm /srv/www/html && \
+    mv /tmp/msmtprc /etc/msmtprc && \
+    mv /tmp/run_fpm /etc/services.d/fpm/run && \
+    \
+    # Fixup the sendmail path for msmtp and set it as mailer.
+    ln -sf /usr/bin/msmtp /usr/sbin/sendmail && \
+    ln -sf /usr/bin/msmtp /usr/bin/sendmail && \
+    \
+    # Configure php.
+    rm -rf /etc/php8 && \
+    mkdir -p /etc/php8 && \
+    mv -f /tmp/php.ini /tmp/conf.d /tmp/php-fpm.conf /tmp/php-fpm.d /tmp/environment.d /tmp/xdebug.template /etc/php8 && \
+    ln -sf /usr/bin/php8 /usr/bin/php && \
+    \
+    # Configure PHP logs.
+    rm -rf /var/log/php8 && \
+    mkdir /var/log/php && \
+    \
+    # Install and configure New Relic \
+    mkdir -p /etc/services.d/newrelic && \
+    mv /tmp/run_newrelic /etc/services.d/newrelic/run && \
+    curl -s -o /tmp/newrelic.tar.gz \
+      https://download.newrelic.com/php_agent/archive/$NR_VERSION/newrelic-php5-${NR_VERSION}-linux-musl.tar.gz && \
+    mkdir -p /etc/newrelic /var/log/newrelic && \
+    tar xvf /tmp/newrelic.tar.gz -C /tmp && \
+    mv /tmp/newrelic-php5-${NR_VERSION}-linux-musl/daemon/newrelic-daemon.x64 \
+       /usr/bin/newrelic-daemon && \
+    mv /tmp/newrelic-php5-${NR_VERSION}-linux-musl/agent/x64/newrelic-$(php --info | awk '/^PHP API/ {print $NF}').so \
+       /usr/lib/php8/modules/newrelic.so && \
+    mv /tmp/newrelic-php5-${NR_VERSION}-linux-musl/scripts/newrelic.cfg.template \
+       /etc/newrelic/newrelic.cfg && \
+    rm -rf /tmp/newrelic-php5* /tmp/newrelic.tar.gz && \
+    \
+    # Cleanup tmp dir.
+    rm -rf /tmp/*
+
+# This is where the magic happens.
+WORKDIR /srv/www/html
+
+EXPOSE 9000
+
+# Add a health check for the FPM server on port 9000.
+HEALTHCHECK --interval=60s --timeout=5s \
+        CMD REDIRECT_STATUS=true SCRIPT_NAME=/ping SCRIPT_FILENAME=/ping REQUEST_METHOD=GET cgi-fcgi -bind -connect 127.0.0.1:9000

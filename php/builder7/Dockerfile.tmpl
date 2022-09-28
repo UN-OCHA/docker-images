@@ -1,0 +1,130 @@
+FROM public.ecr.aws/unocha/nodejs-builder:%%UPSTREAM%%
+
+MAINTAINER UN-OCHA Operations <ops+docker@humanitarianresponse.info>
+
+# Alpine based docker image.
+# Includes php composer, ruby bundler, less, npm, jasmine, compass and drush.
+
+# Parse arguments for the build command.
+ARG VERSION
+ARG VCS_URL
+ARG VCS_REF
+ARG BUILD_DATE
+
+# A little bit of metadata management.
+# See http://label-schema.org/
+LABEL org.label-schema.schema-version="1.0" \
+      org.label-schema.build-date=$BUILD_DATE \
+      org.label-schema.vendor="UN-OCHA" \
+      org.label-schema.version=$VERSION \
+      org.label-schema.vcs-url=$VCS_URL \
+      org.label-schema.vcs-ref=$VCS_REF \
+      org.label-schema.name="unified-builder" \
+      org.label-schema.description="This service provides a builder container for PHP, with node and sass helpers." \
+      org.label-schema.architecture="x86_64" \
+      org.label-schema.distribution="Alpine Linux" \
+      org.label-schema.distribution-version="3.15" \
+      info.humanitarianresponse.php=$VERSION \
+      info.humanitarianresponse.php.modules="bcmath bz2 calendar ctype curl dom exif fileinfo fpm ftp gd gettext gmp iconv igbinary imagick imap intl json mcrypt memcached opcache openssl pdo pdo_mysql phar posix redis shmop soap sysvmsg sysvsem sysvshm simplexml sockets wddx xml xmlreader xmlwriter xsl zip zlib" \
+      info.humanitarianresponse.php.sapi="cli" \
+      info.humanitarianresponse.composer="2.10.19" \
+      info.humanitarianresponse.node="12.18" \
+      info.humanitarianresponse.npm="12.18" \
+      info.humanitarianresponse.yarn="1.7.0" \
+      info.humanitarianresponse.compass="3.2.0" \
+      info.humanitarianresponse.jasmine="3.4.0" \
+      info.humanitarianresponse.python="3.8.5" \
+      info.humanitarianresponse.ruby="2.3.7"
+
+ENV DRUSH_VERSION=10 \
+    DRUSH_RELEASE=10.x-dev
+
+COPY drushrc.php /drushrc.php
+COPY etc/php7/php.ini /tmp/php.ini
+COPY drushrc.php /drushrc.php
+
+RUN \
+    apk -U upgrade && \
+    npm install --global npm@latest && \
+    npm install --global \
+      jasmine && \
+    rm -rf /tmp/npm-* && \
+    \
+    apk add --update-cache \
+      bash \
+      ca-certificates \
+      curl \
+      build-base \
+      git \
+      gzip \
+      openssh-client \
+      patch \
+      python3 \
+      rsync \
+      tar \
+      wget \
+      php7 \
+      php7-cli \
+      php7-bcmath \
+      php7-bz2 \
+      php7-calendar \
+      php7-ctype \
+      php7-curl \
+      php7-dom \
+      php7-exif \
+      php7-iconv \
+      php7-fileinfo \
+      php7-ftp \
+      php7-gd \
+      php7-gettext \
+      php7-iconv \
+      php7-igbinary \
+      php7-imagick \
+      php7-imap \
+      php7-intl \
+      php7-json \
+      php7-mbstring \
+      php7-mcrypt \
+      php7-memcached \
+      php7-mysqli \
+      php7-mysqlnd \
+      php7-opcache \
+      php7-openssl \
+      php7-pdo \
+      php7-pdo_mysql \
+      php7-phar \
+      php7-posix \
+      php7-redis \
+      php7-session \
+      php7-shmop \
+      php7-sysvmsg \
+      php7-sysvsem \
+      php7-sysvshm \
+      php7-simplexml \
+      php7-soap \
+      php7-sockets \
+      php7-tokenizer \
+      php7-xml \
+      php7-xmlreader \
+      php7-xmlwriter \
+      php7-xsl \
+      php7-zip \
+      php7-zlib && \
+    cd /tmp && \
+    mv /tmp/php.ini /etc/php7/php.ini && \
+    ln -sf /usr/bin/php7 /usr/bin/php && \
+    ln -sf /usr/bin/python3 /usr/bin/python && \
+    COMPOSER_HASH=$(curl -sS https://composer.github.io/installer.sig) && \
+    php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" && \
+    php -r "if (hash_file('SHA384', 'composer-setup.php') === '$COMPOSER_HASH') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;" && \
+    php composer-setup.php --install-dir=/usr/bin --filename=composer && \
+    php -r "unlink('composer-setup.php');" && \
+    # Add dependencies for casper and phantom, but do NOT install them. npm will fetch a newer one anyway.
+    apk add --update-cache \
+      fontconfig \
+      libc6-compat && \
+    rm -rf /var/cache/apk/*
+
+WORKDIR /tmp
+
+CMD ["bash"]

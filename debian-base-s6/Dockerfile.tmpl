@@ -1,12 +1,10 @@
-FROM unocha/debian-base:%%UPSTREAM%%
+FROM public.ecr.aws/unocha/debian-base:%%UPSTREAM%%
 
 # Parse arguments for the build command.
-ARG VERSION
 ARG VCS_URL
 ARG VCS_REF
 ARG BUILD_DATE
-
-ARG S6_VERSION=v1.22.1.0
+ARG S6_VERSION=v2.2.0.3
 
 # A little bit of metadata management.
 # See http://label-schema.org/
@@ -17,15 +15,13 @@ LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.vcs-url=$VCS_URL \
       org.label-schema.vcs-ref=$VCS_REF \
       org.label-schema.name="base-s6" \
-      org.label-schema.description="This service provides a base Debian Linux container." \
-      org.label-schema.architecture="x86_64" \
-      org.label-schema.distribution="Debian Linux" \
-      org.label-schema.distribution-version=$VERSION \
       org.label-schema.s6-version=$S6_VERSION
 
-RUN curl -sL https://github.com/just-containers/s6-overlay/releases/download/${S6_VERSION}/s6-overlay-amd64.tar.gz -o /tmp/s6.tgz && \
-    tar xzf /tmp/s6.tgz -C / && \
-    rm -f /tmp/s6.tgz
+RUN S6_ARCH=$(uname -m | sed 's/x86_64/amd64/') && \
+    echo "Installing s6 version: $S6_VERSION for $S6_ARCH" && \
+    curl -o /tmp/s6-overlay.tar.gz -jkSL https://github.com/just-containers/s6-overlay/releases/download/${S6_VERSION}/s6-overlay-${S6_ARCH}.tar.gz && \
+    tar xzf /tmp/s6-overlay.tar.gz -C / && \
+    rm -f /tmp/s6-overlay.tar.gz
 
 ENTRYPOINT ["/init"]
 

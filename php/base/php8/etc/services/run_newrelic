@@ -1,0 +1,9 @@
+#!/usr/bin/with-contenv sh
+set -e
+
+if [ "${PHP_NEWRELIC_ENABLED}" == "0"  -o -z "${PHP_NEWRELIC_LICENSE}" ]; then
+  echo "[services.d] New Relic agent is disabled."
+  exec /bin/sleep infinity '(not newrelic)'
+else
+  exec /usr/bin/newrelic-daemon -c /etc/newrelic/newrelic.cfg -f
+fi

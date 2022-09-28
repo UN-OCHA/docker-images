@@ -37,3 +37,5 @@ RUN apt-get -qy update && \
     groupadd --system -g $APPUSER_GID appuser && \
     useradd --system -u $APPUSER_UID -s /sbin/nologin -c 'Docker App User' \
         -d /home/appuser -g appuser -m appuser
+
+ENTRYPOINT []

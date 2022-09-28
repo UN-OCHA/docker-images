@@ -1,4 +1,4 @@
-FROM unocha/alpine-base:%%UPSTREAM%%
+FROM public.ecr.aws/unocha/alpine-base:%%UPSTREAM%%
 
 # Parse arguments for the build command.
 ARG VERSION
@@ -6,7 +6,7 @@ ARG VCS_URL
 ARG VCS_REF
 ARG BUILD_DATE
 
-ARG S6_VERSION=v2.2.0.3
+ENV S6VERSION=2.2.0.3
 
 # A little bit of metadata management.
 # See http://label-schema.org/
@@ -21,11 +21,13 @@ LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.architecture="x86_64" \
       org.label-schema.distribution="Alpine Linux" \
       org.label-schema.distribution-version=$UPSTREAM \
-      org.label-schema.s6-version=$S6_VERSION
+      org.label-schema.s6-version=$S6VERSION
 
-RUN curl -sL https://github.com/just-containers/s6-overlay/releases/download/${S6_VERSION}/s6-overlay-amd64.tar.gz -o /tmp/s6.tgz && \
-    tar xzf /tmp/s6.tgz -C / && \
-    rm -f /tmp/s6.tgz
+RUN S6ARCH=$(uname -m | sed 's/x86_64/amd64/') && \
+    echo "Installing s6 version: $S6VERSION for $S6ARCH" && \
+    curl -o /tmp/s6-overlay.tar.gz -jkSL https://github.com/just-containers/s6-overlay/releases/download/v${S6VERSION}/s6-overlay-${S6ARCH}.tar.gz && \
+    tar xzf /tmp/s6-overlay.tar.gz -C / && \
+    rm -f tar xzf /tmp/s6-overlay.tar.gz
 
 ENTRYPOINT ["/init"]
 

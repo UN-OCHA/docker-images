@@ -67,12 +67,14 @@ RUN set +x && apk update && \
     chmod 1777 /tmp && \
     mkdir -p ${SRC_DIR} ${NODE_APP_DIR} && \
     cp -a /usr/local/share/.config/yarn/global/node_modules/newrelic/newrelic.js /srv && \
-    curl -sL https://github.com/just-containers/s6-overlay/releases/download/${S6_VERSION}/s6-overlay-amd64.tar.gz -o /tmp/s6.tgz && \
-    tar xzf /tmp/s6.tgz -C / && \
-    rm -f /tmp/s6.tgz && \
     groupadd --system -g $APPUSER_GID appuser && \
     useradd --system -u $APPUSER_UID -s /sbin/nologin -c 'Docker App User' \
-      -d /home/appuser -g appuser -m appuser
+      -d /home/appuser -g appuser -m appuser && \
+    S6_ARCH=$(uname -m | sed 's/x86_64/amd64/') && \
+    echo "Installing s6 version: $S6_VERSION for $S6_ARCH" && \
+    curl -o /tmp/s6-overlay.tar.gz -jkSL https://github.com/just-containers/s6-overlay/releases/download/${S6_VERSION}/s6-overlay-${S6_ARCH}.tar.gz && \
+    tar xzf /tmp/s6-overlay.tar.gz -C / && \
+    rm -f /tmp/s6-overlay.tar.gz
 
 ENTRYPOINT []
 
