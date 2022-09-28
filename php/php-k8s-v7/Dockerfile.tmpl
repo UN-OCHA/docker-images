@@ -41,7 +41,7 @@ COPY etc/drush/drushrc.php \
 
 # Install NGINX for standard operation.
 RUN \
-    apk add -U nginx nginx-mod-http-upload-progress nginx-mod-http-lua && \
+    apk add -U nginx nginx-mod-http-headers-more nginx-mod-http-upload-progress nginx-mod-http-lua && \
     mkdir -p /etc/services.d/nginx && \
     rm -rf /etc/nginx/* && \
     mv /tmp/apps /tmp/fastcgi.conf /tmp/koi-utf /tmp/map_block_http_methods.conf /tmp/mime.types /tmp/upstream_phpcgi_unix.conf \
