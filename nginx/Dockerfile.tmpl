@@ -32,7 +32,8 @@ RUN apk update && \
       nginx-mod-http-lua \
       nginx-mod-http-echo \
       nginx-mod-http-cache-purge \
-      nginx-mod-http-fancyindex && \
+      nginx-mod-http-fancyindex \
+      nginx-mod-http-headers-more && \
     rm -rf /var/cache/apk/* && \
     mkdir -p  /etc/nginx/env /run/nginx /srv/www/html /var/log/nginx /var/cache/nginx && \
     sed -i 's/access_log.*/access_log off;/' /etc/nginx/nginx.conf && \
@@ -50,7 +51,7 @@ EXPOSE 80
 ENTRYPOINT ["nginx", "-g", "daemon off;"]
 
 # Volumes
-# - Conf: /etc/nginx/conf.d (default.conf)
+# - Conf: /etc/nginx/http.d (default.conf)
 # - Logs: /var/log/nginx
 # - Data: /srv/www/html
 # - Cache: /var/cache/nginx

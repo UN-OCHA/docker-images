@@ -1,6 +1,5 @@
 include ../Makefile.conf
 
-ORGANISATION=public.ecr.aws/unocha
 IMAGE=python2-base-s6
 
 VERSION=$$(VERSION)
