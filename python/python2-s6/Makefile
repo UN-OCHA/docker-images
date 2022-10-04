@@ -1,6 +1,7 @@
-include ../Makefile.conf
+include ../../Makefile.conf
 
-IMAGE=alpine-base-python3
+IMAGE=python
+
 VERSION=$$(VERSION)
 
 all: build tag

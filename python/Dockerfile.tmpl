@@ -9,19 +9,18 @@ ARG BUILD_DATE
 # A little bit of metadata management.
 # See http://label-schema.org/
 LABEL org.label-schema.build-date=$BUILD_DATE \
+      org.label-schema.name="python3-base-s6" \
       org.label-schema.version=$VERSION \
       org.label-schema.vcs-url=$VCS_URL \
       org.label-schema.vcs-ref=$VCS_REF \
-      org.label-schema.description="This service provides a base Python3 Alpine Linux container." \
-      info.humanitarianresponse.python="$VERSION"
+      org.label-schema.description="This image provides a base Python Alpine Linux container."
 
-RUN apk add --update-cache \
-        python3 && \
+RUN apk add --update-cache python3 && \
     python3 -m ensurepip && \
     ln -sf /usr/bin/python3 /usr/bin/python && \
     ln -sf /usr/bin/pip3 /usr/bin/pip && \
     rm -r /usr/lib/python*/ensurepip && \
-    pip3 install --upgrade pip setuptools && \
+    pip install --upgrade pip setuptools && \
     rm -r /root/.cache && \
     rm -rf /var/cache/apk/* && \
     rm -rf /tmp/*
