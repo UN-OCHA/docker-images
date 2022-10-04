@@ -1,7 +1,7 @@
 include ../../Makefile.conf
 
 IMAGE=nginx
-VERSION=$$(VERSION)-beagle
+VERSION=$$(VERSION)
 
 all: build tag
 

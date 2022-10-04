@@ -1,7 +1,7 @@
 include ../../Makefile.conf
 
 IMAGE=nodejs-base
-VERSION=$$(VERSION)-debian
+VERSION=$$(VERSION)
 
 all: build tag
 
