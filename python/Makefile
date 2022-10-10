@@ -1,6 +1,6 @@
 include ../Makefile.conf
 
-IMAGE=python3-base-s6
+IMAGE=python
 
 VERSION=$$(VERSION)
 

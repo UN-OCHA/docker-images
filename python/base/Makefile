@@ -1,7 +1,6 @@
-include ../Makefile.conf
+include ../../Makefile.conf
 
-IMAGE=python2-base-s6
-
+IMAGE=python
 VERSION=$$(VERSION)
 
 all: build tag

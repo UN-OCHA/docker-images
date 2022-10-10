@@ -10,17 +10,12 @@ ENV S6VERSION=2.2.0.3
 
 # A little bit of metadata management.
 # See http://label-schema.org/
-LABEL org.label-schema.schema-version="1.0" \
-      org.label-schema.build-date=$BUILD_DATE \
-      org.label-schema.vendor="UN-OCHA" \
-      org.label-schema.version=$VERSION \
+LABEL org.label-schema.build-date=$BUILD_DATE \
       org.label-schema.vcs-url=$VCS_URL \
       org.label-schema.vcs-ref=$VCS_REF \
       org.label-schema.name="base-s6" \
-      org.label-schema.description="This service provides a base Alpine Linux container." \
-      org.label-schema.architecture="x86_64" \
-      org.label-schema.distribution="Alpine Linux" \
-      org.label-schema.distribution-version=$UPSTREAM \
+      org.label-schema.version=$VERSION \
+      org.label-schema.description="This image provides a s6-init base Alpine Linux container." \
       org.label-schema.s6-version=$S6VERSION
 
 RUN S6ARCH=$(uname -m | sed 's/x86_64/amd64/') && \
