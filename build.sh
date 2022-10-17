@@ -1,15 +1,14 @@
 #!/bin/bash -e
 
-SEVEN=0
-EIGHT=0
+SEVEN=1
+EIGHT=1
 EIGHTONE=1
 
-# BASE=3.15-202203-01
 BASE=3.16-202208-01
-VERSION=7.4.30-r0
-VERSION8=8.0.22-r0
-VERSION81=8.1.9-r0
-EXTRAVERSION=-202208-01
+VERSION=7.4.32-r0
+VERSION8=8.0.24-r0
+VERSION81=8.1.11-r0
+EXTRAVERSION=-202210-01
 STABILITY=stable
 REGISTRY=public.ecr.aws/unocha
 
@@ -29,6 +28,8 @@ fi
 aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/unocha
 
 if [ ${SEVEN} -eq 1 ]; then
+SAVEBASE=${BASE}
+BASE=3.15-202203-01
 PHP=7
 
 # First off, we build the base php 7 image.
@@ -56,10 +57,12 @@ pushd php/php-k8s-v7-NR && \
   popd
 
 # Build the php 7 builder image.
-# pushd php/builder7 && \
-#   make VERSION=${VERSION} EXTRAVERSION=${EXTRAVERSION} UPSTREAM=14-alpine build && \
-#   docker tag ${REGISTRY}/unified-builder:${VERSION}${EXTRAVERSION} ${REGISTRY}/unified-builder:7.4-${STABILITY} && \
-#   popd
+pushd php/builder7 && \
+  make VERSION=${VERSION} EXTRAVERSION=${EXTRAVERSION} UPSTREAM=7.4-stable build && \
+  docker tag ${REGISTRY}/unified-builder:${VERSION}${EXTRAVERSION} ${REGISTRY}/unified-builder:7.4-${STABILITY} && \
+  popd
+
+BASE=${SAVEBASE}
 
 else
   echo "Skipping PHP7 builds."
@@ -93,8 +96,8 @@ pushd php/php-k8s-v8-NR && \
 
 # Build the php 8 builder image.
 pushd php/builder8 && \
-  make VERSION=${VERSION8} EXTRAVERSION=${EXTRAVERSION} UPSTREAM=16-alpine build && \
-  docker tag ${REGISTRY}/unified-builder:${VERSION8}${EXTRAVERSION} ${REGISTRY}/unified-builder:8.0-${STABILITY} && \
+   make VERSION=${VERSION8} EXTRAVERSION=${EXTRAVERSION} UPSTREAM=16-alpine build && \
+   docker tag ${REGISTRY}/unified-builder:${VERSION8}${EXTRAVERSION} ${REGISTRY}/unified-builder:8.0-${STABILITY} && \
   popd
 
 else
@@ -135,7 +138,7 @@ pushd php/builder81 && \
   popd
 
 else
-  echo "Skipping PHP8 builds."
+  echo "Skipping PHP8.1 builds."
 fi
 
 # Login, so we can push.
