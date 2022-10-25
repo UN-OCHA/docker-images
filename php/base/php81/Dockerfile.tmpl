@@ -25,7 +25,7 @@ LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.distribution="Alpine Linux" \
       org.label-schema.distribution-version="$UPSTREAM" \
       info.humanitarianresponse.php=$VERSION \
-      info.humanitarianresponse.php.modules="bcmath bz2 calendar ctype curl dom exif fileinfo fpm gd gettext gmp iconv igbinary imagick intl json memcached mysqli opcache openssl pdo pdo_mysql phar posix redis shmop sysvmsg sysvsem sysvshm simplexml sockets uploadprogress yaml xml xmlreader xmlwriter xsl zip zlib" \
+      info.humanitarianresponse.php.modules="bcmath bz2 calendar ctype curl dom exif fileinfo fpm gd gettext gmp iconv igbinary imagick intl json memcached mysqli opcache openssl pdo pdo_mysql phar posix redis shmop sysvmsg sysvsem sysvshm simplexml sodium sockets uploadprogress yaml xml xmlreader xmlwriter xsl zip zlib" \
       info.humanitarianresponse.php.sapi="fpm"
 
 # Default PHP configuration variables. These can be overridden via the environment.
@@ -121,6 +121,7 @@ RUN \
       php81-sysvsem \
       php81-sysvshm \
       php81-simplexml \
+      php81-sodium \
       php81-sockets \
       php81-tokenizer \
       php81-xml \
