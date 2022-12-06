@@ -5,10 +5,10 @@ EIGHT=1
 EIGHTONE=1
 
 BASE=3.16-202208-01
-VERSION=7.4.32-r0
-VERSION8=8.0.24-r0
-VERSION81=8.1.11-r0
-EXTRAVERSION=-202210-01
+VERSION=7.4.33-r0
+VERSION8=8.0.25-r0
+VERSION81=8.1.12-r0
+EXTRAVERSION=-202211-01
 STABILITY=stable
 REGISTRY=public.ecr.aws/unocha
 
@@ -58,7 +58,7 @@ pushd php/php-k8s-v7-NR && \
 
 # Build the php 7 builder image.
 pushd php/builder7 && \
-  make VERSION=${VERSION} EXTRAVERSION=${EXTRAVERSION} UPSTREAM=7.4-stable build && \
+  make VERSION=${VERSION} EXTRAVERSION=${EXTRAVERSION} UPSTREAM=alpine-14 build && \
   docker tag ${REGISTRY}/unified-builder:${VERSION}${EXTRAVERSION} ${REGISTRY}/unified-builder:7.4-${STABILITY} && \
   popd
 
