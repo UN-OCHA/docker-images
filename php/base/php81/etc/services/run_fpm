@@ -12,4 +12,4 @@ if [ "${PHP_XDEBUG}" = "true" ]; then
       ;;
   esac
 fi
-exec /usr/sbin/php-fpm81 -c /etc/php8/php.ini -y /etc/php81/php-fpm.conf -F
+exec /usr/sbin/php-fpm81 -c /etc/php81/php.ini -y /etc/php81/php-fpm.conf -F
