@@ -1,13 +1,15 @@
 #!/bin/bash -e
 
-SEVEN=1
-EIGHT=1
-EIGHTONE=1
+SEVEN=0
+EIGHT=0
+EIGHTONE=0
+EIGHTTWO=1
 
-BASE=3.16-202208-01
-VERSION=7.4.33-r0
-VERSION8=8.0.25-r0
-VERSION81=8.1.12-r0
+BASE=3.17
+VERSION=7.4.34-r0
+VERSION8=8.0.26-r0
+VERSION81=8.1.13-r0
+VERSION82=8.2.0-r0
 EXTRAVERSION=-202211-01
 STABILITY=stable
 REGISTRY=public.ecr.aws/unocha
@@ -69,6 +71,8 @@ else
 fi
 
 if [ ${EIGHT} -eq 1 ]; then
+SAVEBASE=${BASE}
+BASE=3.16
 
 # First off, we build the base php 8 image.
 pushd php/base/php8 && \
@@ -99,6 +103,8 @@ pushd php/builder8 && \
    make VERSION=${VERSION8} EXTRAVERSION=${EXTRAVERSION} UPSTREAM=16-alpine build && \
    docker tag ${REGISTRY}/unified-builder:${VERSION8}${EXTRAVERSION} ${REGISTRY}/unified-builder:8.0-${STABILITY} && \
   popd
+
+BASE=${SAVEBASE}
 
 else
   echo "Skipping PHP8 builds."
@@ -139,6 +145,38 @@ pushd php/builder81 && \
 
 else
   echo "Skipping PHP8.1 builds."
+fi
+
+if [ ${EIGHTTWO} -eq 1 ]; then
+
+# First off, we build the base php 8.2 image.
+pushd php/base/php82 && \
+  make VERSION=${VERSION82} EXTRAVERSION=${EXTRAVERSION} UPSTREAM=${BASE} build && \
+  docker tag ${REGISTRY}/base-php:${VERSION82}${EXTRAVERSION} ${REGISTRY}/base-php:8.2-${STABILITY} && \
+  popd
+
+# Build the standard php 8.2 image.
+pushd php/php82 && \
+  make VERSION=${VERSION82} EXTRAVERSION=${EXTRAVERSION} UPSTREAM=${VERSION82}${EXTRAVERSION} build && \
+  docker tag ${REGISTRY}/php:${VERSION82}${EXTRAVERSION} ${REGISTRY}/php:8.2-${STABILITY} && \
+  popd
+
+# Build the k8s php 82 image.
+pushd php/php-k8s-v82 && \
+  make VERSION=${VERSION82} EXTRAVERSION=${EXTRAVERSION} UPSTREAM=${VERSION82}${EXTRAVERSION} && \
+  docker tag ${REGISTRY}/php-k8s:${VERSION82}${EXTRAVERSION} ${REGISTRY}/php-k8s:8.2-${STABILITY} && \
+  popd
+
+# Do not bother with New Relic since we will stop using it.
+
+# Build the php 8.2 builder image.
+pushd php/builder82 && \
+  make VERSION=${VERSION82} EXTRAVERSION=${EXTRAVERSION} UPSTREAM=16-alpine build && \
+  docker tag ${REGISTRY}/unified-builder:${VERSION82}${EXTRAVERSION} ${REGISTRY}/unified-builder:8.2-${STABILITY} && \
+  popd
+
+else
+  echo "Skipping PHP8.2 builds."
 fi
 
 # Login, so we can push.
