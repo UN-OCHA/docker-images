@@ -10,7 +10,7 @@ VERSION=7.4.34-r0
 VERSION8=8.0.26-r0
 VERSION81=8.1.13-r0
 VERSION82=8.2.0-r0
-EXTRAVERSION=-202212-01
+EXTRAVERSION=-202212-02
 
 STABILITY=unstable
 REGISTRY=public.ecr.aws/unocha
@@ -170,11 +170,13 @@ pushd php/php-k8s-v82 && \
 
 # Do not bother with New Relic since we will stop using it.
 
+# Since sass is not needed, node is not needed, which means builder is not needed.
+
 # Build the php 8.2 builder image.
-pushd php/builder82 && \
-  make VERSION=${VERSION82} EXTRAVERSION=${EXTRAVERSION} UPSTREAM=16-alpine build && \
-  docker tag ${REGISTRY}/unified-builder:${VERSION82}${EXTRAVERSION} ${REGISTRY}/unified-builder:8.2-${STABILITY} && \
-  popd
+# pushd php/builder82 && \
+#   make VERSION=${VERSION82} EXTRAVERSION=${EXTRAVERSION} UPSTREAM=16-alpine build && \
+#   docker tag ${REGISTRY}/unified-builder:${VERSION82}${EXTRAVERSION} ${REGISTRY}/unified-builder:8.2-${STABILITY} && \
+#   popd
 
 else
   echo "Skipping PHP8.2 builds."
