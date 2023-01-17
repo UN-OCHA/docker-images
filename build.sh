@@ -1,16 +1,16 @@
 #!/bin/bash -e
 
 SEVEN=0
-EIGHT=0
-EIGHTONE=0
+EIGHT=1
+EIGHTONE=1
 EIGHTTWO=1
 
 BASE=3.17
 VERSION=7.4.34-r0
-VERSION8=8.0.26-r0
-VERSION81=8.1.13-r0
-VERSION82=8.2.0-r0
-EXTRAVERSION=-202212-02
+VERSION8=8.0.27-r0
+VERSION81=8.1.14-r0
+VERSION82=8.2.1-r0
+EXTRAVERSION=-202301-01
 
 STABILITY=unstable
 REGISTRY=public.ecr.aws/unocha
@@ -101,7 +101,7 @@ pushd php/php-k8s-v8-NR && \
 
 # Build the php 8 builder image.
 pushd php/builder8 && \
-   make VERSION=${VERSION8} EXTRAVERSION=${EXTRAVERSION} UPSTREAM=16-alpine build && \
+   make VERSION=${VERSION8} EXTRAVERSION=${EXTRAVERSION} UPSTREAM=16.19.0-alpine3.16 build && \
    docker tag ${REGISTRY}/unified-builder:${VERSION8}${EXTRAVERSION} ${REGISTRY}/unified-builder:8.0-${STABILITY} && \
   popd
 
@@ -140,7 +140,7 @@ pushd php/php-k8s-v81-NR && \
 
 # Build the php 8.1 builder image.
 pushd php/builder81 && \
-  make VERSION=${VERSION81} EXTRAVERSION=${EXTRAVERSION} UPSTREAM=16-alpine build && \
+  make VERSION=${VERSION81} EXTRAVERSION=${EXTRAVERSION} UPSTREAM=16.19.0-alpine build && \
   docker tag ${REGISTRY}/unified-builder:${VERSION81}${EXTRAVERSION} ${REGISTRY}/unified-builder:8.1-${STABILITY} && \
   popd
 
