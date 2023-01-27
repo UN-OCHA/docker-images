@@ -77,7 +77,7 @@ ENV NR_VERSION=10.4.0.316 \
     PHP_NEWRELIC_TRANSACTION_TRACER_CUSTOM=""
 
 # Copy custom config files into the container.
-COPY etc/php8 etc/services/run_fpm etc/services/run_newrelic etc/msmtprc /tmp/
+COPY etc/php8 etc/services/run_fpm etc/services/run_newrelic etc/msmtp/msmtprc /tmp/
 
 RUN \
     # Install standard packages from $UPSTREAM.
@@ -143,13 +143,15 @@ RUN \
     # Tidy.
     rm -rf /var/cache/apk/* && \
     # Setup directory structure for FPM.
-    mkdir -p /etc/services.d/fpm /srv/www/html && \
-    mv /tmp/msmtprc /etc/msmtprc && \
+    mkdir -p /etc/services.d/fpm /srv/www/html /etc/msmtp && \
+    mv /tmp/msmtprc /etc/msmtp/msmtprc && \
     mv /tmp/run_fpm /etc/services.d/fpm/run && \
     \
     # Fixup the sendmail path for msmtp and set it as mailer.
     ln -sf /usr/bin/msmtp /usr/sbin/sendmail && \
     ln -sf /usr/bin/msmtp /usr/bin/sendmail && \
+    # Link the msmtp file from the volume to the expected location.
+    ln -sf /etc/msmtp/msmtprc /etc/msmtprc && \
     \
     # Configure php.
     rm -rf /etc/php8 && \
