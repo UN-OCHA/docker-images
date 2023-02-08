@@ -29,8 +29,7 @@ LABEL org.label-schema.schema-version="1.0" \
       info.humanitarianresponse.php.sapi="fpm"
 
 # Default PHP configuration variables. These can be overridden via the environment.
-ENV NR_VERSION=10.4.0.316 \
-    PS1="\u@\h:\w\n\$ " \
+ENV PS1="\u@\h:\w\n\$ " \
     PHP_ENVIRONMENT=production \
     PHP_SYSLOG_FACILITY=LOG_LOCAL4 \
     PHP_ERROR_LOG=/var/log/php/error.log \
@@ -77,7 +76,7 @@ ENV NR_VERSION=10.4.0.316 \
     PHP_NEWRELIC_TRANSACTION_TRACER_CUSTOM=""
 
 # Copy custom config files into the container.
-COPY etc/php81 etc/services/run_fpm etc/services/run_newrelic etc/msmtp/msmtprc /tmp/
+COPY etc/php81 etc/services/run_fpm etc/msmtp/msmtprc /tmp/
 
 RUN \
     # Install standard packages from $UPSTREAM.
@@ -161,21 +160,6 @@ RUN \
     # Configure PHP logs.
     rm -rf /var/log/php81 && \
     mkdir /var/log/php && \
-    \
-    # Install and configure New Relic \
-    mkdir -p /etc/services.d/newrelic && \
-    mv /tmp/run_newrelic /etc/services.d/newrelic/run && \
-    curl -s -o /tmp/newrelic.tar.gz \
-      https://download.newrelic.com/php_agent/archive/$NR_VERSION/newrelic-php5-${NR_VERSION}-linux-musl.tar.gz && \
-    mkdir -p /etc/newrelic /var/log/newrelic && \
-    tar xvf /tmp/newrelic.tar.gz -C /tmp && \
-    mv /tmp/newrelic-php5-${NR_VERSION}-linux-musl/daemon/newrelic-daemon.x64 \
-       /usr/bin/newrelic-daemon && \
-    mv /tmp/newrelic-php5-${NR_VERSION}-linux-musl/agent/x64/newrelic-$(php --info | awk '/^PHP API/ {print $NF}').so \
-       /usr/lib/php81/modules/newrelic.so && \
-    mv /tmp/newrelic-php5-${NR_VERSION}-linux-musl/scripts/newrelic.cfg.template \
-       /etc/newrelic/newrelic.cfg && \
-    rm -rf /tmp/newrelic-php5* /tmp/newrelic.tar.gz && \
     \
     # Cleanup tmp dir.
     rm -rf /tmp/*
