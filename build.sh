@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-SEVEN=0
+SEVEN=1
 EIGHT=1
 EIGHTONE=1
 EIGHTTWO=1
@@ -8,9 +8,9 @@ EIGHTTWO=1
 BASE=3.17
 VERSION=7.4.33-r0
 VERSION8=8.0.27-r0
-VERSION81=8.1.14-r0
-VERSION82=8.2.1-r0
-EXTRAVERSION=-202301-01
+VERSION81=8.1.15-r0
+VERSION82=8.2.2-r0
+EXTRAVERSION=-202302-01
 
 STABILITY=stable
 REGISTRY=public.ecr.aws/unocha
@@ -53,12 +53,6 @@ pushd php/php-k8s-v7 && \
   docker tag ${REGISTRY}/php-k8s:${VERSION}${EXTRAVERSION} ${REGISTRY}/php-k8s:7.4-${STABILITY} && \
   popd
 
-# Build the k8s php 7 image with New Relic.
-pushd php/php-k8s-v7-NR && \
-  make VERSION=${VERSION} EXTRAVERSION=-NR${EXTRAVERSION} UPSTREAM=${VERSION}${EXTRAVERSION} build && \
-  docker tag ${REGISTRY}/php-k8s:${VERSION}-NR${EXTRAVERSION} ${REGISTRY}/php-k8s:7.4-NR-${STABILITY} && \
-  popd
-
 # Build the php 7 builder image.
 pushd php/builder7 && \
   make VERSION=${VERSION} EXTRAVERSION=${EXTRAVERSION} UPSTREAM=alpine-14 build && \
@@ -93,12 +87,6 @@ pushd php/php-k8s-v8 && \
   docker tag ${REGISTRY}/php-k8s:${VERSION8}${EXTRAVERSION} ${REGISTRY}/php-k8s:8.0-${STABILITY} && \
   popd
 
-# Build the k8s php 8 image with New Relic.
-pushd php/php-k8s-v8-NR && \
-  make VERSION=${VERSION8} EXTRAVERSION=-NR${EXTRAVERSION} UPSTREAM=${VERSION8}${EXTRAVERSION} build && \
-  docker tag ${REGISTRY}/php-k8s:${VERSION8}-NR${EXTRAVERSION} ${REGISTRY}/php-k8s:8.0-NR-${STABILITY} && \
-  popd
-
 # Build the php 8 builder image.
 pushd php/builder8 && \
    make VERSION=${VERSION8} EXTRAVERSION=${EXTRAVERSION} UPSTREAM=16.19.0-alpine3.16 build && \
@@ -130,12 +118,6 @@ pushd php/php81 && \
 pushd php/php-k8s-v81 && \
   make VERSION=${VERSION81} EXTRAVERSION=${EXTRAVERSION} UPSTREAM=${VERSION81}${EXTRAVERSION} && \
   docker tag ${REGISTRY}/php-k8s:${VERSION81}${EXTRAVERSION} ${REGISTRY}/php-k8s:8.1-${STABILITY} && \
-  popd
-
-# Build the k8s php 8 image with New Relic.
-pushd php/php-k8s-v81-NR && \
-  make VERSION=${VERSION81} EXTRAVERSION=-NR${EXTRAVERSION} UPSTREAM=${VERSION81}${EXTRAVERSION} build && \
-  docker tag ${REGISTRY}/php-k8s:${VERSION81}-NR${EXTRAVERSION} ${REGISTRY}/php-k8s:8.1-NR-${STABILITY} && \
   popd
 
 # Build the php 8.1 builder image.
