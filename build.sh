@@ -7,10 +7,10 @@ EIGHTTWO=1
 
 BASE=3.17
 VERSION=7.4.33-r0
-VERSION8=8.0.27-r0
-VERSION81=8.1.15-r0
-VERSION82=8.2.2-r0
-EXTRAVERSION=-202302-01
+VERSION8=8.0.28-r0
+VERSION81=8.1.16-r0
+VERSION82=8.2.3-r0
+EXTRAVERSION=-202302-02
 
 STABILITY=stable
 REGISTRY=public.ecr.aws/unocha
@@ -131,7 +131,7 @@ else
 fi
 
 if [ ${EIGHTTWO} -eq 1 ]; then
-STABILITY=unstable
+# STABILITY=unstable
 
 # First off, we build the base php 8.2 image.
 pushd php/base/php82 && \
