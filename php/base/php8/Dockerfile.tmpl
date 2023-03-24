@@ -28,6 +28,9 @@ LABEL org.label-schema.schema-version="1.0" \
       info.humanitarianresponse.php.modules="apcu bcmath bz2 calendar ctype curl dom exif fileinfo fpm gd gettext gmp iconv igbinary imagick intl json mcrypt memcached mysqli opcache openssl pdo pdo_mysql phar posix redis shmop sysvmsg sysvsem sysvshm simplexml sodium sockets uploadprogress yaml xml xmlreader xmlwriter xsl zip zlib" \
       info.humanitarianresponse.php.sapi="fpm"
 
+# Set the APM module version.
+ENV ES_APM_VERSION="1.7.2"
+
 # Default PHP configuration variables. These can be overridden via the environment.
 ENV PS1="\u@\h:\w\n\$ " \
     PHP_ENVIRONMENT=production \
@@ -53,6 +56,12 @@ ENV PS1="\u@\h:\w\n\$ " \
     # See https://humanitarian.atlassian.net/browse/OPS-7156
     PHP_OPCACHE_ENABLE=1 \
     PHP_OPCACHE_REVALIDATE_FREQ=300 \
+    # Configure Elastic APM
+    PHP_ELASTIC_APM_ENABLED=0 \
+    PHP_ELASTIC_APM_ENVIRONMENT="" \
+    PHP_ELASTIC_APM_TOKEN="" \
+    PHP_ELASTIC_APM_SERVER="" \
+    PHP_ELASTIC_APM_SERVICE="" \
     # Allow developers to use and configure xdebug.
     PHP_XDEBUG=false \
     PHP_XDEBUG_REMOTE_HOST=127.0.0.1 \
@@ -151,6 +160,12 @@ RUN \
     # Configure PHP logs.
     rm -rf /var/log/php8 && \
     mkdir /var/log/php && \
+    \
+    # Install Elastic APM.
+    curl -L -o /tmp/apm-agent-php_all.apk https://github.com/elastic/apm-agent-php/releases/download/v${ES_APM_VERSION}/apm-agent-php_${ES_APM_VERSION}_all.apk && \
+    apk add --allow-untrusted /tmp/apm-agent-php_all.apk && \
+    rm -f /tmp/apm-agent-php_all.apk && \
+    mv -f /etc/php8/99-elastic-apm-custom.ini /etc/php8/conf.d/99-elastic-apm-custom.ini && \
     \
     # Cleanup tmp dir.
     rm -rf /tmp/*
