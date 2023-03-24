@@ -174,7 +174,7 @@ RUN \
     curl -L -o /tmp/apm-agent-php_all.apk https://github.com/elastic/apm-agent-php/releases/download/v${ES_APM_VERSION}/apm-agent-php_${ES_APM_VERSION}_all.apk && \
     apk add --allow-untrusted /tmp/apm-agent-php_all.apk && \
     rm -f /tmp/apm-agent-php_all.apk && \
-    mv -f /etc/php81/99-elastic-apm-custom.ini /etc/php81/conf.d/99-elastic-apm-custom.ini && \
+    mv -f /tmp/99-elastic-apm-custom.ini /opt/elastic/apm-agent-php/etc/elastic-apm-custom.ini && \
     \
     # Cleanup tmp dir.
     rm -rf /tmp/*
