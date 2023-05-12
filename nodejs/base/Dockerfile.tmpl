@@ -16,11 +16,6 @@ ENV NODE_VERSION=$NODE_VERSION \
     NODE_APP_DIR=/srv/www \
     NODE_PATH=/usr/lib/node_modules:/usr/local/lib/node_modules:/usr/local/share/.config/yarn/global/node_modules \
     SRC_DIR=/src \
-    NEW_RELIC_HOME=/srv/ \
-    NEW_RELIC_LOG_LEVEL=info \
-    NEW_RELIC_LICENSE_KEY=aaa \
-    NEW_RELIC_APP_NAME=nodeapp \
-    NEW_RELIC_NO_CONFIG_FILE=True \
     APPUSER_GID=4000 \
     APPUSER_UID=4000
 
@@ -53,8 +48,7 @@ RUN set +x && apk update && \
         curl \
         git && \
    yarn global add \
-        grunt-cli \
-        newrelic && \
+        grunt-cli && \
    yarn cache clean && \
    rm -rf \
         /usr/lib/node_modules/npm/man \
@@ -66,7 +60,6 @@ RUN set +x && apk update && \
     mkdir -p /tmp && \
     chmod 1777 /tmp && \
     mkdir -p ${SRC_DIR} ${NODE_APP_DIR} && \
-    cp -a /usr/local/share/.config/yarn/global/node_modules/newrelic/newrelic.js /srv && \
     groupadd --system -g $APPUSER_GID appuser && \
     useradd --system -u $APPUSER_UID -s /sbin/nologin -c 'Docker App User' \
       -d /home/appuser -g appuser -m appuser && \
