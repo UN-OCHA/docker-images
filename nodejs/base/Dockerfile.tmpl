@@ -9,6 +9,7 @@ ARG VERSION
 ARG VCS_URL
 ARG VCS_REF
 ARG BUILD_DATE
+ARG TARGETPLATFORM
 
 ENV NODE_VERSION=$NODE_VERSION \
     YARN_VERSION=$YARN_VERSION \
@@ -32,14 +33,14 @@ LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.vcs-ref=$VCS_REF \
       org.label-schema.name="nodejs-base" \
       org.label-schema.description="This service provides a base nodejs platform." \
-      org.label-schema.architecture="x86_64" \
+      org.label-schema.architecture="$TARGETPLATFORM" \
       org.label-schema.distribution="NodeJS official image" \
       org.label-schema.distribution-version="%%UPSTREAM%%" \
       info.humanitarianresponse.nodejs="$NODE_VERSION" \
       info.humanitarianresponse.npm="$NPM_VERSION" \
       info.humanitarianresponse.yarn="$YARN_VERSION"
 
-RUN set +x && apk update && \
+RUN set -x && apk update && \
    apk upgrade && \
    apk add --no-cache \
         libstdc++ && \
@@ -65,7 +66,7 @@ RUN set +x && apk update && \
       -d /home/appuser -g appuser -m appuser && \
     S6_ARCH=$(uname -m | sed 's/x86_64/amd64/') && \
     echo "Installing s6 version: $S6_VERSION for $S6_ARCH" && \
-    curl -o /tmp/s6-overlay.tar.gz -jkSL https://github.com/just-containers/s6-overlay/releases/download/${S6_VERSION}/s6-overlay-${S6_ARCH}.tar.gz && \
+    curl -o /tmp/s6-overlay.tar.gz -jskSL https://github.com/just-containers/s6-overlay/releases/download/${S6_VERSION}/s6-overlay-${S6_ARCH}.tar.gz && \
     tar xzf /tmp/s6-overlay.tar.gz -C / && \
     rm -f /tmp/s6-overlay.tar.gz
 
