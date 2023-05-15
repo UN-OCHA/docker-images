@@ -1,0 +1,26 @@
+FROM public.ecr.aws/unocha/alpine-base:%%UPSTREAM%%
+
+# Parse arguments for the build command.
+ARG VERSION
+ARG VCS_URL
+ARG VCS_REF
+ARG BUILD_DATE
+
+# A little bit of metadata management.
+# See http://label-schema.org/
+LABEL org.label-schema.schema-version="1.0" \
+      org.label-schema.build-date=$BUILD_DATE \
+      org.label-schema.name="python3-base" \
+      org.label-schema.version=$VERSION \
+      org.label-schema.vcs-url=$VCS_URL \
+      org.label-schema.vcs-ref=$VCS_REF \
+      org.label-schema.name="python3" \
+      org.label-schema.description="This image provides a base python3 platform."
+
+RUN apk add --update-cache \
+        python3 && \
+    python3 -m ensurepip && \
+    rm -r /usr/lib/python*/ensurepip && \
+    pip3 install --upgrade pip setuptools && \
+    rm -r /root/.cache && \
+    rm -rf /var/cache/apk/*

@@ -1,8 +1,7 @@
 include ../../Makefile.conf
 
-ORGANISATION=public.ecr.aws/unocha
 IMAGE=nodejs-base
-VERSION=$$(VERSION)-debian
+VERSION=$$(VERSION)
 
 all: build tag
 

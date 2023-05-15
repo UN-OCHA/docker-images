@@ -1,6 +1,5 @@
 include ../../Makefile.conf
 
-ORGANISATION=public.ecr.aws/unocha
 IMAGE=nodejs-builder
 UPSTREAM=$$((UPSTREAM))
 VERSION=$$(VERSION))

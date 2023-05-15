@@ -1,0 +1,23 @@
+FROM public.ecr.aws/unocha/nginx:%%UPSTREAM%%
+
+# Parse arguments for the build command.
+ARG VERSION
+ARG VCS_URL
+ARG VCS_REF
+ARG BUILD_DATE
+
+# A little bit of metadata management.
+# See http://label-schema.org/
+LABEL org.label-schema.description="This service provides a base nginx platform with some hardening."
+
+    # sed -i "s|^http {|http {\n\t#proxy_cookie_path off;\n|" /etc/nginx/nginx.conf && \
+    # sed -i "s|^http {|http {\n\t# disable it by adding the following line to the desired server or location block|" /etc/nginx/nginx.conf && \
+    # sed -i "s|^http {|http {\n\tproxy_cookie_path ~^/(.*)$ \"/\$1; SameSite=Lax\";|" /etc/nginx/nginx.conf && \
+    # sed -i "s|^http {|http {\n\t# add SameSite to cookies|" /etc/nginx/nginx.conf && \
+    # sed -i "s|^http {|http {\n\tmore_set_headers \"Content-Security-Policy: default-src 'self'\";|" /etc/nginx/nginx.conf && \
+    # sed -i "s|^http {|http {\n\tmore_set_headers 'X-Frame-Options: SAMEORIGIN';|" /etc/nginx/nginx.conf && \
+RUN sed -i "s|^http {|http {\n\tmore_set_headers 'Referrer-Policy: strict-origin-when-cross-origin';\n|" /etc/nginx/nginx.conf && \
+    sed -i "s|^http {|http {\n\tmore_set_headers 'X-Content-Type-Options: nosniff';|" /etc/nginx/nginx.conf && \
+    sed -i "s|^http {|http {\n\tmore_set_headers 'X-XSS-Protection: 1; mode=block';|" /etc/nginx/nginx.conf && \
+    sed -i "s|^http {|http {\n\tmore_set_headers 'Strict-Transport-Security: max-age=31536000; includeSubDomains; preload; always;';|" /etc/nginx/nginx.conf && \
+    sed -i "s|^http {|http {\n\tmore_set_headers 'Server: \$http_host';|" /etc/nginx/nginx.conf

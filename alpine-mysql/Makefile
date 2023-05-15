@@ -1,6 +1,6 @@
 include ../Makefile.conf
 
-IMAGE=alpine-mysql
+IMAGE=mysql
 VERSION=$$(VERSION)
 
 all: build tag
