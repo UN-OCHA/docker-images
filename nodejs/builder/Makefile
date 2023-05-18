@@ -1,4 +1,5 @@
 include ../../Makefile.conf
+include ../../Makefile.buildx.conf
 
 IMAGE=nodejs-builder
 UPSTREAM=$$((UPSTREAM))
