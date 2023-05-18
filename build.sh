@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-SEVEN=1
+SEVEN=0
 EIGHT=1
 EIGHTONE=1
 EIGHTTWO=1
@@ -8,9 +8,9 @@ EIGHTTWO=1
 BASE=3.17
 VERSION=7.4.33-r0
 VERSION8=8.0.28-r0
-VERSION81=8.1.16-r0
-VERSION82=8.2.3-r0
-EXTRAVERSION=-202302-02
+VERSION81=8.1.19-r0
+VERSION82=8.2.6-r1
+EXTRAVERSION=-202305-01
 
 STABILITY=stable
 REGISTRY=public.ecr.aws/unocha
@@ -88,10 +88,10 @@ pushd php/php-k8s-v8 && \
   popd
 
 # Build the php 8 builder image.
-pushd php/builder8 && \
-   make VERSION=${VERSION8} EXTRAVERSION=${EXTRAVERSION} UPSTREAM=16.19.0-alpine3.16 build && \
-   docker tag ${REGISTRY}/unified-builder:${VERSION8}${EXTRAVERSION} ${REGISTRY}/unified-builder:8.0-${STABILITY} && \
-  popd
+# pushd php/builder8 && \
+#    make VERSION=${VERSION8} EXTRAVERSION=${EXTRAVERSION} UPSTREAM=16.19.0-alpine3.16 build && \
+#    docker tag ${REGISTRY}/unified-builder:${VERSION8}${EXTRAVERSION} ${REGISTRY}/unified-builder:8.0-${STABILITY} && \
+#   popd
 
 BASE=${SAVEBASE}
 
@@ -121,10 +121,10 @@ pushd php/php-k8s-v81 && \
   popd
 
 # Build the php 8.1 builder image.
-pushd php/builder81 && \
-  make VERSION=${VERSION81} EXTRAVERSION=${EXTRAVERSION} UPSTREAM=16.19.0-alpine build && \
-  docker tag ${REGISTRY}/unified-builder:${VERSION81}${EXTRAVERSION} ${REGISTRY}/unified-builder:8.1-${STABILITY} && \
-  popd
+# pushd php/builder81 && \
+#   make VERSION=${VERSION81} EXTRAVERSION=${EXTRAVERSION} UPSTREAM=16.19.0-alpine build && \
+#   docker tag ${REGISTRY}/unified-builder:${VERSION81}${EXTRAVERSION} ${REGISTRY}/unified-builder:8.1-${STABILITY} && \
+#   popd
 
 else
   echo "Skipping PHP8.1 builds."
@@ -132,6 +132,8 @@ fi
 
 if [ ${EIGHTTWO} -eq 1 ]; then
 # STABILITY=unstable
+SAVEBASE=${BASE}
+BASE=3.18
 
 # First off, we build the base php 8.2 image.
 pushd php/base/php82 && \
