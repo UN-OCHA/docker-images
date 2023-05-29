@@ -21,7 +21,7 @@ LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.vcs-ref=$VCS_REF \
       org.label-schema.name="base-php" \
       org.label-schema.description="This service provides a base php-fpm platform." \
-      org.label-schema.architecture="x86_64" \
+      org.label-schema.architecture="" \
       org.label-schema.distribution="Alpine Linux" \
       org.label-schema.distribution-version="$UPSTREAM" \
       info.humanitarianresponse.php=$VERSION \
@@ -81,56 +81,55 @@ RUN \
       msmtp \
       mupdf \
       mupdf-tools && \
-    echo "@community http://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories && \
-    echo "@testing http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories && \
     apk add --update-cache \
-      php82-bcmath@community \
-      php82-bz2@community \
-      php82-calendar@community \
-      php82-ctype@community \
-      php82-curl@community \
-      php82-dom@community \
-      php82-exif@community \
-      php82-iconv@community \
-      php82-fileinfo@community \
-      php82-fpm@community \
-      php82-gd@community \
-      php82-gettext@community \
-      php82-gmp@community \
-      php82-iconv@community \
-      php82-intl@community \
-      php82-json@community \
-      php82-mbstring@community \
-      php82-mysqli@community \
-      php82-opcache@community \
-      php82-openssl@community \
-      php82-pdo@community \
-      php82-pdo_mysql@community \
-      php82-phar@community \
-      php82-posix@community \
-      php82-redis@community \
-      php82-session@community \
-      php82-shmop@community \
-      php82-sysvmsg@community \
-      php82-sysvsem@community \
-      php82-sysvshm@community \
-      php82-simplexml@community \
-      php82-sodium@community \
-      php82-sockets@community \
-      php82-tokenizer@community \
-      php82-xml@community \
-      php82-xmlreader@community \
-      php82-xmlwriter@community \
-      php82-xsl@community \
-      php82-zip@community \
-      php82-zlib@community \
-      php82-pecl-apcu@community \
-      php82-pecl-imagick@testing \
-      php82-pecl-memcached@community \
-      php82-pecl-msgpack@community \
-      php82-pecl-uploadprogress@community \
-      php82-pecl-xdebug@community \
-      php82-pecl-yaml@community \
+      imagemagick-libs \
+      php82-bcmath \
+      php82-bz2 \
+      php82-calendar \
+      php82-ctype \
+      php82-curl \
+      php82-dom \
+      php82-exif \
+      php82-iconv \
+      php82-fileinfo \
+      php82-fpm \
+      php82-gd \
+      php82-gettext \
+      php82-gmp \
+      php82-iconv \
+      php82-intl \
+      php82-json \
+      php82-mbstring \
+      php82-mysqli \
+      php82-opcache \
+      php82-openssl \
+      php82-pdo \
+      php82-pdo_mysql \
+      php82-phar \
+      php82-posix \
+      php82-redis \
+      php82-session \
+      php82-shmop \
+      php82-sysvmsg \
+      php82-sysvsem \
+      php82-sysvshm \
+      php82-simplexml \
+      php82-sodium \
+      php82-sockets \
+      php82-tokenizer \
+      php82-xml \
+      php82-xmlreader \
+      php82-xmlwriter \
+      php82-xsl \
+      php82-zip \
+      php82-zlib \
+      php82-pecl-apcu \
+      php82-pecl-imagick \
+      php82-pecl-memcached \
+      php82-pecl-msgpack \
+      php82-pecl-uploadprogress \
+      php82-pecl-xdebug \
+      php82-pecl-yaml \
       pngquant && \
     # Tidy.
     rm -rf /var/cache/apk/* && \

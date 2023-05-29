@@ -1,4 +1,5 @@
 include ../Makefile.conf
+include ../Makefile.buildx.conf
 
 
 IMAGE=alpine-base-s6
