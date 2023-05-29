@@ -1,4 +1,5 @@
 include ../Makefile.conf
+include ../Makefile.buildx.conf
 
 IMAGE=mysql
 VERSION=$$(VERSION)
