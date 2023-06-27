@@ -1,18 +1,25 @@
 #!/bin/bash -e
+#
+BASE=lol
 
 SEVEN=0
 EIGHT=0
 EIGHTONE=1
 EIGHTTWO=1
 
-BASE=3.17
+BASE7=3.15-202203-01
+BASE8=3.16
+BASE81=3.17
+BASE82=3.18
+
 VERSION=7.4.33-r0
 VERSION8=8.0.28-r0
-VERSION81=8.1.19-r0
-VERSION82=8.2.6-r1
-EXTRAVERSION=-202305-02
+VERSION81=8.1.20-r0
+VERSION82=8.2.7-r0
 
-STABILITY=unstable
+EXTRAVERSION=-202306-01
+
+STABILITY=stable
 REGISTRY=public.ecr.aws/unocha
 
 # Is there a version?
@@ -31,13 +38,11 @@ fi
 aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/unocha
 
 if [ ${SEVEN} -eq 1 ]; then
-SAVEBASE=${BASE}
-BASE=3.15-202203-01
 PHP=7
 
 # First off, we build the base php 7 image.
 pushd php/base/php7 && \
-  make VERSION=${VERSION} EXTRAVERSION=${EXTRAVERSION} UPSTREAM=${BASE} build && \
+  make VERSION=${VERSION} EXTRAVERSION=${EXTRAVERSION} UPSTREAM=${BASE7} build && \
   docker tag ${REGISTRY}/base-php:${VERSION}${EXTRAVERSION} ${REGISTRY}/base-php:7.4-${STABILITY} && \
   popd
 
@@ -59,19 +64,15 @@ pushd php/builder7 && \
   docker tag ${REGISTRY}/unified-builder:${VERSION}${EXTRAVERSION} ${REGISTRY}/unified-builder:7.4-${STABILITY} && \
   popd
 
-BASE=${SAVEBASE}
-
 else
   echo "Skipping PHP7 builds."
 fi
 
 if [ ${EIGHT} -eq 1 ]; then
-SAVEBASE=${BASE}
-BASE=3.16
 
 # First off, we build the base php 8 image.
 pushd php/base/php8 && \
-  make VERSION=${VERSION8} EXTRAVERSION=${EXTRAVERSION} UPSTREAM=${BASE} buildx && \
+  make VERSION=${VERSION8} EXTRAVERSION=${EXTRAVERSION} UPSTREAM=${BASE8} buildx && \
   make VERSION=${VERSION8} EXTRAVERSION=${EXTRAVERSION} MANIFEST_VERSION=8.0-${STABILITY} tagx && \
   popd
 
@@ -104,7 +105,7 @@ if [ ${EIGHTONE} -eq 1 ]; then
 
 # First off, we build the base php 8.1 image.
 pushd php/base/php81 && \
-  make VERSION=${VERSION81} EXTRAVERSION=${EXTRAVERSION} UPSTREAM=${BASE} buildx && \
+  make VERSION=${VERSION81} EXTRAVERSION=${EXTRAVERSION} UPSTREAM=${BASE81} buildx && \
   make VERSION=${VERSION81} EXTRAVERSION=${EXTRAVERSION} MANIFEST_VERSION=8.1-${STABILITY} tagx && \
   popd
 
@@ -131,13 +132,10 @@ else
 fi
 
 if [ ${EIGHTTWO} -eq 1 ]; then
-# STABILITY=unstable
-SAVEBASE=${BASE}
-BASE=3.18
 
 # First off, we build the base php 8.2 image.
 pushd php/base/php82 && \
-  make VERSION=${VERSION82} EXTRAVERSION=${EXTRAVERSION} UPSTREAM=${BASE} buildx && \
+  make VERSION=${VERSION82} EXTRAVERSION=${EXTRAVERSION} UPSTREAM=${BASE82} buildx && \
   make VERSION=${VERSION82} EXTRAVERSION=${EXTRAVERSION} MANIFEST_VERSION=8.2-${STABILITY} tagx && \
   popd
 
@@ -152,8 +150,6 @@ pushd php/php-k8s-v82 && \
   make VERSION=${VERSION82} EXTRAVERSION=${EXTRAVERSION} UPSTREAM=${VERSION82}${EXTRAVERSION} buildx && \
   make VERSION=${VERSION82} EXTRAVERSION=${EXTRAVERSION} MANIFEST_VERSION=8.2-${STABILITY} tagx && \
   popd
-
-# Do not bother with New Relic since we will stop using it.
 
 # Since sass is not needed, node is not needed, which means builder is not needed.
 
