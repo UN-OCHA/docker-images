@@ -53,6 +53,12 @@ ENV PS1="\u@\h:\w\n\$ " \
     # See https://humanitarian.atlassian.net/browse/OPS-7156
     PHP_OPCACHE_ENABLE=1 \
     PHP_OPCACHE_REVALIDATE_FREQ=300 \
+    # Configure Elastic APM (default off)
+    PHP_ELASTIC_APM_ENABLED=0 \
+    PHP_ELASTIC_APM_ENVIRONMENT="" \
+    PHP_ELASTIC_APM_TOKEN="" \
+    PHP_ELASTIC_APM_SERVER="" \
+    PHP_ELASTIC_APM_SERVICE="" \
     # Allow developers to use and configure xdebug.
     PHP_XDEBUG=false \
     PHP_XDEBUG_REMOTE_HOST=127.0.0.1 \
@@ -143,6 +149,11 @@ RUN \
     ln -sf /usr/bin/msmtp /usr/bin/sendmail && \
     # Link the msmtp file from the volume to the expected location.
     ln -s /etc/msmtp/msmtprc /etc/msmtprc && \
+    \
+    # Add Elastic APM.
+    curl -L -o /tmp/apm-agent-php_all.apk https://github.com/elastic/apm-agent-php/releases/download/v1.9.1/apm-agent-php_1.9.1_all.apk && \
+      apk add --allow-untrusted /tmp/apm-agent-php_all.apk && \
+      rm -f /tmp/apm-agent.apk && \
     \
     # Configure php.
     rm -rf /etc/php82 && \
