@@ -2,22 +2,25 @@
 #
 BASE=lol
 
-SEVEN=0
-EIGHT=0
-EIGHTONE=0
+SEVEN=1
+EIGHT=1
+EIGHTONE=1
 EIGHTTWO=1
+EIGHTTHREE=0
 
 BASE7=3.15-202203-01
 BASE8=3.16
 BASE81=3.17
 BASE82=3.18
+BASE83=3.18
 
-VERSION=7.4.33-r0
-VERSION8=8.0.28-r0
-VERSION81=8.1.20-r0
-VERSION82=8.2.7-r0
+VERSION=7.4.33-r1
+VERSION8=8.0.30-r0
+VERSION81=8.1.22-r0
+VERSION82=8.2.10-r0
+VERSION83=8.3.0_rc2-r0
 
-EXTRAVERSION=-202306-02
+EXTRAVERSION=-20230-01
 
 STABILITY=stable
 REGISTRY=public.ecr.aws/unocha
@@ -42,20 +45,20 @@ PHP=7
 
 # First off, we build the base php 7 image.
 pushd php/base/php7 && \
-  make VERSION=${VERSION} EXTRAVERSION=${EXTRAVERSION} UPSTREAM=${BASE7} build && \
-  docker tag ${REGISTRY}/base-php:${VERSION}${EXTRAVERSION} ${REGISTRY}/base-php:7.4-${STABILITY} && \
+  make VERSION=${VERSION} EXTRAVERSION=${EXTRAVERSION} UPSTREAM=${BASE7} buildx && \
+  make VERSION=${VERSION} EXTRAVERSION=${EXTRAVERSION} MANIFEST_VERSION=7.4-${STABILITY} tagx && \
   popd
 
 # Build the standard php 7 image.
 pushd php/php7 && \
-  make VERSION=${VERSION} EXTRAVERSION=${EXTRAVERSION} UPSTREAM=${VERSION}${EXTRAVERSION} build && \
-  docker tag ${REGISTRY}/php:${VERSION}${EXTRAVERSION} ${REGISTRY}/php:7.4-stable && \
+  make VERSION=${VERSION} EXTRAVERSION=${EXTRAVERSION} UPSTREAM=${VERSION}${EXTRAVERSION} buildx && \
+  make VERSION=${VERSION} EXTRAVERSION=${EXTRAVERSION} MANIFEST_VERSION=7.4-${STABILITY} tagx && \
   popd
 
 # Build the k8s php 7 image.
 pushd php/php-k8s-v7 && \
-  make VERSION=${VERSION} EXTRAVERSION=${EXTRAVERSION} UPSTREAM=${VERSION}${EXTRAVERSION} build && \
-  docker tag ${REGISTRY}/php-k8s:${VERSION}${EXTRAVERSION} ${REGISTRY}/php-k8s:7.4-${STABILITY} && \
+  make VERSION=${VERSION} EXTRAVERSION=${EXTRAVERSION} UPSTREAM=${VERSION}${EXTRAVERSION} buildx && \
+  make VERSION=${VERSION} EXTRAVERSION=${EXTRAVERSION} MANIFEST_VERSION=7.4-${STABILITY} tagx && \
   popd
 
 # Build the php 7 builder image.
@@ -161,6 +164,32 @@ pushd php/php-k8s-v82 && \
 
 else
   echo "Skipping PHP8.2 builds."
+fi
+
+if [ ${EIGHTTHREE} -eq 1 ]; then
+
+STABILITY=unstable
+
+# First off, we build the base php 8.3 image.
+pushd php/base/php83 && \
+  make VERSION=${VERSION83} EXTRAVERSION=${EXTRAVERSION} UPSTREAM=${BASE83} buildx && \
+  make VERSION=${VERSION83} EXTRAVERSION=${EXTRAVERSION} MANIFEST_VERSION=8.3-${STABILITY} tagx && \
+  popd
+
+# Build the standard php 8.3 image.
+pushd php/php83 && \
+  make VERSION=${VERSION83} EXTRAVERSION=${EXTRAVERSION} UPSTREAM=${VERSION83}${EXTRAVERSION} buildx && \
+  make VERSION=${VERSION83} EXTRAVERSION=${EXTRAVERSION} MANIFEST_VERSION=8.3-${STABILITY} tagx && \
+  popd
+
+# Build the k8s php 83 image.
+pushd php/php-k8s-v83 && \
+  make VERSION=${VERSION83} EXTRAVERSION=${EXTRAVERSION} UPSTREAM=${VERSION82}${EXTRAVERSION} buildx && \
+  make VERSION=${VERSION83} EXTRAVERSION=${EXTRAVERSION} MANIFEST_VERSION=8.3-${STABILITY} tagx && \
+  popd
+
+else
+  echo "Skipping PHP8.3 builds."
 fi
 
 # Login, so we can push.
