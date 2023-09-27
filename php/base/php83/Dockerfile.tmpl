@@ -71,6 +71,7 @@ COPY etc/php83 etc/services/run_fpm etc/msmtp/msmtprc /tmp/
 RUN \
     # Add edge.
     echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories && \
+    echo "@edge-main https://dl-cdn.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories && \
     # Install standard packages from $UPSTREAM.
     apk -U upgrade && \
     apk add --update-cache \
@@ -82,7 +83,8 @@ RUN \
       imagemagick \
       msmtp \
       mupdf \
-      mupdf-tools && \
+      mupdf-tools \
+      libavif@edge-main && \
     apk add --update-cache \
       imagemagick-libs \
       php83-bcmath@testing \
@@ -126,12 +128,12 @@ RUN \
       php83-zip@testing \
       php83-zlib@testing \
       php83-pecl-apcu@testing \
-      php83-pecl-imagick@testing \
-      php83-pecl-memcached@testing \
+      # php83-pecl-imagick@testing \
+      # php83-pecl-memcached@testing \
       php83-pecl-msgpack@testing \
       php83-pecl-uploadprogress@testing \
       php83-pecl-xdebug@testing \
-      php83-pecl-yaml@testing \
+      # php83-pecl-yaml@testing \
       pngquant && \
     # Tidy.
     rm -rf /var/cache/apk/* && \

@@ -59,6 +59,6 @@ RUN \
 
 # Add a health check for the FPM server on port 9000.
 HEALTHCHECK --interval=60s --timeout=5s \
-        CMD REDIRECT_STATUS=true SCRIPT_NAME=/ping SCRIPT_FILENAME=/ping REQUEST_METHOD=GET cgi-fcgi -bind -connect /var/run/php-fpm82.sock
+        CMD REDIRECT_STATUS=true SCRIPT_NAME=/ping SCRIPT_FILENAME=/ping REQUEST_METHOD=GET cgi-fcgi -bind -connect /var/run/php-fpm83.sock
 
 EXPOSE 80
