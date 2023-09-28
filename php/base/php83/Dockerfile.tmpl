@@ -1,0 +1,171 @@
+FROM public.ecr.aws/unocha/alpine-base-s6:%%UPSTREAM%%
+
+MAINTAINER UN-OCHA Operations <ops+docker@humanitarianresponse.info>
+
+# Thanks to orakili <docker@orakili.net>
+
+# Parse arguments for the build command.
+ARG UPSTREAM
+ARG VERSION
+ARG VCS_URL
+ARG VCS_REF
+ARG BUILD_DATE
+
+# A little bit of metadata management.
+# See http://label-schema.org/
+LABEL org.label-schema.schema-version="1.0" \
+      org.label-schema.build-date=$BUILD_DATE \
+      org.label-schema.vendor="UN-OCHA" \
+      org.label-schema.version=$VERSION \
+      org.label-schema.vcs-url=$VCS_URL \
+      org.label-schema.vcs-ref=$VCS_REF \
+      org.label-schema.name="base-php" \
+      org.label-schema.description="This service provides a base php-fpm platform." \
+      org.label-schema.architecture="" \
+      org.label-schema.distribution="Alpine Linux" \
+      org.label-schema.distribution-version="$UPSTREAM" \
+      info.humanitarianresponse.php=$VERSION \
+      info.humanitarianresponse.php.modules="bcmath bz2 calendar ctype curl dom exif fileinfo fpm gd gettext gmp iconv igbinary imagick intl json memcached mysqli msgpack opcache openssl pdo pdo_mysql phar posix redis shmop sysvmsg sysvsem sysvshm simplexml sodium sockets uploadprogress yaml xml xmlreader xmlwriter xsl zip zlib" \
+      info.humanitarianresponse.php.sapi="fpm"
+
+# Default PHP configuration variables. These can be overridden via the environment.
+ENV PS1="\u@\h:\w\n\$ " \
+    PHP_ENVIRONMENT=production \
+    PHP_SYSLOG_FACILITY=LOG_LOCAL4 \
+    PHP_ERROR_LOG=/var/log/php/error.log \
+    PHP_RUN_USER=appuser \
+    PHP_RUN_GROUP=appuser \
+    PHP_MAX_CHILDREN=16 \
+    PHP_START_SERVERS=2 \
+    PHP_MIN_SPARE_SERVERS=1 \
+    PHP_MAX_SPARE_SERVERS=2 \
+    PHP_MAX_REQUESTS=1000 \
+    PHP_MEMORY_LIMIT=256M \
+    PHP_MAX_EXECUTION_TIME=60s \
+    PHP_POST_MAX_SIZE=100m \
+    PHP_UPLOAD_MAX_FILESIZE=100m \
+    PHP_MAX_INPUT_VARS=1000 \
+    # Allow developers to disable apc.
+    PHP_APC_ENABLE=1 \
+    PHP_APC_ENABLE_CLI=0 \
+    PHP_APC_SHM_SIZE=32M \
+    # Allow developers to disable opcache, so local changes show up immediately.
+    # See https://humanitarian.atlassian.net/browse/OPS-7156
+    PHP_OPCACHE_ENABLE=1 \
+    PHP_OPCACHE_REVALIDATE_FREQ=300 \
+    # Allow developers to use and configure xdebug.
+    PHP_XDEBUG=false \
+    PHP_XDEBUG_REMOTE_HOST=127.0.0.1 \
+    PHP_XDEBUG_REMOTE_AUTOSTART=0 \
+    PHP_XDEBUG_REMOTE_ENABLE=0 \
+    PHP_XDEBUG_REMOTE_PORT=9001 \
+    PHP_XDEBUG_DEFAULT_ENABLE=0 \
+    PHP_XDEBUG_REMOTE_CONNECT_BACK=0 \
+    # Oh, this is hideous, but it does solve the iconv problem.
+    # See https://humanitarian.atlassian.net/browse/OPS-6486
+    LD_PRELOAD=/usr/lib/preloadable_libiconv.so
+
+# Copy custom config files into the container.
+COPY etc/php83 etc/services/run_fpm etc/msmtp/msmtprc /tmp/
+
+RUN \
+    # Add edge.
+    echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories && \
+    echo "@edge-main https://dl-cdn.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories && \
+    # Install standard packages from $UPSTREAM.
+    apk -U upgrade && \
+    apk add --update-cache \
+      bash \
+      fcgi \
+      gettext \
+      gnu-libiconv \
+      icu-data-full \
+      imagemagick \
+      msmtp \
+      mupdf \
+      mupdf-tools \
+      libavif@edge-main && \
+    apk add --update-cache \
+      imagemagick-libs \
+      php83-bcmath@testing \
+      php83-bz2@testing \
+      php83-calendar@testing \
+      php83-ctype@testing \
+      php83-curl@testing \
+      php83-dom@testing \
+      php83-exif@testing \
+      php83-iconv@testing \
+      php83-fileinfo@testing \
+      php83-fpm@testing \
+      php83-gd@testing \
+      php83-gettext@testing \
+      php83-gmp@testing \
+      php83-iconv@testing \
+      php83-intl@testing \
+      php83-json@testing \
+      php83-mbstring@testing \
+      php83-mysqli@testing \
+      php83-opcache@testing \
+      php83-openssl@testing \
+      php83-pdo@testing \
+      php83-pdo_mysql@testing \
+      php83-phar@testing \
+      php83-posix@testing \
+      php83-redis@testing \
+      php83-session@testing \
+      php83-shmop@testing \
+      php83-sysvmsg@testing \
+      php83-sysvsem@testing \
+      php83-sysvshm@testing \
+      php83-simplexml@testing \
+      php83-sodium@testing \
+      php83-sockets@testing \
+      php83-tokenizer@testing \
+      php83-xml@testing \
+      php83-xmlreader@testing \
+      php83-xmlwriter@testing \
+      php83-xsl@testing \
+      php83-zip@testing \
+      php83-zlib@testing \
+      php83-pecl-apcu@testing \
+      # php83-pecl-imagick@testing \
+      # php83-pecl-memcached@testing \
+      php83-pecl-msgpack@testing \
+      php83-pecl-uploadprogress@testing \
+      php83-pecl-xdebug@testing \
+      # php83-pecl-yaml@testing \
+      pngquant && \
+    # Tidy.
+    rm -rf /var/cache/apk/* && \
+    # Setup directory structure for FPM.
+    mkdir -p /etc/services.d/fpm /srv/www/html /etc/msmtp && \
+    mv /tmp/msmtprc /etc/msmtp/msmtprc && \
+    mv /tmp/run_fpm /etc/services.d/fpm/run && \
+    \
+    # Fixup the sendmail path for msmtp and set it as mailer.
+    ln -sf /usr/bin/msmtp /usr/sbin/sendmail && \
+    ln -sf /usr/bin/msmtp /usr/bin/sendmail && \
+    # Link the msmtp file from the volume to the expected location.
+    ln -s /etc/msmtp/msmtprc /etc/msmtprc && \
+    \
+    # Configure php.
+    rm -rf /etc/php83 && \
+    mkdir -p /etc/php83 && \
+    mv -f /tmp/php.ini /tmp/conf.d /tmp/php-fpm.conf /tmp/php-fpm.d /tmp/environment.d /tmp/xdebug.template /etc/php83 && \
+    ln -sf /usr/bin/php83 /usr/bin/php && \
+    \
+    # Configure PHP logs.
+    rm -rf /var/log/php83 && \
+    mkdir /var/log/php && \
+    \
+    # Cleanup tmp dir.
+    rm -rf /tmp/*
+
+# This is where the magic happens.
+WORKDIR /srv/www/html
+
+EXPOSE 9000
+
+# Add a health check for the FPM server on port 9000.
+HEALTHCHECK --interval=60s --timeout=5s \
+        CMD REDIRECT_STATUS=true SCRIPT_NAME=/ping SCRIPT_FILENAME=/ping REQUEST_METHOD=GET cgi-fcgi -bind -connect 127.0.0.1:9000
