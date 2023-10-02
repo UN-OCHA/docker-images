@@ -13,9 +13,9 @@ ARG BUILD_DATE
 
 ENV NGINX_SERVERNAME=localhost \
     NGINX_LIMIT_BOTS=2r/m \
-    NGINX_BURST_BOTS=2 \
+    NGINX_BURST_BOTS=2 nodelay \
     NGINX_LIMIT_HUMANS=16r/s \
-    NGINX_BURST_HUMANS=16 \
+    NGINX_BURST_HUMANS=16 nodelay \
     PAGER=more \
     PATH=/srv/www/vendor/bin:$PATH \
     LD_PRELOAD=/usr/lib/preloadable_libiconv.so \
