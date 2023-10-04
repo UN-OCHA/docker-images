@@ -21,5 +21,5 @@ limit_req_zone $limit_bot zone=bots:10m rate=${NGINX_LIMIT_BOTS};
 limit_req_zone $binary_remote_addr zone=humans:10m rate=${NGINX_LIMIT_HUMANS};
 
 ## Apply the burst limits.
-limit_req zone=bots burst=${NGINX_BURST_BOTS} nodelay;
+limit_req zone=bots burst=${NGINX_BURST_BOTS};
 limit_req zone=humans burst=${NGINX_BURST_HUMANS};
