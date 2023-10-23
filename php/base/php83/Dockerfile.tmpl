@@ -45,6 +45,9 @@ ENV PS1="\u@\h:\w\n\$ " \
     PHP_POST_MAX_SIZE=100m \
     PHP_UPLOAD_MAX_FILESIZE=100m \
     PHP_MAX_INPUT_VARS=1000 \
+    # Override PHP session cookie vars.
+    PHP_SESSION_COOKIE_HTTPONLY=1 \
+    PHP_SESSION_COOKIE_SAMESITE=Strict \
     # Allow developers to disable apc.
     PHP_APC_ENABLE=1 \
     PHP_APC_ENABLE_CLI=0 \
@@ -129,7 +132,7 @@ RUN \
       php83-zlib@testing \
       php83-pecl-apcu@testing \
       # php83-pecl-imagick@testing \
-      # php83-pecl-memcached@testing \
+      php83-pecl-memcached@testing \
       php83-pecl-msgpack@testing \
       php83-pecl-uploadprogress@testing \
       php83-pecl-xdebug@testing \
