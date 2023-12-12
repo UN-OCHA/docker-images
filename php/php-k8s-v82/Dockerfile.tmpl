@@ -19,6 +19,8 @@ ENV NGINX_SERVERNAME=localhost \
     PAGER=more \
     PATH=/srv/www/vendor/bin:$PATH \
     LD_PRELOAD=/usr/lib/preloadable_libiconv.so \
+    OCHA_IMAGE_VERSION=$VERSION \
+    OCHA_IMAGE_DATE=$BUILD_DATE \
     PS1="\u@\h:\w\n\$ "
 
 LABEL org.label-schema.schema-version="1.0" \
