@@ -27,11 +27,12 @@ ENV NODE_APP_DIR=/srv/www \
 
 COPY assets/ /tmp/assets
 
-RUN set -x && mkdir -p /var/run/s6 && \
+RUN  \
     apt-get -qy update && \
     apt-get -qy dist-upgrade && \
     apt-get -qy install \
         build-essential \
+        chromium \
         imagemagick \
         libgconf-2-4 \
         fonts-freefont-ttf \
@@ -42,9 +43,9 @@ RUN set -x && mkdir -p /var/run/s6 && \
         psmisc && \
     mv -f /tmp/assets/Roboto*.ttf /usr/share/fonts/truetype/roboto/ && \
     # Configure Chrome repo.
-    curl -s https://dl-ssl.google.com/linux/linux_signing_key.pub -o linux_signing_key.pub && \
-    apt-key add linux_signing_key.pub && \
-    echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list && \
+    # curl -s https://dl-ssl.google.com/linux/linux_signing_key.pub -o linux_signing_key.pub && \
+    # apt-key add linux_signing_key.pub && \
+    # echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list && \
     # Clean stuff up
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
