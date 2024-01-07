@@ -73,7 +73,7 @@ COPY etc/php83 etc/services/run_fpm etc/msmtp/msmtprc /tmp/
 
 RUN \
     # Add edge.
-    echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories && \
+    echo "@edge-community https://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories && \
     # Install standard packages from $UPSTREAM.
     apk -U upgrade && \
     apk add --update-cache \
@@ -132,7 +132,7 @@ RUN \
       php83-zip \
       php83-zlib \
       php83-pecl-apcu \
-      php83-pecl-imagick@testing \
+      php83-pecl-imagick@edge-community \
       php83-pecl-memcached \
       php83-pecl-msgpack \
       php83-pecl-uploadprogress \
