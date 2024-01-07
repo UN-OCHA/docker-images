@@ -20,14 +20,14 @@ LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.description="This service provides a php-fpm platform with composer." \
       org.label-schema.vcs-url=$VCS_URL \
       org.label-schema.vcs-ref=$VCS_REF \
-      info.humanitarianresponse.composer="2.4.4"
+      info.humanitarianresponse.composer="2.6.6"
 
 COPY etc/my.cnf.d/client.cnf /client.cnf
 
 RUN apk add --update-cache \
         git \
         patch \
-        php83@testing \
+        php83 \
         mysql-client && \
     rm -rf /var/cache/apk/* && \
     \
