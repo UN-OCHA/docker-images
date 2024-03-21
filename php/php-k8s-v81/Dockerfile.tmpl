@@ -6,6 +6,7 @@ MAINTAINER UN-OCHA Operations <ops+docker@humanitarianresponse.info>
 
 # A little bit of metadata management.
 ARG VERSION
+ARG EXTRAVERSION
 ARG UPSTREAM
 ARG VCS_URL
 ARG VCS_REF
@@ -14,9 +15,10 @@ ARG BUILD_DATE
 ENV NGINX_SERVERNAME=localhost \
     NGINX_LIMIT_BOTS="2r/m" \
     NGINX_BURST_BOTS="4 nodelay" \
-    NGINX_LIMIT_HUMANS="16r/s" \
-    NGINX_BURST_HUMANS="32 nodelay" \
+    NGINX_LIMIT_HUMANS="100r/m" \
+    NGINX_BURST_HUMANS="200" \
     OCHA_IMAGE_VERSION=$VERSION \
+    OCHA_IMAGE_EXTRAVERSION=$EXTRAVERSION \
     OCHA_IMAGE_DATE=$BUILD_DATE \
     PAGER=more \
     PATH=/srv/www/vendor/bin:$PATH \
@@ -27,6 +29,7 @@ LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.build-date=$BUILD_DATE \
       org.label-schema.vendor="UN-OCHA" \
       org.label-schema.version=$VERSION \
+      org.label-schema.extra-version=$EXTRAVERSION \
       org.label-schema.name="php-k8s" \
       org.label-schema.description="This service provides an nginx / php-fpm platform with composer and wp-cli." \
       org.label-schema.vcs-url=$VCS_URL \
