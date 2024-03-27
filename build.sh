@@ -20,9 +20,9 @@ VERSION81=8.1.27-r0
 VERSION82=8.2.17-r0
 VERSION83=8.3.4-r0
 
-EXTRAVERSION=-202403-01
+EXTRAVERSION=-202403-02
 
-STABILITY=unstable
+STABILITY=stable
 REGISTRY=public.ecr.aws/unocha
 
 # Is there a version?
@@ -167,8 +167,6 @@ else
 fi
 
 if [ ${EIGHTTHREE} -eq 1 ]; then
-
-STABILITY=stable
 
 # First off, we build the base php 8.3 image.
 pushd php/base/php83 && \
