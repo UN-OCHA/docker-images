@@ -8,6 +8,7 @@ map $http_user_agent $isbot_ua {
         default                0;
         ~*pingdom              0;
         ~*(bot|crawler|spider) 1;
+        ~*facebookexternalhit  1;
         ""                     1;
         "-"                    1;
 }
