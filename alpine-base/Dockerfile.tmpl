@@ -22,8 +22,11 @@ LABEL org.label-schema.schema-version="1.0" \
 
 # Default user id and group id.
 # a good idea from orakili <docker@orakili.net>
+# And a Jenkins user that matches what ansible sets.
 ENV APPUSER_GID=4000 \
-    APPUSER_UID=4000
+    APPUSER_UID=4000 \
+    JENKINS_GID=508 \
+    JENKINS_UID=508
 
 RUN apk update && \
     apk upgrade && \
@@ -31,4 +34,6 @@ RUN apk update && \
         nano && \
     rm -rf /var/cache/apk/* && \
     addgroup -g $APPUSER_GID -S appuser && \
-    adduser -u $APPUSER_UID -s /sbin/nologin -g 'Docker App User' -h /home/appuser -D -G appuser appuser
+    adduser -u $APPUSER_UID -s /sbin/nologin -g 'Docker App User' -h /home/appuser -D -G appuser appuser && \
+    addgroup -g $JENKINS_GID -S jenkins && \
+    adduser -u $JENKINS_UID -s /sbin/nologin -g 'Jenkins User' -h /var/lib/jenkins -D -G jenkins jenkins
