@@ -5,6 +5,7 @@ ARG VERSION
 ARG VCS_URL
 ARG VCS_REF
 ARG BUILD_DATE
+ARG TARGETARCH
 
 # A little bit of metadata management.
 # See http://label-schema.org/
@@ -16,7 +17,7 @@ LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.name="base" \
       org.label-schema.version=$VERSION \
       org.label-schema.description="This image provides a base Alpine Linux container." \
-      org.label-schema.architecture="x86_64" \
+      org.label-schema.architecture="$TARGETARCH" \
       org.label-schema.distribution="Alpine Linux" \
       org.label-schema.distribution-version=$VERSION
 
