@@ -21,12 +21,13 @@ LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.distribution-version="%%UPSTREAM%%" \
       info.humanitarianresponse.nginx=$VERSION
 
-COPY default.conf env.conf index.html /tmp/
+COPY _common.conf default.conf env.conf index.html 20-envsubst-on-templates.sh docker-entrypoint.sh /tmp/
 
 # Install nginx.
 RUN apk update && \
     apk upgrade && \
     apk add \
+      envsubst \
       nginx \
       nginx-mod-http-upload-progress \
       nginx-mod-http-lua \
@@ -35,8 +36,11 @@ RUN apk update && \
       nginx-mod-http-fancyindex \
       nginx-mod-http-headers-more && \
     rm -rf /var/cache/apk/* && \
-    mkdir -p  /etc/nginx/env /run/nginx /srv/www/html /var/log/nginx /var/cache/nginx && \
+    mkdir -p  /docker-entrypoint.d /etc/nginx/env /run/nginx /srv/www/html /var/log/nginx /var/cache/nginx && \
     sed -i 's/access_log.*/access_log off;/' /etc/nginx/nginx.conf && \
+    mv /tmp/20-envsubst-on-templates.sh /docker-entrypoint.d/ && \
+    mv /tmp/docker-entrypoint.sh / && \
+    mv /tmp/_common.conf /etc/nginx/http.d/_common.conf && \
     mv /tmp/default.conf /etc/nginx/http.d/default.conf && \
     mv /tmp/env.conf /etc/nginx/env/env.conf && \
     mv /tmp/index.html /srv/www/html/index.html && \
@@ -48,7 +52,9 @@ RUN apk update && \
 
 EXPOSE 80
 
-ENTRYPOINT ["nginx", "-g", "daemon off;"]
+ENTRYPOINT ["/docker-entrypoint.sh"]
+
+CMD ["nginx", "-g", "daemon off;"]
 
 # Volumes
 # - Conf: /etc/nginx/http.d (default.conf)
