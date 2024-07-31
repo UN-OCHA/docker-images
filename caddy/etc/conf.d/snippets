@@ -1,0 +1,14 @@
+(logs) {
+	log {
+		output file /logs/{args[0]}
+		format filter {
+			wrap json {
+				time_format iso8601
+			}
+			fields {
+				common_log delete
+				request>headers>Authorization delete
+			}
+		}
+	}
+}

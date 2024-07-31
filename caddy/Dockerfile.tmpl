@@ -1,0 +1,48 @@
+# Parse arguments for the build command.
+ARG VERSION=%%VERSION%%
+ARG VCS_URL
+ARG VCS_REF
+ARG BUILD_DATE
+
+ARG TARGETPLATFORM
+ARG TARGETOS
+ARG TARGETARCH
+
+FROM caddy:${VERSION}-builder AS builder
+
+RUN CGO_ENABLED=0 GOARCH=${TARGETARCH} GOOS=${TARGETOS} \
+    xcaddy build \
+    --with github.com/greenpau/caddy-security \
+    --with github.com/lucaslorentz/caddy-docker-proxy/v2 \
+    --with github.com/teodorescuserban/caddy-argsort \
+    --with github.com/teodorescuserban/caddy-cookieflag
+
+# FROM caddy:${VERSION}-alpine
+FROM public.ecr.aws/unocha/alpine-base:%%UPSTREAM%%
+
+WORKDIR /etc/caddy
+
+# A little bit of metadata management.
+# See http://label-schema.org/
+LABEL org.label-schema.schema-version="1.0" \
+    org.label-schema.build-date=$BUILD_DATE \
+    org.label-schema.vendor="UN-OCHA" \
+    org.label-schema.version=$VERSION \
+    org.label-schema.vcs-url=$VCS_URL \
+    org.label-schema.vcs-ref=$VCS_REF \
+    org.label-schema.name="caddy" \
+    org.label-schema.description="This service provides a base caddy platform." \
+    org.label-schema.distribution-version="%%UPSTREAM%%" \
+    info.humanitarianresponse.caddy=$VERSION
+
+COPY --from=builder /usr/bin/caddy /usr/bin/caddy
+COPY etc ./
+
+RUN apk add nss-tools curl && \
+    rm -rf /var/cache/apk/*
+
+# CMD ["caddy", "docker-proxy", "--caddyfile-path", "/etc/caddy/Caddyfile"]
+CMD ["caddy","run","--config","/etc/caddy/Caddyfile","--adapter","caddyfile"]
+
+# to be able to tunnel into the admin api to grab profiles
+#EXPOSE 12019
