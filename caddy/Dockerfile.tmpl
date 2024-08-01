@@ -20,6 +20,8 @@ RUN CGO_ENABLED=0 GOARCH=${TARGETARCH} GOOS=${TARGETOS} \
 # FROM caddy:${VERSION}-alpine
 FROM public.ecr.aws/unocha/alpine-base:%%UPSTREAM%%
 
+ENV XDG_CONFIG_HOME=/config XDG_DATA_HOME=/data
+
 WORKDIR /etc/caddy
 
 # A little bit of metadata management.
