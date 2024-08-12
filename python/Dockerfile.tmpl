@@ -1,21 +1,55 @@
-FROM public.ecr.aws/unocha/alpine-base-s6:%%UPSTREAM%%
+FROM python:%%UPSTREAM%%
 
 # Parse arguments for the build command.
+ARG S6_VERSION=v2.2.0.3
 ARG VERSION
 ARG VCS_URL
 ARG VCS_REF
 ARG BUILD_DATE
+ARG TARGETARCH
+# ARG TARGETPLATFORM
 
 # A little bit of metadata management.
 # See http://label-schema.org/
-LABEL org.label-schema.build-date=$BUILD_DATE \
-      org.label-schema.name="python3-base-s6" \
-      org.label-schema.version=$VERSION \
+LABEL org.label-schema.schema-version="1.0" \
+      org.label-schema.build-date=$BUILD_DATE \
+      org.label-schema.vendor="UN-OCHA" \
       org.label-schema.vcs-url=$VCS_URL \
       org.label-schema.vcs-ref=$VCS_REF \
-      org.label-schema.description="This image provides a base Python Alpine Linux container with S6-init as entrypoint."
+      org.label-schema.name="python-base" \
+      org.label-schema.version=$VERSION \
+      org.label-schema.description="This image provides an alpine based python platform." \
+      org.label-schema.architecture="$TARGETARCH" \
+      org.label-schema.distribution="Python official image" \
+      org.label-schema.distribution-version="%%UPSTREAM%%" \
+      org.label-schema.s6-version=$S6VERSION
+# org.label-schema.architecture="$TARGETPLATFORM" \
 
-RUN apk add --update-cache \
-      python3 \
-      py3-pip && \
-    rm -rf /var/cache/apk/*
+# Default user id and group id.
+# a good idea from orakili <docker@orakili.net>
+# And a Jenkins user that matches what ansible sets.
+ENV APPUSER_GID=4000 \
+      APPUSER_UID=4000 \
+      JENKINS_GID=508 \
+      JENKINS_UID=508
+
+RUN apk update && \
+      apk upgrade && \
+      apk add --update-cache curl nano && \
+      addgroup -g $APPUSER_GID -S appuser && \
+      adduser -u $APPUSER_UID -s /sbin/nologin -g 'Docker App User' -h /home/appuser -D -G appuser appuser && \
+      addgroup -g $JENKINS_GID -S jenkins && \
+      adduser -u $JENKINS_UID -s /sbin/nologin -g 'Jenkins User' -h /var/lib/jenkins -D -G jenkins jenkins && \
+      S6_ARCH=$(uname -m | sed 's/x86_64/amd64/') && \
+      echo "Installing s6 version: $S6_VERSION for $S6_ARCH" && \
+      curl -o /tmp/s6-overlay.tar.gz -jskSL https://github.com/just-containers/s6-overlay/releases/download/${S6_VERSION}/s6-overlay-${S6_ARCH}.tar.gz && \
+      tar xzf /tmp/s6-overlay.tar.gz -C / && \
+      rm -f /tmp/s6-overlay.tar.gz && \
+      rm -rf /var/cache/apk/*
+
+# add ENTRYPOINT ["/init"] in your image if you want to use s6-init
+ENTRYPOINT []
+
+CMD []
+
+
