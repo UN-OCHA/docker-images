@@ -4,7 +4,7 @@ BASE=lol
 
 SEVEN=0
 EIGHT=0
-EIGHTONE=0
+EIGHTONE=1
 EIGHTTWO=1
 EIGHTTHREE=1
 
@@ -18,10 +18,10 @@ BASE83=3.20
 VERSION=7.4.33-r1
 VERSION8=8.0.30-r0
 VERSION81=8.1.29-r0
-VERSION82=8.2.22-r0
-VERSION83=8.3.10-r0
+VERSION82=8.2.24-r0
+VERSION83=8.3.12-r0
 
-EXTRAVERSION=-202408-01
+EXTRAVERSION=-202410-02
 
 STABILITY=stable
 REGISTRY=public.ecr.aws/unocha
@@ -39,7 +39,7 @@ if [ -z "${EXTRAVERSION}" ]; then
 fi
 
 # Login, so we can pull.
-aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/unocha
+# aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/unocha
 
 if [ ${SEVEN} -eq 1 ]; then
 PHP=7
@@ -192,4 +192,4 @@ else
 fi
 
 # Login, so we can push.
-aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/unocha
+# aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/unocha
