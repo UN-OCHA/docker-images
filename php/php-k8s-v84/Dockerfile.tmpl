@@ -1,0 +1,69 @@
+FROM public.ecr.aws/unocha/php:%%UPSTREAM%%
+
+MAINTAINER UN-OCHA Operations <ops+docker@humanitarianresponse.info>
+
+# Thanks to orakili <docker@orakili.net>
+
+# A little bit of metadata management.
+ARG VERSION
+ARG EXTRAVERSION
+ARG UPSTREAM
+ARG VCS_URL
+ARG VCS_REF
+ARG BUILD_DATE
+
+ENV NGINX_SERVERNAME=localhost \
+    NGINX_LIMIT_BOTS="2r/m" \
+    NGINX_BURST_BOTS="4 nodelay" \
+    NGINX_LIMIT_HUMANS="100r/m" \
+    NGINX_BURST_HUMANS="200" \
+    OCHA_IMAGE_VERSION=$VERSION \
+    OCHA_IMAGE_EXTRAVERSION=$EXTRAVERSION \
+    OCHA_IMAGE_DATE=$BUILD_DATE \
+    PAGER=more \
+    PATH=/srv/www/vendor/bin:$PATH \
+    LD_PRELOAD=/usr/lib/preloadable_libiconv.so \
+    PS1="\u@\h:\w\n\$ "
+
+LABEL org.label-schema.schema-version="1.0" \
+      org.label-schema.build-date=$BUILD_DATE \
+      org.label-schema.vendor="UN-OCHA" \
+      org.label-schema.version=$VERSION \
+      org.label-schema.extra-version=$EXTRAVERSION \
+      org.label-schema.name="php-k8s" \
+      org.label-schema.description="This service provides an nginx / php-fpm platform with composer and wp-cli." \
+      org.label-schema.vcs-url=$VCS_URL \
+      org.label-schema.vcs-ref=$VCS_REF \
+      info.humanitarianresponse.nginx=$UPSTREAM \
+      info.humanitarianresponse.nginx=1.24.0
+
+# Insert all our custom config files.
+COPY etc/nginx/ etc/services.d/run_nginx \
+     /tmp/
+
+# Install NGINX for standard operation.
+RUN \
+    apk add -U nginx nginx-mod-http-headers-more nginx-mod-http-upload-progress nginx-mod-http-lua && \
+    mkdir -p /etc/services.d/nginx && \
+    rm -rf /etc/nginx/* && \
+    mv /tmp/apps /tmp/fastcgi.conf /tmp/koi-utf /tmp/map_block_http_methods.conf /tmp/mime.types /tmp/upstream_phpcgi_unix.conf \
+       /tmp/blocklist.conf /tmp/ratelimit.conf /tmp/ratelimit.conf.template /tmp/fastcgi_params /tmp/koi-win /tmp/map_https_fcgi.conf /tmp/nginx.conf \
+       /tmp/lua /tmp/sites-enabled /tmp/win-utf \
+         /etc/nginx && \
+    mv /tmp/run_nginx /etc/services.d/nginx/run && \
+    mkdir -p /var/cache/nginx /var/lib/nginx/tmp /var/tmp/nginx && \
+    chgrp appuser /var/lib/nginx && \
+    chown -R appuser /var/cache/nginx /var/lib/nginx/tmp /var/tmp/nginx && \
+    rm -rf /var/cache/apk/* && \
+    \
+    # Update the fpm pool config to use a socket.
+    sed -i 's/^listen = .*/listen = \/var\/run\/php-fpm84.sock/' /etc/php84/php-fpm.d/www.conf && \
+    \
+    # Cleanup.
+    rm -rf /tmp/*
+
+# Add a health check for the FPM server on port 9000.
+HEALTHCHECK --interval=60s --timeout=5s \
+        CMD REDIRECT_STATUS=true SCRIPT_NAME=/ping SCRIPT_FILENAME=/ping REQUEST_METHOD=GET cgi-fcgi -bind -connect /var/run/php-fpm84.sock
+
+EXPOSE 80

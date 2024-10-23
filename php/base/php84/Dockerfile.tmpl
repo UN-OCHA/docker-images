@@ -1,0 +1,175 @@
+FROM public.ecr.aws/unocha/alpine-base-s6:%%UPSTREAM%%
+
+MAINTAINER UN-OCHA Operations <ops+docker@humanitarianresponse.info>
+
+# Thanks to orakili <docker@orakili.net>
+
+# Parse arguments for the build command.
+ARG UPSTREAM
+ARG VERSION
+ARG VCS_URL
+ARG VCS_REF
+ARG BUILD_DATE
+
+# A little bit of metadata management.
+# See http://label-schema.org/
+LABEL org.label-schema.schema-version="1.0" \
+      org.label-schema.build-date=$BUILD_DATE \
+      org.label-schema.vendor="UN-OCHA" \
+      org.label-schema.version=$VERSION \
+      org.label-schema.vcs-url=$VCS_URL \
+      org.label-schema.vcs-ref=$VCS_REF \
+      org.label-schema.name="base-php" \
+      org.label-schema.description="This service provides a base php-fpm platform." \
+      org.label-schema.architecture="" \
+      org.label-schema.distribution="Alpine Linux" \
+      org.label-schema.distribution-version="$UPSTREAM" \
+      info.humanitarianresponse.php=$VERSION \
+      info.humanitarianresponse.php.modules="bcmath bz2 calendar ctype curl dom exif fileinfo fpm gd gettext gmp iconv igbinary imagick intl json memcached mysqli msgpack opcache openssl pdo pdo_mysql phar posix redis shmop sysvmsg sysvsem sysvshm simplexml sodium sockets uploadprogress yaml xml xmlreader xmlwriter xsl zip zlib" \
+      info.humanitarianresponse.php.sapi="fpm"
+
+# Default PHP configuration variables. These can be overridden via the environment.
+ENV PS1="\u@\h:\w\n\$ " \
+    PHP_ENVIRONMENT=production \
+    PHP_SYSLOG_FACILITY=LOG_LOCAL4 \
+    PHP_ERROR_LOG=/var/log/php/error.log \
+    PHP_RUN_USER=appuser \
+    PHP_RUN_GROUP=appuser \
+    PHP_MAX_CHILDREN=16 \
+    PHP_START_SERVERS=2 \
+    PHP_MIN_SPARE_SERVERS=1 \
+    PHP_MAX_SPARE_SERVERS=2 \
+    PHP_MAX_REQUESTS=1000 \
+    PHP_MEMORY_LIMIT=256M \
+    PHP_MAX_EXECUTION_TIME=60s \
+    PHP_POST_MAX_SIZE=100m \
+    PHP_UPLOAD_MAX_FILESIZE=100m \
+    PHP_MAX_INPUT_VARS=1000 \
+    # Override PHP session cookie vars.
+    PHP_SESSION_COOKIE_HTTPONLY=1 \
+    PHP_SESSION_COOKIE_SAMESITE=Lax \
+    # Allow developers to disable apc.
+    PHP_APC_ENABLE=1 \
+    PHP_APC_ENABLE_CLI=0 \
+    PHP_APC_SHM_SIZE=32M \
+    # Allow developers to disable opcache, so local changes show up immediately.
+    # See https://humanitarian.atlassian.net/browse/OPS-7156
+    PHP_OPCACHE_ENABLE=1 \
+    PHP_OPCACHE_REVALIDATE_FREQ=300 \
+    # Allow developers to use and configure xdebug.
+    PHP_XDEBUG=false \
+    PHP_XDEBUG_REMOTE_HOST=127.0.0.1 \
+    PHP_XDEBUG_REMOTE_AUTOSTART=0 \
+    PHP_XDEBUG_REMOTE_ENABLE=0 \
+    PHP_XDEBUG_REMOTE_PORT=9001 \
+    PHP_XDEBUG_DEFAULT_ENABLE=0 \
+    PHP_XDEBUG_REMOTE_CONNECT_BACK=0 \
+    # Oh, this is hideous, but it does solve the iconv problem.
+    # See https://humanitarian.atlassian.net/browse/OPS-6486
+    LD_PRELOAD=/usr/lib/preloadable_libiconv.so
+
+# Copy custom config files into the container.
+COPY etc/php83 etc/services/run_fpm etc/msmtp/msmtprc /tmp/
+
+RUN \
+    # Install standard packages from $UPSTREAM.
+    apk -U upgrade && \
+    apk add --update-cache \
+      bash \
+      fcgi \
+      gettext \
+      gnu-libiconv \
+      icu-data-full \
+      icu-libs \
+      imagemagick \
+      msmtp \
+      mupdf \
+      mupdf-tools \
+      libsodium \
+      libavif && \
+    # Add the edge testing repository.
+    echo "@edge https://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories && \
+    apk add --update-cache \
+      imagemagick-libs \
+      php84-bcmath@edge \
+      php84-bz2@edge \
+      php84-calendar@edge \
+      php84-ctype@edge \
+      php84-curl@edge \
+      php84-dom@edge \
+      php84-exif@edge \
+      php84-iconv@edge \
+      php84-fileinfo@edge \
+      php84-fpm@edge \
+      php84-gd@edge \
+      php84-gettext@edge \
+      php84-gmp@edge \
+      php84-iconv@edge \
+      php84-intl@edge \
+      php84-json@edge \
+      php84-mbstring@edge \
+      php84-mysqli@edge \
+      php84-opcache@edge \
+      php84-openssl@edge \
+      php84-pdo@edge \
+      php84-pdo_mysql@edge \
+      php84-phar@edge \
+      php84-posix@edge \
+      php84-redis@edge \
+      php84-session@edge \
+      php84-shmop@edge \
+      php84-sysvmsg@edge \
+      php84-sysvsem@edge \
+      php84-sysvshm@edge \
+      php84-simplexml@edge \
+      php84-sodium@edge \
+      php84-sockets@edge \
+      php84-tokenizer@edge \
+      php84-xml@edge \
+      php84-xmlreader@edge \
+      php84-xmlwriter@edge \
+      php84-xsl@edge \
+      php84-zip@edge \
+      php84-zlib@edge \
+      php84-pecl-apcu@edge \
+      php84-pecl-imagick @edge\
+      php84-pecl-memcached@edge \
+      php84-pecl-msgpack@edge \
+      php84-pecl-uploadprogress@edge \
+      php84-pecl-xdebug@edge \
+      php84-pecl-yaml@edge \
+      pngquant && \
+    # Tidy.
+    rm -rf /var/cache/apk/* && \
+    # Setup directory structure for FPM.
+    mkdir -p /etc/services.d/fpm /srv/www/html /etc/msmtp && \
+    mv /tmp/msmtprc /etc/msmtp/msmtprc && \
+    mv /tmp/run_fpm /etc/services.d/fpm/run && \
+    \
+    # Fixup the sendmail path for msmtp and set it as mailer.
+    ln -sf /usr/bin/msmtp /usr/sbin/sendmail && \
+    ln -sf /usr/bin/msmtp /usr/bin/sendmail && \
+    # Link the msmtp file from the volume to the expected location.
+    ln -s /etc/msmtp/msmtprc /etc/msmtprc && \
+    \
+    # Configure php.
+    rm -rf /etc/php84 && \
+    mkdir -p /etc/php84 && \
+    mv -f /tmp/php.ini /tmp/conf.d /tmp/php-fpm.conf /tmp/php-fpm.d /tmp/environment.d /tmp/xdebug.template /etc/php84 && \
+    ln -sf /usr/bin/php84 /usr/bin/php && \
+    \
+    # Configure PHP logs.
+    rm -rf /var/log/php84 && \
+    mkdir /var/log/php && \
+    \
+    # Cleanup tmp dir.
+    rm -rf /tmp/*
+
+# This is where the magic happens.
+WORKDIR /srv/www/html
+
+EXPOSE 9000
+
+# Add a health check for the FPM server on port 9000.
+HEALTHCHECK --interval=60s --timeout=5s \
+        CMD REDIRECT_STATUS=true SCRIPT_NAME=/ping SCRIPT_FILENAME=/ping REQUEST_METHOD=GET cgi-fcgi -bind -connect 127.0.0.1:9000
