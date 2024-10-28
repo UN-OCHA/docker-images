@@ -69,7 +69,7 @@ ENV PS1="\u@\h:\w\n\$ " \
     LD_PRELOAD=/usr/lib/preloadable_libiconv.so
 
 # Copy custom config files into the container.
-COPY etc/php83 etc/services/run_fpm etc/msmtp/msmtprc /tmp/
+COPY etc/php84 etc/services/run_fpm etc/msmtp/msmtprc /tmp/
 
 RUN \
     # Install standard packages from $UPSTREAM.
@@ -132,7 +132,7 @@ RUN \
       php84-zip@edge \
       php84-zlib@edge \
       php84-pecl-apcu@edge \
-      php84-pecl-imagick @edge\
+      php84-pecl-imagick@edge \
       php84-pecl-memcached@edge \
       php84-pecl-msgpack@edge \
       php84-pecl-uploadprogress@edge \
