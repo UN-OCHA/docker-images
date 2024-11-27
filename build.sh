@@ -4,9 +4,10 @@ BASE=lol
 
 SEVEN=0
 EIGHT=0
-EIGHTONE=0
+EIGHTONE=1
 EIGHTTWO=1
 EIGHTTHREE=1
+EIGHTFOUR=1
 
 
 BASE7=3.15-202203-01
@@ -14,14 +15,16 @@ BASE8=3.16
 BASE81=3.19
 BASE82=3.20
 BASE83=3.20
+BASE84=3.20
 
 VERSION=7.4.33-r1
 VERSION8=8.0.30-r0
-VERSION81=8.1.29-r0
-VERSION82=8.2.25-r0
-VERSION83=8.3.13-r0
+VERSION81=8.1.30-r0
+VERSION82=8.2.26-r0
+VERSION83=8.3.14-r0
+VERSION84=8.4.1-r0
 
-EXTRAVERSION=-202410-03
+EXTRAVERSION=-202411-01
 
 STABILITY=stable
 REGISTRY=public.ecr.aws/unocha
@@ -38,8 +41,9 @@ if [ -z "${EXTRAVERSION}" ]; then
   exit 1
 fi
 
-# Login, so we can pull.
-# aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/unocha
+# Login, so we can pull and push.
+aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/unocha
+aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/v2/unocha
 
 if [ ${SEVEN} -eq 1 ]; then
 PHP=7
@@ -189,6 +193,33 @@ pushd php/php-k8s-v83 && \
 
 else
   echo "Skipping PHP8.3 builds."
+fi
+
+if [ ${EIGHTFOUR} -eq 1 ]; then
+
+# Yeeeeeaaaaaah
+STABILITY=unstable
+
+# First off, we build the base php 8.4 image.
+pushd php/base/php84 && \
+  make VERSION=${VERSION84} EXTRAVERSION=${EXTRAVERSION} UPSTREAM=${BASE84} buildx && \
+  make VERSION=${VERSION84} EXTRAVERSION=${EXTRAVERSION} MANIFEST_VERSION=8.4-${STABILITY} tagx && \
+  popd
+
+# Build the standard php 8.4 image.
+pushd php/php84 && \
+  make VERSION=${VERSION84} EXTRAVERSION=${EXTRAVERSION} UPSTREAM=${VERSION84}${EXTRAVERSION} buildx && \
+  make VERSION=${VERSION84} EXTRAVERSION=${EXTRAVERSION} MANIFEST_VERSION=8.4-${STABILITY} tagx && \
+  popd
+
+# Build the k8s php 84 image.
+pushd php/php-k8s-v84 && \
+  make VERSION=${VERSION84} EXTRAVERSION=${EXTRAVERSION} UPSTREAM=${VERSION84}${EXTRAVERSION} buildx && \
+  make VERSION=${VERSION84} EXTRAVERSION=${EXTRAVERSION} MANIFEST_VERSION=8.4-${STABILITY} tagx && \
+  popd
+
+else
+  echo "Skipping PHP8.4 builds."
 fi
 
 # Login, so we can push.
