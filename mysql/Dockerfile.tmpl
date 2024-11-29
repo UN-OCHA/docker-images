@@ -29,7 +29,7 @@ ENV LANG=en_US.utf8 \
 
 COPY run_mysql fix_* unocha.cnf /
 
-RUN apk add --update-cache \
+RUN apk add --repository http://dl-cdn.alpinelinux.org/alpine/edge/main \
         mysql \
         mysql-client \
         && \
