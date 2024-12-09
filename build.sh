@@ -4,7 +4,7 @@ BASE=lol
 
 SEVEN=0
 EIGHT=0
-EIGHTONE=1
+EIGHTONE=0
 EIGHTTWO=1
 EIGHTTHREE=1
 EIGHTFOUR=1
@@ -13,9 +13,9 @@ EIGHTFOUR=1
 BASE7=3.15-202203-01
 BASE8=3.16
 BASE81=3.19
-BASE82=3.20
-BASE83=3.20
-BASE84=3.20
+BASE82=3.21
+BASE83=3.21
+BASE84=3.21
 
 VERSION=7.4.33-r1
 VERSION8=8.0.30-r0
@@ -24,9 +24,9 @@ VERSION82=8.2.26-r0
 VERSION83=8.3.14-r0
 VERSION84=8.4.1-r0
 
-EXTRAVERSION=-202411-01
+EXTRAVERSION=-202412-01
 
-STABILITY=stable
+STABILITY=unstable
 REGISTRY=public.ecr.aws/unocha
 
 # Is there a version?
@@ -196,9 +196,6 @@ else
 fi
 
 if [ ${EIGHTFOUR} -eq 1 ]; then
-
-# Yeeeeeaaaaaah
-STABILITY=unstable
 
 # First off, we build the base php 8.4 image.
 pushd php/base/php84 && \

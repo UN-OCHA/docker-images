@@ -27,7 +27,7 @@ COPY etc/my.cnf.d/client.cnf /client.cnf
 RUN apk add --update-cache \
         git \
         patch \
-        php84@edge \
+        php84 \
         mysql-client && \
     rm -rf /var/cache/apk/* && \
     \
