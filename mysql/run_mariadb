@@ -14,7 +14,7 @@ chown -R mysql:mysql /run/mysqld
 args=""
 # init db if datadir is empty
 if [ ! "$(ls -A $MYSQL_DIR)" ]; then
-    s6-setuidgid mysql mysql_install_db --datadir=$MYSQL_DIR
+    s6-setuidgid mysql mariadb-install-db --datadir=$MYSQL_DIR
     tempSqlFile='/tmp/mysql-first-time.sql'
     cat > "$tempSqlFile" <<-EOSQL
 DELETE FROM mysql.user ;
@@ -35,9 +35,9 @@ EOSQL
 
     args="--init-file=$tempSqlFile"
 else
-    echo "Data dir ($MYSQL_DIR) not empty. Skipping mysql initialisation."
+    echo "Data dir ($MYSQL_DIR) not empty. Skipping mariadb initialisation."
 fi
 
 chown -R mysql:mysql $MYSQL_DIR
 
-exec s6-setuidgid mysql /usr/bin/mysqld --datadir=$MYSQL_DIR --bind-address=0.0.0.0 $args
+exec s6-setuidgid mysql /usr/bin/mariadbd --datadir=$MYSQL_DIR --bind-address=0.0.0.0 $args

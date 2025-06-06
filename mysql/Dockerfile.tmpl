@@ -14,7 +14,7 @@ LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.version=$VERSION \
       org.label-schema.vcs-url=$VCS_URL \
       org.label-schema.vcs-ref=$VCS_REF \
-      org.label-schema.name="alpine-varnish" \
+      org.label-schema.name="mysql" \
       org.label-schema.description="This service provides a mysql service using MariaDB" \
       org.label-schema.distribution="Alpine Linux" \
       info.humanitarianresponse.mysql=$VERSION
@@ -27,15 +27,15 @@ ENV LANG=en_US.utf8 \
     MYSQL_PASS=test_pass \
     PS1="\u@\h:\w\n\$ "
 
-COPY run_mysql fix_* unocha.cnf /
+COPY run_mariadb fix_* unocha.cnf /
 
 RUN apk add --update-cache \
-        mysql \
-        mysql-client \
+        mariadb \
+        mariadb-client \
         && \
     rm -rf /var/cache/apk/* && \
-    mkdir -p /etc/services.d/mysql && \
-    mv /run_mysql /etc/services.d/mysql/run && \
+    mkdir -p /etc/services.d/mariadb && \
+    mv /run_mariadb /etc/services.d/mariadb/run && \
     mv /unocha.cnf /etc/my.cnf.d/unocha.cnf && \
     mkdir -p /etc/fix-attrs.d && \
     cp /fix_data_dir /etc/fix-attrs.d/01-fix-data-dir && \
