@@ -72,9 +72,6 @@ ENV PS1="\u@\h:\w\n\$ " \
 COPY etc/php83 etc/services/run_fpm etc/msmtp/msmtprc /tmp/
 
 RUN \
-    # Add edge.
-    echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories && \
-    echo "@edge-main https://dl-cdn.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories && \
     # Install standard packages from $UPSTREAM.
     apk -U upgrade && \
     apk add --update-cache \
@@ -82,63 +79,63 @@ RUN \
       fcgi \
       gettext \
       gnu-libiconv \
-      icu-data-full@edge-main \
-      icu-libs@edge-main \
+      icu-data-full \
+      icu-libs \
       imagemagick \
       msmtp \
       mupdf \
       mupdf-tools \
-      libsodium@edge-main \
-      libavif@edge-main && \
+      libsodium \
+      libavif && \
     apk add --update-cache \
       imagemagick-libs \
-      php83-bcmath@testing \
-      php83-bz2@testing \
-      php83-calendar@testing \
-      php83-ctype@testing \
-      php83-curl@testing \
-      php83-dom@testing \
-      php83-exif@testing \
-      php83-iconv@testing \
-      php83-fileinfo@testing \
-      php83-fpm@testing \
-      php83-gd@testing \
-      php83-gettext@testing \
-      php83-gmp@testing \
-      php83-iconv@testing \
-      php83-intl@testing \
-      php83-json@testing \
-      php83-mbstring@testing \
-      php83-mysqli@testing \
-      php83-opcache@testing \
-      php83-openssl@testing \
-      php83-pdo@testing \
-      php83-pdo_mysql@testing \
-      php83-phar@testing \
-      php83-posix@testing \
-      php83-redis@testing \
-      php83-session@testing \
-      php83-shmop@testing \
-      php83-sysvmsg@testing \
-      php83-sysvsem@testing \
-      php83-sysvshm@testing \
-      php83-simplexml@testing \
-      php83-sodium@testing \
-      php83-sockets@testing \
-      php83-tokenizer@testing \
-      php83-xml@testing \
-      php83-xmlreader@testing \
-      php83-xmlwriter@testing \
-      php83-xsl@testing \
-      php83-zip@testing \
-      php83-zlib@testing \
-      php83-pecl-apcu@testing \
-      # php83-pecl-imagick@testing \
-      php83-pecl-memcached@testing \
-      php83-pecl-msgpack@testing \
-      php83-pecl-uploadprogress@testing \
-      php83-pecl-xdebug@testing \
-      # php83-pecl-yaml@testing \
+      php83-bcmath \
+      php83-bz2 \
+      php83-calendar \
+      php83-ctype \
+      php83-curl \
+      php83-dom \
+      php83-exif \
+      php83-iconv \
+      php83-fileinfo \
+      php83-fpm \
+      php83-gd \
+      php83-gettext \
+      php83-gmp \
+      php83-iconv \
+      php83-intl \
+      php83-json \
+      php83-mbstring \
+      php83-mysqli \
+      php83-opcache \
+      php83-openssl \
+      php83-pdo \
+      php83-pdo_mysql \
+      php83-phar \
+      php83-posix \
+      php83-redis \
+      php83-session \
+      php83-shmop \
+      php83-sysvmsg \
+      php83-sysvsem \
+      php83-sysvshm \
+      php83-simplexml \
+      php83-sodium \
+      php83-sockets \
+      php83-tokenizer \
+      php83-xml \
+      php83-xmlreader \
+      php83-xmlwriter \
+      php83-xsl \
+      php83-zip \
+      php83-zlib \
+      php83-pecl-apcu \
+      php83-pecl-imagick \
+      php83-pecl-memcached \
+      php83-pecl-msgpack \
+      php83-pecl-uploadprogress \
+      php83-pecl-xdebug \
+      php83-pecl-yaml \
       pngquant && \
     # Tidy.
     rm -rf /var/cache/apk/* && \

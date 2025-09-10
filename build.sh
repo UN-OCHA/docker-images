@@ -5,24 +5,28 @@ BASE=lol
 SEVEN=0
 EIGHT=0
 EIGHTONE=0
-EIGHTTWO=0
+EIGHTTWO=1
 EIGHTTHREE=1
+EIGHTFOUR=1
+
 
 BASE7=3.15-202203-01
 BASE8=3.16
-BASE81=3.17
-BASE82=3.18
-BASE83=3.18
+BASE81=3.19
+BASE82=3.22
+BASE83=3.22
+BASE84=3.22
 
 VERSION=7.4.33-r1
 VERSION8=8.0.30-r0
-VERSION81=8.1.22-r0
-VERSION82=8.2.12-r0
-VERSION83=8.3.0_rc6-r0
+VERSION81=8.1.32-r0
+VERSION82=8.2.29-r0
+VERSION83=8.3.23-r0
+VERSION84=8.4.10-r0
 
-EXTRAVERSION=-202311-01
+EXTRAVERSION=-202507-01
 
-STABILITY=stable
+STABILITY=develop
 REGISTRY=public.ecr.aws/unocha
 
 # Is there a version?
@@ -37,8 +41,9 @@ if [ -z "${EXTRAVERSION}" ]; then
   exit 1
 fi
 
-# Login, so we can pull.
+# Login, so we can pull and push.
 aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/unocha
+aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/v2/unocha
 
 if [ ${SEVEN} -eq 1 ]; then
 PHP=7
@@ -151,6 +156,7 @@ pushd php/php82 && \
 # Build the k8s php 82 image.
 pushd php/php-k8s-v82 && \
   make VERSION=${VERSION82} EXTRAVERSION=${EXTRAVERSION} UPSTREAM=${VERSION82}${EXTRAVERSION} buildx && \
+  make VERSION=${VERSION82} EXTRAVERSION=${EXTRAVERSION} testx && \
   make VERSION=${VERSION82} EXTRAVERSION=${EXTRAVERSION} MANIFEST_VERSION=8.2-${STABILITY} tagx && \
   popd
 
@@ -168,8 +174,6 @@ fi
 
 if [ ${EIGHTTHREE} -eq 1 ]; then
 
-STABILITY=unstable
-
 # First off, we build the base php 8.3 image.
 pushd php/base/php83 && \
   make VERSION=${VERSION83} EXTRAVERSION=${EXTRAVERSION} UPSTREAM=${BASE83} buildx && \
@@ -185,6 +189,7 @@ pushd php/php83 && \
 # Build the k8s php 83 image.
 pushd php/php-k8s-v83 && \
   make VERSION=${VERSION83} EXTRAVERSION=${EXTRAVERSION} UPSTREAM=${VERSION83}${EXTRAVERSION} buildx && \
+  make VERSION=${VERSION83} EXTRAVERSION=${EXTRAVERSION} testx && \
   make VERSION=${VERSION83} EXTRAVERSION=${EXTRAVERSION} MANIFEST_VERSION=8.3-${STABILITY} tagx && \
   popd
 
@@ -192,5 +197,30 @@ else
   echo "Skipping PHP8.3 builds."
 fi
 
+if [ ${EIGHTFOUR} -eq 1 ]; then
+
+# First off, we build the base php 8.4 image.
+pushd php/base/php84 && \
+  make VERSION=${VERSION84} EXTRAVERSION=${EXTRAVERSION} UPSTREAM=${BASE84} buildx && \
+  make VERSION=${VERSION84} EXTRAVERSION=${EXTRAVERSION} MANIFEST_VERSION=8.4-${STABILITY} tagx && \
+  popd
+
+# Build the standard php 8.4 image.
+pushd php/php84 && \
+  make VERSION=${VERSION84} EXTRAVERSION=${EXTRAVERSION} UPSTREAM=${VERSION84}${EXTRAVERSION} buildx && \
+  make VERSION=${VERSION84} EXTRAVERSION=${EXTRAVERSION} MANIFEST_VERSION=8.4-${STABILITY} tagx && \
+  popd
+
+# Build the k8s php 84 image.
+pushd php/php-k8s-v84 && \
+  make VERSION=${VERSION84} EXTRAVERSION=${EXTRAVERSION} UPSTREAM=${VERSION84}${EXTRAVERSION} buildx && \
+  make VERSION=${VERSION84} EXTRAVERSION=${EXTRAVERSION} testx && \
+  make VERSION=${VERSION84} EXTRAVERSION=${EXTRAVERSION} MANIFEST_VERSION=8.4-${STABILITY} tagx && \
+  popd
+
+else
+  echo "Skipping PHP8.4 builds."
+fi
+
 # Login, so we can push.
-aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/unocha
+# aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/unocha

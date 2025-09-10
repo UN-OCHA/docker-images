@@ -5,11 +5,14 @@ limit_req_status 429;
 
 ## Determine if this is a bot request via the user-agent string.
 map $http_user_agent $isbot_ua {
-        default                0;
-        ~*pingdom              0;
-        ~*(bot|crawler|spider) 1;
-        ""                     1;
-        "-"                    1;
+        default                0;   # With the benefit of the doubt.
+        ~*pingdom              0;   # Pingdom is a bot, but allowed.
+        ~*elb-healthchecker    0;   # The AWS health check is allowed.
+        ~*(bot|crawler|spider) 1;   # You are scrapers, thus bots.
+        ~*facebookexternalhit  1;   # Deffo a bot.
+        ""                     1;   # Empty UA? Bot!
+        "-"                    1;   # No UA? probably a bot.
+        "~^[^/]*$"             1;   # If your UA contains no slash, you are most likely a bot.
 }
 
 ## Set a limit zone based on the bot status.

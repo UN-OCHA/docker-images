@@ -48,7 +48,7 @@ query_cache_limit              = 32K
 query_cache_min_res_unit       = 1K
 
 # On local and non-prod this can be fairly low.
-max_connections                = 16
+max_connections                = 64
 
 # This should mirror production and existing config, so we can export and import data.
 max_allowed_packet             = 100M

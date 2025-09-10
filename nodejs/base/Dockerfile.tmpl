@@ -64,7 +64,7 @@ RUN set -x && apk update && \
     groupadd --system -g $APPUSER_GID appuser && \
     useradd --system -u $APPUSER_UID -s /sbin/nologin -c 'Docker App User' \
       -d /home/appuser -g appuser -m appuser && \
-    S6_ARCH=$(uname -m | sed 's/x86_64/amd64/') && \
+    S6_ARCH=$(uname -m | sed 's/x86_64/amd64/; /arm64/aarch64/') && \
     echo "Installing s6 version: $S6_VERSION for $S6_ARCH" && \
     curl -o /tmp/s6-overlay.tar.gz -jskSL https://github.com/just-containers/s6-overlay/releases/download/${S6_VERSION}/s6-overlay-${S6_ARCH}.tar.gz && \
     tar xzf /tmp/s6-overlay.tar.gz -C / && \
