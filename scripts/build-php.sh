@@ -10,6 +10,7 @@ EIGHTONE=0
 EIGHTTWO=0
 EIGHTTHREE=1
 EIGHTFOUR=1
+EIGHTFIVE=1
 
 
 BASE7=3.15-202203-01
@@ -18,6 +19,7 @@ BASE81=3.19
 BASE82=3.22
 BASE83=3.22
 BASE84=3.22
+BASE85=3.22
 
 VERSION=7.4.33-r1
 VERSION8=8.0.30-r0
@@ -25,6 +27,7 @@ VERSION81=8.1.32-r0
 VERSION82=8.2.29-r0
 VERSION83=8.3.27-r0
 VERSION84=8.4.14-r0
+VERSION85=8.5.0-r0
 
 EXTRAVERSION=-202511-01
 
@@ -222,6 +225,32 @@ pushd php/php-k8s-v84 && \
 
 else
   echo "Skipping PHP8.4 builds."
+fi
+
+if [ ${EIGHTFIVE} -eq 1 ]; then
+STABILITY=unstable
+
+# First off, we build the base php 8.5 image.
+pushd php/base/php85 && \
+  make VERSION=${VERSION85} EXTRAVERSION=${EXTRAVERSION} UPSTREAM=${BASE85} buildx && \
+  make VERSION=${VERSION85} EXTRAVERSION=${EXTRAVERSION} MANIFEST_VERSION=8.5-${STABILITY} tagx && \
+  popd
+
+# Build the standard php 8.5 image.
+pushd php/php85 && \
+  make VERSION=${VERSION85} EXTRAVERSION=${EXTRAVERSION} UPSTREAM=${VERSION85}${EXTRAVERSION} buildx && \
+  make VERSION=${VERSION85} EXTRAVERSION=${EXTRAVERSION} MANIFEST_VERSION=8.5-${STABILITY} tagx && \
+  popd
+
+# Build the k8s php 8.5 image.
+pushd php/php-k8s-v85 && \
+  make VERSION=${VERSION85} EXTRAVERSION=${EXTRAVERSION} UPSTREAM=${VERSION85}${EXTRAVERSION} buildx && \
+  make VERSION=${VERSION85} EXTRAVERSION=${EXTRAVERSION} testx && \
+  make VERSION=${VERSION85} EXTRAVERSION=${EXTRAVERSION} MANIFEST_VERSION=8.5-${STABILITY} tagx && \
+  popd
+
+else
+  echo "Skipping PHP8.5 builds."
 fi
 
 # Login, so we can push.
