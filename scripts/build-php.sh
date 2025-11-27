@@ -1,5 +1,7 @@
 #!/bin/bash -e
 #
+# Build Alpine based PHP docker images for OCHA.
+
 BASE=lol
 
 SEVEN=0
@@ -21,10 +23,10 @@ VERSION=7.4.33-r1
 VERSION8=8.0.30-r0
 VERSION81=8.1.32-r0
 VERSION82=8.2.29-r0
-VERSION83=8.3.26-r0
-VERSION84=8.4.13-r0
+VERSION83=8.3.27-r0
+VERSION84=8.4.14-r0
 
-EXTRAVERSION=-202509-02
+EXTRAVERSION=-202511-01
 
 STABILITY=stable
 REGISTRY=public.ecr.aws/unocha
