@@ -1,0 +1,4 @@
+# Set the max_allowed_packet to 100M, which is what our production servers allow.
+
+[client]
+max_allowed_packet=100M
