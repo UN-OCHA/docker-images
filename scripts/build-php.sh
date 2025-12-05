@@ -27,6 +27,7 @@ VERSION82=8.2.29-r0
 VERSION83=8.3.28-r0
 VERSION84=8.4.15-r0
 VERSION84=8.5.0-r0
+VERSION85=8.5.0-r0
 
 EXTRAVERSION=-202512-01
 
@@ -235,13 +236,13 @@ pushd php/base/php85 && \
   popd
 
 # Build the standard php 8.5 image.
-pushd php/php84 && \
+pushd php/php85 && \
   make VERSION=${VERSION85} EXTRAVERSION=${EXTRAVERSION} UPSTREAM=${VERSION85}${EXTRAVERSION} buildx && \
   make VERSION=${VERSION85} EXTRAVERSION=${EXTRAVERSION} MANIFEST_VERSION=8.5-${STABILITY} tagx && \
   popd
 
-# Build the k8s php 85 image.
-pushd php/php-k8s-v84 && \
+# Build the k8s php 8.5 image.
+pushd php/php-k8s-v85 && \
   make VERSION=${VERSION85} EXTRAVERSION=${EXTRAVERSION} UPSTREAM=${VERSION85}${EXTRAVERSION} buildx && \
   make VERSION=${VERSION85} EXTRAVERSION=${EXTRAVERSION} testx && \
   make VERSION=${VERSION85} EXTRAVERSION=${EXTRAVERSION} MANIFEST_VERSION=8.5-${STABILITY} tagx && \
