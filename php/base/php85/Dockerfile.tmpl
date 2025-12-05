@@ -69,14 +69,9 @@ ENV PS1="\u@\h:\w\n\$ " \
     LD_PRELOAD=/usr/lib/preloadable_libiconv.so
 
 # Copy custom config files into the container.
-COPY etc/apk/pin.conf etc/php85 etc/services/run_fpm etc/msmtp/msmtprc /tmp/
+COPY etc/php85 etc/services/run_fpm etc/msmtp/msmtprc /tmp/
 
 RUN \
-    # Add edge repositories.
-    echo "http://dl-cdn.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories && \
-    echo "http://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories && \
-    # Pin the PHP packages to edge.
-    mv -f /tmp/pin.conf /etc/apk/pin.conf && \
     # Install standard packages from $UPSTREAM.
     apk -U upgrade && \
     apk add --update-cache \
