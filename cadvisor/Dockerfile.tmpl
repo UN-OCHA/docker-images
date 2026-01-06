@@ -8,7 +8,7 @@ ARG TARGETOS
 ARG TARGETARCH
 # ARG VERSION
 
-FROM golang:1.24-alpine%%UPSTREAM%% AS build
+FROM golang:1.25-alpine%%UPSTREAM%% AS build
 
 ARG WORKDIR=/go/src/github.com/google/cadvisor
 
@@ -29,28 +29,27 @@ RUN apk --no-cache add \
         python3 \
         wget \
         zfs && \
-    apk --no-cache add --repository http://dl-3.alpinelinux.org/alpine/edge/main/ \
-        thin-provisioning-tools && \
+    apk --no-cache add thin-provisioning-tools && \
     echo 'hosts: files mdns4_minimal [NOTFOUND=return] dns mdns4' >> /etc/nsswitch.conf && \
     rm -rf /var/cache/apk/* && \
     cd /tmp && \
-    wget https://sourceforge.net/projects/perfmon2/files/libpfm4/libpfm-4.11.0.tar.gz && \
-    echo "112bced9a67d565ff0ce6c2bb90452516d1183e5  libpfm-4.11.0.tar.gz" | sha1sum -c  && \
-    tar -xzf libpfm-4.11.0.tar.gz && \
-    rm libpfm-4.11.0.tar.gz && \
+    wget https://sourceforge.net/projects/perfmon2/files/libpfm4/libpfm-4.13.0.tar.gz && \
+    echo "bcb52090f02bc7bcb5ac066494cd55bbd5084e65  libpfm-4.13.0.tar.gz" | sha1sum -c  && \
+    tar -xzf libpfm-4.13.0.tar.gz && \
+    rm libpfm-4.13.0.tar.gz && \
     export DBG="-g -Wall" && \
-    make -e -C libpfm-4.11.0 && \
-    make install -C libpfm-4.11.0 && \
+    make -e -C libpfm-4.13.0 && \
+    make install -C libpfm-4.13.0 && \
     cd $WORKDIR && \
     git clone https://github.com/google/cadvisor.git . && \
     git switch v$VERSION -- detach && \
     cd cmd && go mod download && cd .. && \
     export GO_TAGS="libpfm,netgo"; \
-    if [ "$(uname --machine)" = "x86_64" ]; then \
-          # Disable libipmctl due to https://github.com/google/cadvisor/issues/3482
-          #export GO_TAGS="$GO_TAGS,libipmctl"; \
-          export GO_TAGS="$GO_TAGS"; \
-    fi; \
+    # if [ "$(uname --machine)" = "x86_64" ]; then \
+    #       # Disable libipmctl due to https://github.com/google/cadvisor/issues/3482
+    #       #export GO_TAGS="$GO_TAGS,libipmctl"; \
+    #       export GO_TAGS="$GO_TAGS"; \
+    # fi; \
     GO_FLAGS="-tags=$GO_TAGS" ./build/build.sh
 
 # ipmctl only supports Intel x86_64 processors.
@@ -69,8 +68,7 @@ RUN apk --no-cache add \
 # FROM mirror.gcr.io/library/alpine:3.18
 FROM alpine:%%UPSTREAM%%
 
-RUN apk --no-cache add libc6-compat device-mapper findutils ndctl zfs && \
-    apk --no-cache add thin-provisioning-tools --repository http://dl-3.alpinelinux.org/alpine/edge/main/ && \
+RUN apk --no-cache add libc6-compat device-mapper findutils ndctl thin-provisioning-tools zfs && \
     echo 'hosts: files mdns4_minimal [NOTFOUND=return] dns mdns4' >> /etc/nsswitch.conf && \
     rm -rf /var/cache/apk/*
 
