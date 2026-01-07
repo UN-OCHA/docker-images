@@ -164,7 +164,7 @@ fi
 ROOTDIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
 
 BASE_ALPINE=alpine
-BASE_DEBIAN=slim
+BASE_DEBIAN=trixie-slim
 BASE_PREFIX=
 VERS=${VERS:-}
 
@@ -238,13 +238,13 @@ for ver in $VERS; do
     echo -en "\nBuilding alpine based version:\nalpine: ${BASE_ALPINE}\nnode:$ver\nnode major: $major\nnpm: $npm\nyarn: $yarn\n"
 
     # nodejs-base alpine
-    auth && build_node_base_alpine $ver $major $npm $yarn
+#    auth && build_node_base_alpine $ver $major $npm $yarn
 
     # nodejs alpine
-    auth && build_node_alpine $ver $major
+#    auth && build_node_alpine $ver $major
 
     # nodejs alpine builder
-    auth && build_node_builder $ver $major
+#    auth && build_node_builder $ver $major
 
     ### Debian based
 

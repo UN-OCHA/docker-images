@@ -33,7 +33,6 @@ RUN set -x && \
     apt-get -qy install \
         build-essential \
         imagemagick \
-        libgconf-2-4 \
         fonts-freefont-ttf \
         fonts-roboto \
         gnupg \
@@ -42,8 +41,7 @@ RUN set -x && \
         psmisc && \
     mv -f /tmp/assets/Roboto*.ttf /usr/share/fonts/truetype/roboto/ && \
     # Configure Chrome repo.
-    curl -s https://dl-ssl.google.com/linux/linux_signing_key.pub -o linux_signing_key.pub && \
-    apt-key add linux_signing_key.pub && \
+    curl -fsSL https://dl-ssl.google.com/linux/linux_signing_key.pub | gpg --dearmor -o /usr/share/keyrings/chrome-linux-signing-key.pub && \
     echo "deb [arch=${TARGETARCH}] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list && \
     # Clean stuff up
     apt-get clean && \
