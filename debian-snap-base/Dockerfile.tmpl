@@ -41,8 +41,8 @@ RUN set -x && \
         psmisc && \
     mv -f /tmp/assets/Roboto*.ttf /usr/share/fonts/truetype/roboto/ && \
     # Configure Chrome repo.
-    curl -fsSL https://dl-ssl.google.com/linux/linux_signing_key.pub | gpg --dearmor -o /usr/share/keyrings/chrome-linux-signing-key.pub && \
-    echo "deb [arch=${TARGETARCH}] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list && \
+    curl -fsSL https://dl-ssl.google.com/linux/linux_signing_key.pub | gpg --dearmor -o /usr/share/keyrings/chrome-linux-keyring.gpg && \
+    echo "deb [arch=${TARGETARCH} signed-by=/usr/share/keyrings/chrome-linux-keyring.gpg] https://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list && \
     # Clean stuff up
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
