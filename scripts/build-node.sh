@@ -164,7 +164,7 @@ fi
 ROOTDIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
 
 BASE_ALPINE=alpine
-BASE_DEBIAN=slim
+BASE_DEBIAN=trixie-slim
 BASE_PREFIX=
 VERS=${VERS:-}
 
