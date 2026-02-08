@@ -1,7 +1,5 @@
 FROM public.ecr.aws/unocha/base-php:%%UPSTREAM%%
 
-MAINTAINER UN-OCHA Operations <ops+docker@humanitarianresponse.info>
-
 # Thanks to orakili <docker@orakili.net>
 
 # A little bit of metadata management.
@@ -20,7 +18,8 @@ LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.description="This service provides a php-fpm platform with composer." \
       org.label-schema.vcs-url=$VCS_URL \
       org.label-schema.vcs-ref=$VCS_REF \
-      info.humanitarianresponse.composer="2.9.3"
+      info.humanitarianresponse.composer="2.9.5" \
+      org.opencontainers.image.authors="ops+docker@reliefweb.int"
 
 COPY etc/my.cnf.d/client.cnf /client.cnf
 

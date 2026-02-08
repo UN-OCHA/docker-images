@@ -1,7 +1,5 @@
 FROM public.ecr.aws/unocha/alpine-base-s6:%%UPSTREAM%%
 
-MAINTAINER UN-OCHA Operations <ops+docker@humanitarianresponse.info>
-
 # Thanks to orakili <docker@orakili.net>
 
 # Parse arguments for the build command.
@@ -26,7 +24,8 @@ LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.distribution-version="$UPSTREAM" \
       info.humanitarianresponse.php=$VERSION \
       info.humanitarianresponse.php.modules="bcmath bz2 calendar ctype curl dom exif fileinfo fpm gd gettext gmp iconv igbinary imagick intl json memcached mysqli msgpack opcache openssl pdo pdo_mysql phar posix redis shmop sysvmsg sysvsem sysvshm simplexml sodium sockets uploadprogress yaml xml xmlreader xmlwriter xsl zip zlib" \
-      info.humanitarianresponse.php.sapi="fpm"
+      info.humanitarianresponse.php.sapi="fpm" \
+      org.opencontainers.image.authors="ops+docker@reliefweb.int"
 
 # Default PHP configuration variables. These can be overridden via the environment.
 ENV PS1="\u@\h:\w\n\$ " \

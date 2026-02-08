@@ -1,7 +1,5 @@
 FROM public.ecr.aws/unocha/php:%%UPSTREAM%%
 
-MAINTAINER UN-OCHA Operations <ops+docker@humanitarianresponse.info>
-
 # Thanks to orakili <docker@orakili.net>
 
 # A little bit of metadata management.
@@ -34,8 +32,8 @@ LABEL org.label-schema.schema-version="1.0" \
       org.label-schema.description="This service provides an nginx / php-fpm platform with composer and wp-cli." \
       org.label-schema.vcs-url=$VCS_URL \
       org.label-schema.vcs-ref=$VCS_REF \
-      info.humanitarianresponse.nginx=$UPSTREAM \
-      info.humanitarianresponse.nginx=1.24.0
+      info.humanitarianresponse.nginx=1.28.0 \
+      org.opencontainers.image.authors="ops+docker@reliefweb.int"
 
 # Insert all our custom config files.
 COPY etc/nginx/ etc/services.d/run_nginx \
