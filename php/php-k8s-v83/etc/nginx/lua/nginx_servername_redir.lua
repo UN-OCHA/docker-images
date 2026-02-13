@@ -1,5 +1,5 @@
 -- Grab a lowercase version of the current hostname.
-http_host = ngx.var.http_host:lower()
+local http_host = ngx.var.http_host:lower()
 -- If the current hostname is in the list of allowed hostnames, do not redirect.
 for i = 1, #ngx.ctx.host_name_list do
   if ngx.ctx.host_name_list[i] == http_host then
