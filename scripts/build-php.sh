@@ -30,7 +30,7 @@ VERSION85=8.5.7-r0
 
 EXTRAVERSION=-202606-01
 
-STABILITY=unstable
+STABILITY=stable
 REGISTRY=public.ecr.aws/unocha
 
 # Is there a version?
