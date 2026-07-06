@@ -30,7 +30,6 @@ ENV LANG=en_US.utf8 \
 COPY run_mariadb fix_* unocha.cnf /
 
 RUN apk add --update-cache \
-        --repository https://dl-3.alpinelinux.org/alpine/edge/main/ \
       mariadb mariadb-client mariadb-common \
     && \
     rm -rf /var/cache/apk/* && \
