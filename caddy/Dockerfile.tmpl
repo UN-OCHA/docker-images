@@ -15,7 +15,12 @@ RUN CGO_ENABLED=0 GOARCH=${TARGETARCH} GOOS=${TARGETOS} \
     --with github.com/greenpau/caddy-security \
     --with github.com/lucaslorentz/caddy-docker-proxy/v2 \
     --with github.com/teodorescuserban/caddy-argsort \
-    --with github.com/teodorescuserban/caddy-cookieflag
+    --with github.com/teodorescuserban/caddy-cookieflag \
+    --with github.com/teodorescuserban/caddy-ip-map \
+    --with github.com/lum8rjack/caddy-ja4h \
+    --with github.com/mholt/caddy-ratelimit \
+    --with github.com/darkweak/storages/go-redis/caddy \
+    --with github.com/caddyserver/cache-handler
 
 # FROM caddy:${VERSION}-alpine
 FROM public.ecr.aws/unocha/alpine-base:%%UPSTREAM%%
