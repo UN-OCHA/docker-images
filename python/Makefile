@@ -4,7 +4,8 @@ include ../Makefile.buildx.conf
 IMAGE=python
 
 VERSION=$$(VERSION)
+UPSTREAM=$$(UPSTREAM)
 
-all: build tag
+all: buildx tagx
 
 mrproper: clean_images clean
