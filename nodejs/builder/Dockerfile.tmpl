@@ -28,6 +28,7 @@ RUN apk update && \
         rsync \
         ruby-bundler \
         ruby-rake-compiler \
+        python3-dev \
         build-base \
         ruby-dev \
         libffi-dev && \
@@ -42,6 +43,7 @@ RUN apk update && \
     yarn cache clean && \
     apk del \
         build-base \
+        python3-dev \
         ruby-dev \
         libffi-dev && \
     rm -rf /var/cache/apk/*
