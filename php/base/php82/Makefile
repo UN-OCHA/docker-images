@@ -6,6 +6,6 @@ UPSTREAM=$$(UPSTREAM)
 VERSION=$$(VERSION)
 IMAGE=base-php
 
-all: build tag
+all: buildx tagx
 
 mrproper: clean_images clean
