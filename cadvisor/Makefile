@@ -4,6 +4,6 @@ include ../Makefile.buildx.conf
 IMAGE=cadvisor
 VERSION=$$(VERSION)
 
-all: build tag
+all: buildx tagx
 
 mrproper: clean_images clean
