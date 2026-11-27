@@ -27,11 +27,12 @@ ENV NODE_APP_DIR=/srv/www \
 
 COPY assets/ /tmp/assets
 
-RUN set -x && \
+RUN  \
     apt-get -qy update && \
     apt-get -qy dist-upgrade && \
     apt-get -qy install \
         build-essential \
+        chromium \
         imagemagick \
         fonts-freefont-ttf \
         fonts-roboto \
